@@ -1,0 +1,10 @@
+.navbar-brand{font-size: 25px;}
+
+    .row{padding-top:6px;padding-bottom:3px;background-color: #f7f7f7;}
+   
+   .form-control{font-size: 15px;}
+    ul.icons{list-style:none;}
+    li{display: inline;margin:0 20px 0 20px;}
+    .icons{font-size: 20px;float:right;}
+    .fa-question-circle{text-decoration:none; }
+
