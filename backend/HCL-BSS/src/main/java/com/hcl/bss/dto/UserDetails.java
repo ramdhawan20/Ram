@@ -1,8 +1,11 @@
 package com.hcl.bss.dto;
 
 public class UserDetails {
-	
+	private String userLastName;
+	private String userFirstName;
 	private String userId;
+	private boolean isLoggedIn;
+	
 	public String getUserId() {
 		return userId;
 	}
@@ -21,8 +24,15 @@ public class UserDetails {
 	public void setUserLastName(String userLastName) {
 		this.userLastName = userLastName;
 	}
-	private String userFirstName;
-	private String userLastName;
+	
+	
+
+	public boolean isLoggedIn() {
+		return isLoggedIn;
+	}
+	public void setLoggedIn(boolean isLoggedIn) {
+		this.isLoggedIn = isLoggedIn;
+	}
 	
 	
 }
