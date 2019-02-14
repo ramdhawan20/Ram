@@ -7,6 +7,8 @@ import com.hcl.bss.repository.UserRepository;
 import com.hcl.bss.services.UserServices;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,13 +25,25 @@ public class AuthenticationController{
     public UserRepository userRepository;
 
 
-	@ApiOperation(value = "Get user details after successfull login", response = UserDetails.class)
-    @RequestMapping(value = "/login", produces = { "application/json" }, method = RequestMethod.POST)
-    public UserDetails login(@RequestBody  UserDetails userDetails) {
-    	System.out.print("## Incoming request for login ::"+userDetails.getUserId());
-		userDetails.setUserLastName("Srivastava");
-	    userDetails.setUserId(userDetails.getUserId());
-        return userDetails;
+    @ApiOperation(value = "Get user details after successfull login", response = UserDetails.class)
+    @RequestMapping(value = "/login",
+    produces = { "application/json" }, method = RequestMethod.POST)
+    public ResponseEntity<UserDetails> login(@RequestParam(value = "userId", required = true) String userID, @RequestParam(value = "pwd", required = true) String pwd) {
+		UserDetails userDetails = new UserDetails();
+		if("ranjan479".equals(userID) && "myPassword".equals(pwd)) {
+    	
+		userDetails.setUserId(userID);
+		userDetails.setUserFirstName("Ranjan");
+		userDetails.setUserLastName("Yadav");
+		userDetails.setLoggedIn(true);
+		}
+		else {
+			userDetails.setUserId(userID);
+			userDetails.setLoggedIn(false);
+		}
+		return new ResponseEntity<>(userDetails, HttpStatus.OK);
+		
+       
     }
 
     @ApiOperation(value = "Get whole list of users", response = UserDetails.class)
@@ -37,13 +51,17 @@ public class AuthenticationController{
     public List<UserDetails> getAllUsers() {
   List<UserDetails> userDetailsList = userRepository.isData();
         return userDetailsList;
+    	
     }
 	
 	@ApiOperation(value = "Logout user from current session", response = UserDetails.class)
     @RequestMapping(value = "/logout",
     produces = { "application/json" }, method = RequestMethod.POST)
-    public boolean logout(@RequestParam(value = "sessionID", required = true) String sessionId) {
-    	return true;
+    public ResponseEntity<UserDetails> logout(@RequestParam(value = "userId", required = true) String userId) {
+		UserDetails userDetails = new UserDetails();
+		userDetails.setUserId(userId);
+		userDetails.setLoggedIn(false);
+		return new ResponseEntity<>(userDetails, HttpStatus.OK);
     }
 
 
@@ -68,8 +86,9 @@ public class AuthenticationController{
             produces = { "application/json" }, method = RequestMethod.GET
     )
     public Users findUserById(@RequestParam(required=true, defaultValue="1") int id) {
-        Users users = this.userServices.findById(id);
+       Users users = this.userServices.findById(id);
         return users;
+    	
     }
 
 
