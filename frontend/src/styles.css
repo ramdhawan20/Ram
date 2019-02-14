@@ -1,0 +1,119 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/dist/css/bootstrap.css";
+@import "~font-awesome/css/font-awesome.css";
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import 'ag-grid-community/dist/styles/ag-grid.css';
+@import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+/* @import 'ag-grid-community/dist/styles/ag-theme-bootstrap.css'; */
+@import "@syncfusion/ej2/material.css";
+.container-fluid, .row {
+    height: 100%;
+    min-height: 100%;
+  }
+  /* .navbar.bg-dark{ background:  #f7f7f7 !important;} */
+ 
+  html, body {
+    height: 100%; font-family: 'Open Sans', sans-serif;
+  }
+  .navbar-nav div li{ display: inline-block;}
+  h4{color:#393939; margin-top: 30px;}
+  .bdre2 {
+    border-bottom: 2px solid #999;
+    height: 1px;
+    margin: 6px auto;
+    width: 100px;
+    margin-bottom: 30px;
+}
+.round-paddind{padding: 2%; border:1px solid #bababa; border-radius: 10px; -webkit-box-shadow: 0px 0px 38px 0px rgba(56,54,56,1);
+    -moz-box-shadow: 0px 0px 38px 0px rgba(56,54,56,1);
+    box-shadow: 0px 0px 38px 0px rgba(56,54,56,1);}
+
+    /* pop-up */
+
+    modal {
+      display: none;
+  }
+  .modal {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1000;
+      overflow: auto;
+      display: block;
+  }
+  .modal-body {
+      background: #fff;
+      margin: 40px auto;
+      width: 40%;
+      padding:0;
+  }
+  .modal-background {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: #000;
+      opacity: 0.75;
+      z-index: 900;
+  }
+  .modal-body .form-horizontal {
+      display: block;
+      clear: both;
+      padding: 40px;
+  }
+  .modal-body .form-horizontal .control-label {
+      padding-top: 7px;
+      margin-bottom: 0;
+      text-align: left;
+      float:left;
+      width:160px;
+      padding-right:15px;
+  }
+  .modal-body .input-control{
+      float:left;
+      width:65%;
+  }
+  .modal-body .form-group{
+      margin: 0;
+      padding-bottom:15px;
+      display: block;
+      clear: both;
+  }
+  .crossButton{
+      cursor:pointer;
+      position: absolute;
+      /* top: -13px;
+      right: -11px; */
+      top: 27px;
+      right: 29%;
+      background: #fff;
+      border: 1px solid #333;
+      padding:5px 10px;
+      border-radius: 50%;
+      font-weight: 700;
+  }
+  .page-header h3{
+      display: block;
+      padding:15px;
+      margin: 0;
+      text-align: center;
+      margin:0;
+      color: #fff;
+  }
+  .page-header{
+      background-color: #0099CC ;
+      padding:0;
+      margin:0;
+      text-align: center;
+      display: block;
+  }
+  
+  *{
+      margin: 0;
+      padding: 0;
+      outline: none;
+  }
+  

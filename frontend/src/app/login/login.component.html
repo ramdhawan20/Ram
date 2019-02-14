@@ -1,0 +1,63 @@
+<!-- <p>
+  login works!
+</p> -->
+<div class="container-fluid">
+  <div class="row justify-content-center align-items-center">
+    
+  <div class="col-lg-4 text-center fadeInDown">
+    <div class="round-paddind">
+        <div class="fadeIn first">
+    <img src="/assets/logo3.png" >
+    </div>
+    <h4>One account. Access all services.</h4>
+    <div class="bdre2"></div>
+    <h6>Sign In to access HCL Subscriptions</h6>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <input type="text" formControlName="email" class="form-control fadeIn second" placeholder="Email / Phone" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" [(ngModel)]="emailvalue" pattern="^\S*[@]\S*[.]\S*$" />
+        <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+            <div *ngIf="f.email.errors.required" class="text-left">Email is required</div>
+            <div *ngIf="f.email.errors.email" class="text-left">Email must be a valid email address</div>
+        </div>
+    </div>
+    <div class="form-group">
+      <input type="password" formControlName="password" class="form-control" placeholder="Password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" [(ngModel)]="pwdvalue" />
+      <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+          <div *ngIf="f.password.errors.required" class="text-left">Password is required</div>
+          <!-- <div *ngIf="f.password.errors.minlength" class="text-left">Password must be at least 6 characters</div> -->
+      </div>
+  </div>
+      <div class="form-group">
+          <!-- <button class="btn btn-primary fadeIn fourth" type="submit" [disabled]="!registerForm.valid"  (click)="loginvalidation(emailvalue,pwdvalue)">Sign In</button> -->
+          <button class="btn btn-primary fadeIn fourth" type="submit"  (click)="loginvalidation(emailvalue,pwdvalue)">Sign In</button>
+      </div>
+  </form>
+    
+
+
+<!-- 
+    <form>
+      <div class="form-group">
+        <input type="email" class="form-control fadeIn second" id="email" placeholder="Email / Phone" name="email" [(ngModel)]="emailvalue">
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-control fadeIn third" id="pwd" placeholder="Password" name="pswd" [(ngModel)]="pwdvalue">
+      </div>
+      <div class="form-group form-check text-right">
+        <label class="forgotpasslink underlineHover">
+            Forgot Password?
+        </label>
+      </div>
+      <div class="btn btn-primary fadeIn fourth"  (click)="loginvalidation(emailvalue,pwdvalue)">Sign In</div>
+    </form>
+  -->
+
+
+
+
+
+
+    </div>
+  </div>
+</div>
+</div>

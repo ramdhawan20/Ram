@@ -1,0 +1,144 @@
+<!-- <ul>
+  <li routerLink='/login' routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a>Dashboard</a></li>
+  <li routerLink='/product' ><a>Products</a></li>
+ 
+</ul> -->
+<header> 
+    <!-- <div class="row">
+        <div class="col-lg-12 p-0">
+             <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+                <a class="navbar-brand" href="#">LOGO</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+               
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="navbar-nav">
+                   <div style="position: relative; width: auto; float: left; width:21%;">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                           XYZ <i class="fa fa-angle-down" aria-hidden="true"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style=" width: 274px; height: 200px;">
+                          
+                        </div>
+                      </li>
+                      <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i class="fa fa-bell" aria-hidden="true"></i>
+                          </a>
+                          <div class="dropdown-menu" aria-labelledby="navbarDropdown" style=" width: 274px; height: 200px;">
+                            
+                          </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-gear" aria-hidden="true"></i>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown" style=" width: 274px; height: 200px;">
+                              
+                            </div>
+                          </li>
+                          <li class="nav-item dropdown">
+                              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                              </a>
+                              <div class="dropdown-menu" aria-labelledby="navbarDropdown" style=" width: 274px; height: 100%;">
+                                
+                              </div>
+                            </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-user-circle" aria-hidden="true"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style=" width: 274px; height: 200px;">
+                          
+                        </div>
+                      </li>
+                    </div>
+                  </ul>
+                  
+                </div>
+              </nav> 
+        </div>
+      </div> -->
+      <app-header></app-header>
+  </header>
+<div id="sidebar">   
+    <div class="page-wrapper chiller-theme toggled">
+        
+        <nav id="sidebar" class="sidebar-wrapper">
+          <div class="sidebar-content">
+            <!-- sidebar-search  -->
+            <div class="sidebar-menu">
+              <ul>             
+                <li class="sidebar-dropdown active" routerLink='/dashboard'>
+                  <a  href="javascript:void(0)">
+                      <i class="fa fa-tachometer" aria-hidden="true"></i>
+                    
+                    <span>Dashboard</span>
+                  </a>
+                </li>
+                <li class="sidebar-dropdown" routerLink='/product'>
+                  <a  href="javascript:void(0)">
+                      <i class="fa fa-bitbucket" aria-hidden="true"></i>
+                    <span>Products</span>
+                  </a>
+                </li>
+                <li class="sidebar-dropdown" routerLink='/customers'>
+                  <a  href="javascript:void(0)">
+                      <i class="fa fa-user-o" aria-hidden="true"></i>
+                    <span>Customers</span>
+                  </a>
+                </li>
+                <li class="sidebar-dropdown" routerLink='/subscriptions'>
+                  <a  href="javascript:void(0)">
+                      <i class="fa fa-circle-o-notch" aria-hidden="true"></i>
+                    <span>Subscriptions</span>
+                  </a>
+                </li>
+                <li class="sidebar-dropdown" routerLink='/invoices'>
+                  <a  href="javascript:void(0)">
+                      <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                      <!-- <i class="fa fa-file-text" aria-hidden="true"></i> -->
+                    <span>Invoices</span>
+                  </a>
+                </li>
+                <li class="sidebar-dropdown" routerLink='/transactions'>
+                  <a  href="javascript:void(0)">
+                   
+                    <i class="fa fa-usd" aria-hidden="true"></i>
+                    <span>Transactions</span>
+                  </a>
+                </li>
+                <li class="sidebar-dropdown" routerLink='/events'>
+                  <a  href="javascript:void(0)">
+                      <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                    <span>Events</span>
+                  </a>
+                </li>
+                <li class="sidebar-dropdown" routerLink='/reports'>
+                  <a  href="javascript:void(0)">
+                      <i class="fa fa-bar-chart-o" aria-hidden="true"></i>
+                    <span>Reports</span>
+                  </a>
+                </li>
+               
+              </ul>
+            </div>          
+          </div>
+        </nav>
+      </div>
+  </div>
+  <div id="rightSideWrapper">
+   
+    
+    <div class="ContentBox">
+      <main> 
+        Main Content 
+      </main>
+      <footer> 
+        Footer 
+      </footer>
+    </div> 
+  </div>
