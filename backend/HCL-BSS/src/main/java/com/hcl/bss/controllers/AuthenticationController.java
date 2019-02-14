@@ -1,6 +1,9 @@
 package com.hcl.bss.controllers;
 
 import com.hcl.bss.domain.Users;
+import static com.hcl.bss.constants.AuthenticationConstant.LOGIN_MSG;
+import static com.hcl.bss.constants.AuthenticationConstant.LOGOUT_MSG;
+import static com.hcl.bss.constants.AuthenticationConstant.LOGIN_FAILED_MSG;
 import com.hcl.bss.dto.Greeting;
 import com.hcl.bss.dto.UserDetails;
 import com.hcl.bss.repository.UserRepository;
@@ -33,12 +36,15 @@ public class AuthenticationController{
 		if("ranjan479".equalsIgnoreCase(userID) && "myPassword".equalsIgnoreCase(pwd)) {
 		userDetails.setUserId(userID);
 		userDetails.setUserFirstName("Ranjan");
+		userDetails.setUserMiddleName("Kumar");
 		userDetails.setUserLastName("Yadav");
 		userDetails.setLoggedIn(true);
+		userDetails.setMessage(userDetails.getUserFirstName()+ LOGIN_MSG);
 		}
 		else {
 			userDetails.setUserId(userID);
 			userDetails.setLoggedIn(false);
+			userDetails.setMessage(LOGIN_FAILED_MSG);
 		}
 		return new ResponseEntity<>(userDetails, HttpStatus.OK);
 	
@@ -58,6 +64,7 @@ public class AuthenticationController{
     public ResponseEntity<UserDetails> logout(@RequestParam(value = "userId", required = true) String userId) {
 		UserDetails userDetails = new UserDetails();
 		userDetails.setUserId(userId);
+		userDetails.setMessage(LOGOUT_MSG);
 		userDetails.setLoggedIn(false);
 		return new ResponseEntity<>(userDetails, HttpStatus.OK);
     }
