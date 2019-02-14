@@ -25,8 +25,6 @@ public class UserDetails {
 		this.userLastName = userLastName;
 	}
 	
-	
-
 	public boolean isLoggedIn() {
 		return isLoggedIn;
 	}

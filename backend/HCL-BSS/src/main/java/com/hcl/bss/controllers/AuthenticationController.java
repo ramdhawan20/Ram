@@ -31,7 +31,6 @@ public class AuthenticationController{
     public ResponseEntity<UserDetails> login(@RequestParam(value = "userId", required = true) String userID, @RequestParam(value = "pwd", required = true) String pwd) {
 		UserDetails userDetails = new UserDetails();
 		if("ranjan479".equalsIgnoreCase(userID) && "myPassword".equalsIgnoreCase(pwd)) {
-    	
 		userDetails.setUserId(userID);
 		userDetails.setUserFirstName("Ranjan");
 		userDetails.setUserLastName("Yadav");
