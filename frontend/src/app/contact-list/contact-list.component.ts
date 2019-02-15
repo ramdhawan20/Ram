@@ -22,9 +22,13 @@ export class ContactListComponent implements OnInit {
   constructor(private http: HttpClient, private modalService: ModalsService, private globalServiceService: GlobalServiceService) {
 
     this.columnDefs = [
-      { headerName: 'Make', field: 'make' },
-      { headerName: 'Model', field: 'model' },
-      { headerName: 'Price', field: 'price', editable: true }
+      { headerName: 'CREATED ON', field: 'create' },
+      { headerName: 'ACTIVATED ON', field: 'activated' },
+      { headerName: 'CUSTOMER NAME', field: 'customer' },
+      { headerName: 'PLAN NAME', field: 'plan', width:200},
+      { headerName: 'AMOUNT', field: 'amount' },
+      { headerName: 'LAST BILLED ON', field: 'lastbilled' },
+      { headerName: 'NEXT', field: 'next', editable: true }
     ];
 
     this.rowSelection = "multiple";
@@ -57,9 +61,8 @@ export class ContactListComponent implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
-    this.http
-      .get("https://api.myjson.com/bins/15psn9")
-      .subscribe(data => {
+    this.globalServiceService.SubscriptionCalling().subscribe(
+      data => {
         this.rowData = data;
         params.api.paginationGoToPage(4);
       });
