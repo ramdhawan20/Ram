@@ -13,7 +13,7 @@ export class GlobalServiceService {
   constructor(private http: HttpClient) { }
 
 
-
+  
   // loginservice(username, password) {
 
   //   this.logindata = JSON.stringify(

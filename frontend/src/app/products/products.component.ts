@@ -6,8 +6,8 @@ import { ModalsService } from '../modal.service';
   selector: 'app-products',
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css']
-})
-export class ProductsComponent  {
+}) 
+export class ProductsComponent implements OnInit  {
   private gridApi;
   private gridColumnApi;
 
@@ -16,7 +16,10 @@ export class ProductsComponent  {
   private rowSelection;
   // private rowData: [];
   private rowData;
-
+  ngOnInit(){
+    document.getElementById("productGrid").style.display="none";
+    document.getElementById("exportImportBox").style.display="none";
+  }
   constructor(private http: HttpClient,private modalService: ModalsService) {
     this.columnDefs = [
       {
@@ -75,18 +78,20 @@ export class ProductsComponent  {
     this.gridApi.setQuickFilter(inputElement.value);
   }
 
-
+  exportImport(){
+    document.getElementById("exportImportBox").style.display="block";
+  }
 
   //open popup code start
-  openModal(id: string) {
-    this.modalService.open(id);
-  }
+  // openModal(id: string) {
+  //   this.modalService.open(id);
+  // }
   //open popup code end
 
   //close popup code start
-  closeModal(id: string) {
-    this.modalService.close(id);
-  }
+  // closeModal(id: string) {
+  //   this.modalService.close(id);
+  // }
   //close popup code end
 
 

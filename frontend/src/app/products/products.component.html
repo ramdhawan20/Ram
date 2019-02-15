@@ -67,7 +67,7 @@
     <div class="page-wrapper chiller-theme toggled">
         
         <nav id="sidebar" class="sidebar-wrapper">
-          <div class="sidebar-content">
+          <div class="sidebar-content" style="position: relative;">
             <!-- sidebar-search  -->
             <div class="sidebar-menu">
               <ul>             
@@ -84,25 +84,25 @@
                     <span>Products</span>
                   </a>
                 </li>
-                <li class="sidebar-dropdown" routerLink='/customers'>
+                <!-- <li class="sidebar-dropdown" routerLink='/customers'>
                   <a  href="javascript:void(0)">
                       <i class="fa fa-user-o" aria-hidden="true"></i>
                     <span>Customers</span>
                   </a>
-                </li>
+                </li> -->
                 <li class="sidebar-dropdown" routerLink='/subscriptions'>
                   <a  href="javascript:void(0)">
                       <i class="fa fa-circle-o-notch" aria-hidden="true"></i>
                     <span>Subscriptions</span>
                   </a>
                 </li>
-                <li class="sidebar-dropdown" routerLink='/invoices'>
+                <!-- <li class="sidebar-dropdown" routerLink='/invoices'>
                   <a  href="javascript:void(0)">
                       <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                      <!-- <i class="fa fa-file-text" aria-hidden="true"></i> -->
+                     
                     <span>Invoices</span>
                   </a>
-                </li>
+                </li> 
                 <li class="sidebar-dropdown" routerLink='/transactions'>
                   <a  href="javascript:void(0)">
                    
@@ -121,10 +121,29 @@
                       <i class="fa fa-bar-chart-o" aria-hidden="true"></i>
                     <span>Reports</span>
                   </a>
-                </li>
+                </li>-->
                
               </ul>
-            </div>          
+            </div>  
+            <!-- <button type="button" class="btn btn-info" style="position: absolute;
+            bottom: 33px;
+            left: 10px;">User Management</button>     -->
+            
+            <div class="sidebar-menu" style="    position: absolute;
+            bottom: 33px;
+            left: 0;
+            width: 100%;">
+              <ul>             
+                <li class="sidebar-dropdown" routerLink='/subscriptions'>
+                  <a  href="javascript:void(0)">
+                      <i class="fa fa-user-circle" aria-hidden="true" style="font-size: 20px;"></i>
+                    <span>User Management</span>
+                  </a>
+                </li>
+
+               
+              </ul>
+            </div>  
           </div>
         </nav>
       </div>
@@ -138,48 +157,48 @@
             <div class="row">
                 <div class="col-lg-3" style="border-right: 1px solid #bababa; padding-top: 13px;">
                     <div class="dropdown2"  style="width: auto; float: right;">
-                        <button class="btn btn-info" style="margin-left: 10px; margin-top: -4px;"><i class="fa fa-plus fa-2" aria-hidden="true"></i> New</button>
+                        <button class="btn btn-info" style="margin-left: 10px; margin-top: -4px;background-color: #007bff;border-color:#007bff; font-size: 11px; "><i class="fa fa-plus fa-2" aria-hidden="true"></i> New</button>
                         <div type="button" class=" dropdown-toggle float-left" data-toggle="dropdown" style="    border: 0px solid #fff;
                         width: 33px;
                         float: left;
                         height: 28px;">
-                            <i class="fa fa-align-justify fa-4" aria-hidden="true" style="font-size: 33px; color: #bababa;"></i>
+                            <i class="fa fa-bars fa-4" aria-hidden="true" style="        font-size: 32px;
+                            color: #bababa;
+                            margin-top: -4px;
+                            margin-left: 5px;"></i>
                         </div>
                         <div class="dropdown-menu">
-                          <a class="dropdown-item" style="cursor: pointer;"  (click)="openModal('edit')"><i class="fa fa-download fa-2" aria-hidden="true"></i> Import Plans</a>
+                          <a class="dropdown-item" style="cursor: pointer;"  (click)="exportImport()"><i class="fa fa-download fa-2" aria-hidden="true"></i> Import Plans</a>
                           <a class="dropdown-item" href="#"><i class="fa fa-download fa-2" aria-hidden="true"></i> Import Addons</a>
                           <a class="dropdown-item" href="#"><i class="fa fa-download fa-2" aria-hidden="true"></i> Import Coupons</a>
                         </div>
                       </div>
-                      <modal id="edit">
-                          <div class="modal">
-                             <div class="modal-body">
-                                <span class="crossButton"  (click)="closeModal('edit')">X</span>
-                                <!-- <div class="page-header">
-                                   <h3>Edit User</h3>
-                                </div> -->
-                                <div class="upload-btn-wrapper" style="    position: relative;
-                z-index: 999;
-                display: inline-block;
-                width: 100%;
-                padding: 5%;
-                text-align: left;
-                border: 2px solid #2e8fda;
-                border-radius: 5px;">
-                <div style="position:relative">
-                  <input type="file" class="form-control-file form-control " id="exampleFormControlFile1"
-                    (change)="inputfilename($event)" style="text-indent: 9999px; width: 100%; margin-bottom: 15px; float: left"
-                    accept=".csv">
-                  <!-- <img src="/assets/searchicon.png" for="exampleFormControlFile1"
-                    style="position: absolute;top: 1px;height: 37px;width: 36px;left: 42%;"> -->
-                </div>
-                <button type="button" class="btn btn-primary" style="margin-left:10px" (click)="fileChange()">UPLOAD</button>
-                <button type="button" class="btn btn-secondary" style="margin-left:10px" (click)="downloadToCsv()" disabled >Download Error File</button>
-              </div>
-                             </div>
-                          </div>
-                          <div class="modal-background"></div>
-                        </modal>
+                                                    <!-- <modal id="edit">
+                                                        <div class="modal">
+                                                          <div class="modal-body">
+                                                              <span class="crossButton"  (click)="closeModal('edit')">X</span>
+                                                              
+                                                              <div class="upload-btn-wrapper" style="    position: relative;
+                                              z-index: 999;
+                                              display: inline-block;
+                                              width: 100%;
+                                              padding: 5%;
+                                              text-align: left;
+                                              border: 2px solid #2e8fda;
+                                              border-radius: 5px;">
+                                              <div style="position:relative">
+                                                <input type="file" class="form-control-file form-control " id="exampleFormControlFile1"
+                                                  (change)="inputfilename($event)" style="text-indent: 9999px; width: 100%; margin-bottom: 15px; float: left"
+                                                  accept=".csv">
+
+                                              </div>
+                                              <button type="button" class="btn btn-primary" style="margin-left:10px" (click)="fileChange()">UPLOAD</button>
+                                              <button type="button" class="btn btn-secondary" style="margin-left:10px" (click)="downloadToCsv()" disabled >Download Error File</button>
+                                            </div>
+                                                          </div>
+                                                        </div>
+                                                        <div class="modal-background"></div>
+                                                      </modal> -->
                     <!-- <div style="position: relative; float: right; z-index: 9999;">
                 
                         <a id="thumbnail" href="#"><i class="fa fa-align-justify fa-4" aria-hidden="true" style="font-size: 33px; color: #bababa;"></i></a>
@@ -192,29 +211,62 @@
 
         <div class="col-lg-9">
       <main> 
-        
-        <div style="height: 100%; padding-top: 63px; box-sizing: border-box; width: auto;">
-          <ag-grid-angular
-            #agGrid
-            style="width: auto; height: 100%;"
-            id="myGrid"
-            class="ag-theme-balham"
-            [enableSorting]="true"
-            [pagination]="true"
-            [suppressDragLeaveHidesColumns]="true"
-            [columnDefs]="columnDefs"
-            [defaultColDef]="defaultColDef"
-            [suppressRowClickSelection]="true"
-            [rowSelection]="rowSelection"
-            [rowData]="rowData"
-            (gridReady)="onGridReady($event)"
-          ></ag-grid-angular>
+          <div class="upload-btn-wrapper" id="exportImportBox" style="    position: relative;
+          z-index: 999;
+          display: inline-block;
+          width: 100%;
+          padding: 5%;
+          text-align: left;
+          border: 1px solid #6c757d;
+          border-radius: 5px;
+          margin-top:5%">
+          <div style="position:relative">
+            <input type="file" class="form-control-file form-control " id="exampleFormControlFile1"
+              (change)="inputfilename($event)" style="text-indent: 9999px; width: 50%; margin-bottom: 15px; float: left"
+              accept=".csv">
+            <!-- <img src="/assets/searchicon.png" for="exampleFormControlFile1"
+              style="position: absolute;top: 1px;height: 37px;width: 36px;left: 42%;"> -->
+          </div>
+          <button type="button" class="btn btn-primary" style="margin-left:10px" (click)="fileChange()">Upload</button>
+          <!-- <button type="button" class="btn btn-secondary" style="margin-left:10px" (click)="downloadToCsv()" disabled >Download Error File</button> -->
         </div>
-        <div style="position: absolute; top: 10px; left: auto; width: 100%;">
-          <input type="text" class="form-control" (input)="onQuickFilterChanged()" style="width: 30%; display: inline-block;" id="quickFilter" placeholder="quick filter..." />
-          <!-- <label> File Name: <input type="text" id="fileName" /> </label> -->
-          <label style="margin-left: 20px;"> <button (click)="onBtExport()" class="btn btn-info" style="margin-top: -7px;">Export to CSV</button> </label>
-        </div>
+
+            <div id="productGrid">
+            <div style="height: 100%; padding-top: 63px; box-sizing: border-box; width: auto;">
+              <ag-grid-angular
+                #agGrid
+                style="width: auto; height: 100%;"
+                id="myGrid"
+                class="ag-theme-balham"
+                [enableSorting]="true"
+                [pagination]="true"
+                [suppressDragLeaveHidesColumns]="true"
+                [columnDefs]="columnDefs"
+                [defaultColDef]="defaultColDef"
+                [suppressRowClickSelection]="true"
+                [rowSelection]="rowSelection"
+                [rowData]="rowData"
+                (gridReady)="onGridReady($event)"
+              ></ag-grid-angular>
+            </div>
+            <div style="position: absolute; top: 10px; left: auto; width: 100%;">
+              <input type="text" class="form-control" (input)="onQuickFilterChanged()" style="width: 30%; display: inline-block;" id="quickFilter" placeholder="quick filter..." />
+              <!-- <label> File Name: <input type="text" id="fileName" /> </label> -->
+              <label style="margin-left: 20px;"> <button (click)="onBtExport()" class="btn btn-info" style="margin-top: -7px;">Export to CSV</button> </label>
+            </div></div>
+
+
+
+
+
+         
+
+
+
+
+
+
+
       </main>
       </div>
       </div>

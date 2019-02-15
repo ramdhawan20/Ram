@@ -307,7 +307,7 @@ color: #ffffff;
 .sidebar-wrapper .sidebar-menu .header-menu span {
   font-weight: bold;
   font-size: 14px;
-  padding: 15px 20px 5px 20px;
+  padding: 15px 2px 5px 20px;
   display: inline-block;
 }
 
@@ -316,7 +316,7 @@ color: #ffffff;
   width: 100%;
   text-decoration: none;
   position: relative;
-  padding: 8px 30px 8px 20px;
+  padding: 8px 2px 8px 20px;
 }
 
 .sidebar-wrapper .sidebar-menu ul li a i {
