@@ -131,7 +131,7 @@
               left: 0;
               width: 100%;">
                 <ul>             
-                  <li class="sidebar-dropdown" routerLink='/subscriptions'>
+                  <li class="sidebar-dropdown" routerLink='/usermanagement'>
                     <a  href="javascript:void(0)">
                         <i class="fa fa-user-circle" aria-hidden="true" style="font-size: 20px;"></i>
                       <span>User Management</span>
@@ -162,6 +162,9 @@
               </select>
             </div> -->
  
+
+            <div id="productGrid" style="position: relative;">
+            <div style="height: 100%; padding-top: 63px; box-sizing: border-box; width: auto;">
             <ag-grid-angular
             #agGrid
             style="width: 100%; height: 100%;"
@@ -172,17 +175,26 @@
             [pivotPanelShow]="pivotPanelShow"
             [enableRangeSelection]="true"
             [pagination]="true"
+            [defaultColDef]="defaultColDef"
+            [suppressRowClickSelection]="true"
+            [rowSelection]="rowSelection"
             [paginationPageSize]="paginationPageSize"
-            [paginationNumberFormatter]="paginationNumberFormatter"
+            
             [enableSorting]="true" 
             [enableFilter]="true"
             [pagination]="true" 
             [rowData]="rowData"
             [columnDefs]="columnDefs"
             (gridReady)="onGridReady($event)"
+            [frameworkComponents]="frameworkComponents"
           ></ag-grid-angular>
-
-
+        </div>
+          <div style="position: absolute; top: 10px; left: auto; width: 100%;">
+              <input type="text" class="form-control" (input)="onQuickFilterChanged()" style="width: 30%; display: inline-block;" id="quickFilter" placeholder="quick filter..." />
+              <!-- <label> File Name: <input type="text" id="fileName" /> </label> -->
+              <label style="margin-left: 20px;"> <button (click)="onBtExport()" class="btn btn-info" style="margin-top: -7px;">Export to CSV</button> </label>
+            </div>
+</div>
             <!-- <ejs-grid [dataSource]='data' [allowPaging]='true' [allowSorting]='true' [allowFiltering]='true' [filterSettings]='filterSettings'>
                     <e-columns>
                         <e-column field='OrderID' headerText='Order ID' textAlign='Right' width='120'></e-column>

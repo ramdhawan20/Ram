@@ -20,7 +20,8 @@ import{ModalPopUpComponent} from './modal.component';
 import { GridModule } from '@syncfusion/ej2-angular-grids';
 import { PageService, SortService, FilterService, GroupService } from '@syncfusion/ej2-angular-grids';
 import { TransactionsComponent } from './transactions/transactions.component';
-
+import { ChildMessageRenderer } from "./child-message-renderer.component";
+import { UsermanagementComponent } from './usermanagement/usermanagement.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,15 +33,17 @@ import { TransactionsComponent } from './transactions/transactions.component';
     ContactListComponent,
     ModalPopUpComponent,
     TransactionsComponent,
+    ChildMessageRenderer,
+    UsermanagementComponent
   ],
 
   imports: [
     BrowserModule,FormsModule,HttpClientModule,HttpModule,GridModule,ReactiveFormsModule,
     AppRoutingModule,NgbModule.forRoot(),  
-    AgGridModule.withComponents(null)  
+    AgGridModule.withComponents([ChildMessageRenderer])  
   ],
-  
-  providers: [GlobalServiceService, ModalsService, PageService, SortService, FilterService, GroupService],
+ 
+  providers: [GlobalServiceService, ModalsService, PageService, SortService, FilterService, GroupService,ChildMessageRenderer],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

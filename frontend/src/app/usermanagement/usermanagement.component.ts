@@ -4,12 +4,13 @@ import { GlobalServiceService } from '../global-service.service';
 
 import { HttpClient } from "@angular/common/http";
 import { ChildMessageRenderer } from "../child-message-renderer.component";
+
 @Component({
-  selector: 'app-contact-list',
-  templateUrl: './contact-list.component.html',
-  styleUrls: ['./contact-list.component.css']
+  selector: 'app-usermanagement',
+  templateUrl: './usermanagement.component.html',
+  styleUrls: ['./usermanagement.component.css']
 })
-export class ContactListComponent implements OnInit {
+export class UsermanagementComponent implements OnInit {
   private gridApi;
   private gridColumnApi;
   private columnDefs;
@@ -17,22 +18,19 @@ export class ContactListComponent implements OnInit {
   private rowGroupPanelShow;
   private pivotPanelShow;
   private paginationPageSize;
+  private paginationStartPage;
   private paginationNumberFormatter;
   private rowData;
   private context;
   private frameworkComponents;
-  private fileName;
-
   constructor(private http: HttpClient, private modalService: ModalsService, private globalServiceService: GlobalServiceService,private childMessageRenderer: ChildMessageRenderer) {
-
     this.columnDefs = [
       { headerName: 'CREATED ON', field: 'create' },
       { headerName: 'ACTIVATED ON', field: 'activated' },
       { headerName: 'CUSTOMER NAME', field: 'customer' },
       { headerName: 'PLAN NAME', field: 'plan', width:200},
-      { headerName: 'AMOUNT', field: 'amount' },
-      // { headerName: 'AMOUNT', field: 'amount',cellRenderer: "childMessageRenderer",
-      // colId: "params" },
+      { headerName: 'AMOUNT', field: 'amount',cellRenderer: "childMessageRenderer",
+      colId: "params" },
       { headerName: 'LAST BILLED ON', field: 'lastbilled' },
       { headerName: 'NEXT', field: 'next', editable: true }
     ];
@@ -44,7 +42,8 @@ export class ContactListComponent implements OnInit {
     this.rowSelection = "multiple";
     this.rowGroupPanelShow = "always";
     this.pivotPanelShow = "always";
-    this.paginationPageSize = 10;
+    this.paginationPageSize = 15;
+   // this.paginationStartPage =  0;
     this.paginationNumberFormatter = function (params) {
       return "[" + params.value.toLocaleString() + "]";
     };
@@ -81,10 +80,10 @@ export class ContactListComponent implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
-    this.globalServiceService.SubscriptionCalling().subscribe(
+    this.globalServiceService.usermanagementCalling().subscribe(
       data => {
         this.rowData = data;
-        params.api.paginationGoToPage(4);
+        params.api.paginationGoToPage(1); 
       });
   }
   onQuickFilterChanged() {
@@ -99,8 +98,8 @@ export class ContactListComponent implements OnInit {
   onBtExport() {
     // var inputElements= <HTMLInputElement>document.getElementById("#fileName");
     var params = {
-     fileName : "subscriptions",
-      // fileName: inputElements.value
+      fileName : "usermanagement",
+      // fileName: inputElements.value,
     };
     this.gridApi.exportDataAsCsv(params);
   }

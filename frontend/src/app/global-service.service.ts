@@ -72,6 +72,18 @@ export class GlobalServiceService {
     }));
   }
 
+  usermanagementCalling() {
+  
+    return this.http.get('/assets/usermanagement.json', {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      })
+    }).pipe(map((response: Response) => {
+      console.log(response);
+      return response;
+    }));
+  }
+
 }
 
 

@@ -116,4 +116,9 @@
       padding: 0;
       outline: none;
   }
+  .ag-theme-balham .ag-ltr .ag-cell-focus{
+      
+    border: 0px solid #0091EA !important;
+    outline: none !important;
+  }
   
