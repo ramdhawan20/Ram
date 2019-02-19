@@ -8,7 +8,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProductsComponent } from './products/products.component';
 import { HeaderComponent } from './header/header.component';
 import { TabComponent } from './tab/tab.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule,NgbPaginationModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { ContactListComponent } from './contact-list/contact-list.component';
 import { GlobalServiceService} from './global-service.service'
 import {HttpClientModule} from '@angular/common/http';
@@ -41,7 +41,7 @@ import { FlashMessagesModule } from 'angular2-flash-messages';
   imports: [
     BrowserModule,FormsModule,HttpClientModule,HttpModule,GridModule,ReactiveFormsModule,
     AppRoutingModule,NgbModule.forRoot(),FlashMessagesModule.forRoot(),  
-    AgGridModule.withComponents([ChildMessageRenderer])  
+    AgGridModule.withComponents([ChildMessageRenderer]),NgbPaginationModule, NgbAlertModule  
   ],
  
   providers: [GlobalServiceService, ModalsService, PageService, SortService, FilterService, GroupService,ChildMessageRenderer],

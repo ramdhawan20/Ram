@@ -23,18 +23,17 @@ export class UsermanagementComponent implements OnInit {
   private rowData;
   private context;
   private frameworkComponents;
-  constructor(private http: HttpClient, private modalService: ModalsService, private globalServiceService: GlobalServiceService,private childMessageRenderer: ChildMessageRenderer) {
+  constructor(private http: HttpClient, private modalService: ModalsService, private globalServiceService: GlobalServiceService, private childMessageRenderer: ChildMessageRenderer) {
     this.columnDefs = [
-      { headerName: 'CREATED ON', field: 'create' },
-      { headerName: 'ACTIVATED ON', field: 'activated' },
-      { headerName: 'CUSTOMER NAME', field: 'customer' },
-      { headerName: 'PLAN NAME', field: 'plan', width:200},
-      { headerName: 'AMOUNT', field: 'amount',cellRenderer: "childMessageRenderer",
-      colId: "params" },
-      { headerName: 'LAST BILLED ON', field: 'lastbilled' },
-      { headerName: 'NEXT', field: 'next', editable: true }
+      { headerName: 'User Profile', field: 'userProfile' },
+      { headerName: 'First Name', field: 'userFirstName' },
+      { headerName: 'Middle Name', field: 'userMiddleName' },
+      { headerName: 'Last Name', field: 'userLastName' },
+      { headerName: 'User Id', field: 'userId' },
+      { headerName: 'Is Locked', field: 'isLocked' },
+      { headerName: 'Status', cellRenderer: "childMessageRenderer", colId: "params" }
     ];
-   // this.rowData = this.createRowData();
+    // this.rowData = this.createRowData();
     this.context = { componentParent: this };
     this.frameworkComponents = {
       childMessageRenderer: ChildMessageRenderer
@@ -43,7 +42,7 @@ export class UsermanagementComponent implements OnInit {
     this.rowGroupPanelShow = "always";
     this.pivotPanelShow = "always";
     this.paginationPageSize = 15;
-   // this.paginationStartPage =  0;
+    // this.paginationStartPage =  0;
     this.paginationNumberFormatter = function (params) {
       return "[" + params.value.toLocaleString() + "]";
     };
@@ -53,17 +52,7 @@ export class UsermanagementComponent implements OnInit {
     this.modalService.open(id);
   }
   //open popup code end
-  //  createRowData() {
-  //   var rowData = [];
-  //   // for (var i = 0; i < 15; i++) {
-  //   //   rowData.push({
-  //   //     row: "Row " + i,
-  //   //     value: i,
-  //   //     currency: i + Number(Math.random().toFixed(2))
-  //   //   });
-  //   // }
-  //   return rowData;
-  // }
+
   //close popup code start
   closeModal(id: string) {
     this.modalService.close(id);
@@ -83,26 +72,26 @@ export class UsermanagementComponent implements OnInit {
     this.globalServiceService.usermanagementCalling().subscribe(
       data => {
         this.rowData = data;
-        params.api.paginationGoToPage(1); 
+        params.api.paginationGoToPage(1);
       });
   }
   onQuickFilterChanged() {
-    var inputElement= <HTMLInputElement>document.getElementById("quickFilter");
+    var inputElement = <HTMLInputElement>document.getElementById("quickFilter");
     this.gridApi.setQuickFilter(inputElement.value);
   }
 
-  exportImport(){
-    document.getElementById("exportImportBox").style.display="block";
+  exportImport() {
+    document.getElementById("exportImportBox").style.display = "block";
   }
   // export to Csv code start
   onBtExport() {
     // var inputElements= <HTMLInputElement>document.getElementById("#fileName");
     var params = {
-      fileName : "usermanagement",
+      fileName: "usermanagement",
       // fileName: inputElements.value,
     };
     this.gridApi.exportDataAsCsv(params);
   }
-// export to Csv code end
-} 
+  // export to Csv code end
+}
 
