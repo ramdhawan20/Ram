@@ -27,7 +27,7 @@ export class ProductsComponent implements OnInit  {
     
     document.getElementById("exportImportBox").style.display="none";
     document.getElementById("productGrid").style.display="none";
-    (document.getElementById("downloadFile") as HTMLInputElement).disabled = true;
+   // (document.getElementById("downloadFile") as HTMLInputElement).disabled = true;
 
 
   
