@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { ModalsService } from '../modal.service';
+import {RequestOptions} from '@angular/http';
+import { FlashMessagesService } from 'angular2-flash-messages';
+import {GlobalServiceService} from '../global-service.service';
 
 @Component({
   selector: 'app-products',
@@ -14,58 +17,39 @@ export class ProductsComponent implements OnInit  {
   private columnDefs;
   private defaultColDef;
   private rowSelection;
-  // private rowData: [];
+  filename: string;
   private rowData;
+  flag:boolean=false;
+  inputvalue:boolean=false;
+  file;
+
   ngOnInit(){
-    document.getElementById("productGrid").style.display="none";
+    
     document.getElementById("exportImportBox").style.display="none";
+    document.getElementById("productGrid").style.display="none";
+    (document.getElementById("downloadFile") as HTMLInputElement).disabled = true;
+
+
+  
   }
-  constructor(private http: HttpClient,private modalService: ModalsService) {
+  showFlash() {    
+    this.flashMessage.show('Choose a file', { cssClass: 'alert-danger', timeout: 2000 });
+}
+
+  constructor(private globalServiceService:GlobalServiceService,private http: HttpClient,private modalService: ModalsService,private flashMessage: FlashMessagesService) {
+    
     this.columnDefs = [
-      {
-        headerName: "Athlete",
-        field: "athlete",
-        headerCheckboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true,
-        checkboxSelection: true
-      },
-      {
-        headerName: "XYZ",
-        field: "age"
-      },
-      {
-        headerName: "Country",
-        field: "country"
-      },
-      {
-        headerName: "Year",
-        field: "year"
-      },
-      {
-        headerName: "Date",
-        field: "date"
-      },
-      {
-        headerName: "Sport",
-        field: "sport"
-      },
-      {
-        headerName: "Gold",
-        field: "gold"
-      },
-      {
-        headerName: "Silver",
-        field: "silver"
-      },
-      {
-        headerName: "Bronze",
-        field: "bronze"
-      },
-      {
-        headerName: "price",
-        field: "total"
-      }
+      { headerName: 'Sl.no', field: 'slno' },
+      { headerName: 'Date Added', field: 'dateAdded' },
+      { headerName: 'File Name', field: 'uploadFileName'},
+      { headerName: 'No.of Records', field: 'noOfRecords' },
+      { headerName: 'Updated Records', field: 'noOfSuccessRecords' },
+      { headerName: 'Status', field: 'status' },
+      { headerName: 'Error', field: 'errorLogFileName' },
+
     ];
+
+    
     this.defaultColDef = {
       resizable: true,
       width: 110
@@ -82,21 +66,6 @@ export class ProductsComponent implements OnInit  {
     document.getElementById("exportImportBox").style.display="block";
   }
 
-  //open popup code start
-  // openModal(id: string) {
-  //   this.modalService.open(id);
-  // }
-  //open popup code end
-
-  //close popup code start
-  // closeModal(id: string) {
-  //   this.modalService.close(id);
-  // }
-  //close popup code end
-
-
-
-
 // export to Csv code start
   onBtExport() {
     // var inputElements= <HTMLInputElement>document.getElementById("#fileName");
@@ -110,25 +79,148 @@ export class ProductsComponent implements OnInit  {
 
 
 
-
-
-
-
-
-
-
-
-
   onGridReady(params) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
 
-    this.http
-      .get(
-        "https://raw.githubusercontent.com/ag-grid/ag-grid/master/packages/ag-grid-docs/src/olympicWinnersSmall.json"
-      )
-      .subscribe(data => {
+    this.globalServiceService.jsonCalling().subscribe(
+      data => {
         this.rowData = data;
       });
   }
+
+  
+  //Upload function
+inputfilename(x){
+  this.inputvalue=true;
+console.log(x);
+let fileList: FileList = x.target.files;
+if (fileList.length > 0) {
+  let file: File = fileList[0];
+  this.file=file;
+  this.filename = file.name;
+  let filenamearr =  this.filename.split(".");
+  console.log(filenamearr);
+  let index=filenamearr.length;
+if(filenamearr[index-1]=="csv"){
+  this.flashMessage.show('Proceed with the upload button!!', { cssClass: 'alert-success', timeout: 2000 });
+  this.flag=true;
+  console.log("correct file");
+}
+else{
+  this.flashMessage.show('Please select a .csv file !!', { cssClass: 'alert-danger', timeout: 2000 });
+  this.flag=false;
+  console.log("wrong file");
+}
+  
+}
+  
+  }
+  fileChange() {   
+    if(this.inputvalue==true){
+      if (this.flag==true) {         
+        let formData: FormData = new FormData();
+        formData.append('uploadFile',  this.file, this.filename);
+        let headers = new Headers();
+        headers.append('Content-Type', 'multipart/form-data');
+        headers.append('Accept', 'application/json');
+        //let options = new RequestOptions({ headers: headers });
+        document.getElementById("productGrid").style.display="block";
+        this.globalServiceService.uploadExpData(formData).subscribe(
+          
+          result => {
+           
+          },
+          err => {
+           
+          });
+  
+      }
+    }
+    else{
+      this.showFlash();
+    }
+  
+  }
+
+
+
+
+
+  // Download Functionality
+
+
+  
+//   downloadToCsv(selectedrolepage, Username, firstName, toggleDropdown) {
+//     this.allApicallingService.searchUseruser_accountDownload(this.newdropdownID, Username, firstName, this.statusvalue).subscribe(
+//         result => {
+//             document.getElementById("errofactive").style.display = "none";
+//             this.spinnerService.hide();
+//             this.items = JSON.parse(JSON.stringify(result.userDetailsResponseDTOList).replace(/\s(?=\w+":)/g, ""));
+//             this.data = this.items;
+
+//             let excelData = Object.keys(this.items)
+//                 .map(i => {
+//                     var obj = {};
+//                     obj["uidPk"] = this.items[i].uidPk;
+//                     obj["userId"] = this.items[i].userId;
+//                     obj["firstName"] = this.items[i].firstName;
+//                     obj["middleName"] = this.items[i].middleName;
+//                     obj["lastName"] = this.items[i].lastName;
+//                     obj["email"] = this.items[i].email;
+//                     obj["roleId"] = this.items[i].roleId;
+//                     obj["roleName"] = this.items[i].roleName;
+//                     obj["expiryDate"] = this.items[i].expiryDate;
+//                     obj["active"] = this.items[i].active;
+//                     obj["role"] = this.items[i].role.roleName;
+//                     return obj;
+//                 });
+
+//             this.data = excelData;
+//             this.download();
+//         },
+//         err => {
+//             this.spinnerService.hide();
+//             document.getElementById("errofactive").style.display = "block";
+//             setTimeout(this.myFunctionreset, 3000);
+//         });
+// }
+// download() {
+//     var csvData = this.ConvertToCSV(this.data);
+//     var a = document.createElement("a");
+//     a.setAttribute('style', 'display:none;');
+//     document.body.appendChild(a);
+//     var blob = new Blob([csvData], {
+//         type: 'text/csv'
+//     });
+//     var url = window.URL.createObjectURL(blob);
+//     a.href = url;
+//     a.download = 'Useraccount.csv';
+//     a.click();
+// }
+// ConvertToCSV(objArray) {
+//     var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+//     var str = '';
+//     var row = "";
+
+//     for (var index in objArray[0]) {
+
+//         row += index + ',';
+//     }
+//     row = row.slice(0, -1);
+
+//     str += row + '\r\n';
+
+//     for (var i = 0; i < array.length; i++) {
+//         var line = '';
+//         for (var index in array[i]) {
+//             if (line != '') line += ','
+
+//             line += array[i][index];
+//         }
+//         str += line + '\r\n';
+//     }
+//     return str;
+// }
+
 }

@@ -72,6 +72,22 @@ export class GlobalServiceService {
     }));
   }
 
+  //upload case
+  uploadExpData(formData) {
+			
+    return this.http.post(this.url + '/uploadMigData', formData, {
+        headers: new HttpHeaders({
+            'Content-Type': 'multipart/form-data',
+            'Accept': 'application/json',
+            
+        })
+    }).pipe(map((response: Response) => {
+      console.log(response);
+      return response;
+    }));
+  }
+
+
   usermanagementCalling() {
   
     return this.http.get('/assets/usermanagement.json', {
