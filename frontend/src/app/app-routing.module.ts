@@ -15,7 +15,8 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'subscriptions', component: ContactListComponent },
   { path: 'usermanagement', component: UsermanagementComponent },
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: '' },
+  { path: '', redirectTo: ' ', pathMatch: 'full' },
 
 ];
 

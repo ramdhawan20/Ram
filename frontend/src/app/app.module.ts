@@ -22,6 +22,7 @@ import { PageService, SortService, FilterService, GroupService } from '@syncfusi
 import { TransactionsComponent } from './transactions/transactions.component';
 import { ChildMessageRenderer } from "./child-message-renderer.component";
 import { UsermanagementComponent } from './usermanagement/usermanagement.component';
+import { FlashMessagesModule } from 'angular2-flash-messages';
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,7 +40,7 @@ import { UsermanagementComponent } from './usermanagement/usermanagement.compone
 
   imports: [
     BrowserModule,FormsModule,HttpClientModule,HttpModule,GridModule,ReactiveFormsModule,
-    AppRoutingModule,NgbModule.forRoot(),  
+    AppRoutingModule,NgbModule.forRoot(),FlashMessagesModule.forRoot(),  
     AgGridModule.withComponents([ChildMessageRenderer])  
   ],
  

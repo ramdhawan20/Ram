@@ -34,7 +34,7 @@ export class UsermanagementComponent implements OnInit {
       { headerName: 'LAST BILLED ON', field: 'lastbilled' },
       { headerName: 'NEXT', field: 'next', editable: true }
     ];
-    this.rowData = this.createRowData();
+   // this.rowData = this.createRowData();
     this.context = { componentParent: this };
     this.frameworkComponents = {
       childMessageRenderer: ChildMessageRenderer
@@ -53,17 +53,17 @@ export class UsermanagementComponent implements OnInit {
     this.modalService.open(id);
   }
   //open popup code end
-   createRowData() {
-    var rowData = [];
-    for (var i = 0; i < 15; i++) {
-      rowData.push({
-        row: "Row " + i,
-        value: i,
-        currency: i + Number(Math.random().toFixed(2))
-      });
-    }
-    return rowData;
-  }
+  //  createRowData() {
+  //   var rowData = [];
+  //   // for (var i = 0; i < 15; i++) {
+  //   //   rowData.push({
+  //   //     row: "Row " + i,
+  //   //     value: i,
+  //   //     currency: i + Number(Math.random().toFixed(2))
+  //   //   });
+  //   // }
+  //   return rowData;
+  // }
   //close popup code start
   closeModal(id: string) {
     this.modalService.close(id);
