@@ -1,22 +1,26 @@
 package com.hcl.bss.services;
 
 import com.hcl.bss.domain.Users;
-import com.hcl.bss.dao.UserDAO;
+import com.hcl.bss.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
 public class UserServicesImpl implements UserServices {
-    private UserDAO userDAO;
     @Autowired
-    public UserServicesImpl(UserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
+    private UserRepository userRepository;
+
     @Override
     public Users findById(int id) {
-        return this.userDAO.findById(id);
+        return userRepository.findById(id);
+    }
+
+    @Override
+    public List<Users> findByUserFirstName(String name) {
+        return userRepository.findByUserFirstName(name);
     }
 }
