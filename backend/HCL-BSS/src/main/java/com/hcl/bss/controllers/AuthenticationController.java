@@ -32,13 +32,13 @@ public class AuthenticationController{
         return userDetails;
     }
 
-    @ApiOperation(value = "Get whole list of users", response = UserDetails.class)
+    /*@ApiOperation(value = "Get whole list of users", response = UserDetails.class)
     @RequestMapping(value = "/getAllUsers", produces = { "application/json" }, method = RequestMethod.POST)
     public List<UserDetails> getAllUsers() {
-  List<UserDetails> userDetailsList = userRepository.isData();
+        List<UserDetails> userDetailsList = userRepository.isData();
         return userDetailsList;
-    }
-	
+    }*/
+
 	@ApiOperation(value = "Logout user from current session", response = UserDetails.class)
     @RequestMapping(value = "/logout",
     produces = { "application/json" }, method = RequestMethod.POST)
