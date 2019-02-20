@@ -1,10 +1,10 @@
 [
-{ "slno": "1", "dateAdded": "21-08-1992", "uploadFileName": "abc_hcl.csv", "noOfRecords": "100", "noOfSuccessRecords": "85","status":"Partial","errorLogFileName":"-" },
-{ "slno": "2", "dateAdded": "22-08-1992", "uploadFileName": "abc_hcl.csv", "noOfRecords": "100", "noOfSuccessRecords": "85","status":"Partial","errorLogFileName":"-" },
-{ "slno": "3", "dateAdded": "23-08-1992", "uploadFileName": "abc_hcl.csv", "noOfRecords": "100", "noOfSuccessRecords": "85","status":"Partial","errorLogFileName":"-" },
-{ "slno": "4", "dateAdded": "24-08-1992", "uploadFileName": "abc_hcl.csv", "noOfRecords": "100", "noOfSuccessRecords": "85","status":"Partial","errorLogFileName":"-" },
-{ "slno": "5", "dateAdded": "25-08-1992", "uploadFileName": "abc_hcl.csv", "noOfRecords": "100", "noOfSuccessRecords": "85","status":"Partial","errorLogFileName":"-" },
-{ "slno": "6", "dateAdded": "26-08-1992", "uploadFileName": "abc_hcl.csv", "noOfRecords": "100", "noOfSuccessRecords": "85","status":"Partial","errorLogFileName":"-" },
-{ "slno": "7", "dateAdded": "27-08-1992", "uploadFileName": "abc_hcl.csv", "noOfRecords": "100", "noOfSuccessRecords": "85","status":"Partial","errorLogFileName":"-" }
+{ "slno": "1", "dateAdded": "21-08-1992", "uploadFileName": "abc_hcl.csv", "noOfRecords": "100", "noOfSuccessRecords": "85","status":"Partial","errorLogFileName":"abc.csv" },
+{ "slno": "2", "dateAdded": "21-08-1992", "uploadFileName": "abc_hcl.csv", "noOfRecords": "100", "noOfSuccessRecords": "85","status":"Partial","errorLogFileName":"xyz.csv" },
+{ "slno": "3", "dateAdded": "21-08-1992", "uploadFileName": "abc_hcl.csv", "noOfRecords": "100", "noOfSuccessRecords": "85","status":"Partial","errorLogFileName":"abc.csv" },
+{ "slno": "4", "dateAdded": "21-08-1992", "uploadFileName": "abc_hcl.csv", "noOfRecords": "100", "noOfSuccessRecords": "85","status":"Partial","errorLogFileName":"abc.csv" },
+{ "slno": "5", "dateAdded": "21-08-1992", "uploadFileName": "abc_hcl.csv", "noOfRecords": "100", "noOfSuccessRecords": "85","status":"Partial","errorLogFileName":"def.csv" },
+{ "slno": "6", "dateAdded": "21-08-1992", "uploadFileName": "abc_hcl.csv", "noOfRecords": "100", "noOfSuccessRecords": "85","status":"Partial","errorLogFileName":"abc.csv" },
+{ "slno": "7", "dateAdded": "21-08-1992", "uploadFileName": "abc_hcl.csv", "noOfRecords": "100", "noOfSuccessRecords": "85","status":"Partial","errorLogFileName":"123.csv" }
 
 ]

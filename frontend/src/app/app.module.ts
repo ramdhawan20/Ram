@@ -23,6 +23,8 @@ import { TransactionsComponent } from './transactions/transactions.component';
 import { ChildMessageRenderer } from "./child-message-renderer.component";
 import { UsermanagementComponent } from './usermanagement/usermanagement.component';
 import { FlashMessagesModule } from 'angular2-flash-messages';
+import { ErrorDownloadComponent } from "./error-download.component";
+import { FileDownloadComponent } from './file-download.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,13 +37,16 @@ import { FlashMessagesModule } from 'angular2-flash-messages';
     ModalPopUpComponent,
     TransactionsComponent,
     ChildMessageRenderer,
-    UsermanagementComponent
+    UsermanagementComponent,
+    ErrorDownloadComponent,
+    FileDownloadComponent
   ],
 
   imports: [
     BrowserModule,FormsModule,HttpClientModule,HttpModule,GridModule,ReactiveFormsModule,
     AppRoutingModule,NgbModule.forRoot(),FlashMessagesModule.forRoot(),  
-    AgGridModule.withComponents([ChildMessageRenderer]),NgbPaginationModule, NgbAlertModule  
+    AgGridModule.withComponents([ChildMessageRenderer]),NgbPaginationModule, NgbAlertModule,AgGridModule.withComponents([ErrorDownloadComponent])  ,
+    AgGridModule.withComponents([FileDownloadComponent])  
   ],
  
   providers: [GlobalServiceService, ModalsService, PageService, SortService, FilterService, GroupService,ChildMessageRenderer],
