@@ -1,17 +1,28 @@
 package com.hcl.bss.services.data.migration;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hcl.bss.dao.ProductDAO;
@@ -22,11 +33,22 @@ import com.hcl.bss.dto.FileUploadResponse;
 import com.hcl.bss.dto.ProductDto;
 import com.hcl.bss.dto.ProductErrorLogDetails;
 import com.hcl.bss.dto.ProductUploadDetails;
-import com.hcl.bss.fieldValidator.DataMigrationFieldValidator;
+import com.hcl.bss.exceptions.ImportParseException;
+import com.hcl.bss.validator.DataMigrationFieldValidator;
+
+import static com.hcl.bss.constants.ApplicationConstants.BLANK;
+import static com.hcl.bss.constants.ApplicationConstants.EXTERNAL_FILE_PATH;
+import static com.hcl.bss.constants.ApplicationConstants.FILE_NOT_EXIST_MSG;
 import static com.hcl.bss.constants.ApplicationConstants.STATUS_FAIL;
 import static com.hcl.bss.constants.ApplicationConstants.STATUS_PARTIAL_SUCCESS;
 import static com.hcl.bss.constants.ApplicationConstants.STATUS_SUCCESS;
-
+import static com.hcl.bss.constants.ApplicationConstants.ERROR_FILE;
+import static com.hcl.bss.constants.ApplicationConstants.ERROR_FILE_NAME_SUFFIX;
+import static com.hcl.bss.constants.ApplicationConstants.CSV_EXTENTION;
+import static com.hcl.bss.constants.ApplicationConstants.UPLOADED_FOLDER;
+import static com.hcl.bss.constants.ApplicationConstants.NEW_LINE_SEPARATOR;
+import static com.hcl.bss.constants.ApplicationConstants.FILE_HEADER;
+import static com.hcl.bss.constants.ApplicationConstants.COMMA_DELIMITER;
 @Service
 public class UploadServiceImpl implements UploadService {
 	//@Autowired
@@ -38,13 +60,8 @@ public class UploadServiceImpl implements UploadService {
 	@Autowired
 	ProductDAO productDAO;
 
-	private static String UPLOADED_FOLDER = "C://Users//Public//temp//";
-	// Delimiter used in CSV file
-	private static final String COMMA_DELIMITER = ",";
-	private static final String NEW_LINE_SEPARATOR = "\n";
-
-	// CSV file header
-	private static final String FILE_HEADER = "ROW_NO,ERROR";
+	
+	
 
 	/*
 	 * @Override public List<ProductDto> fileUpload(MultipartFile file) throws
@@ -77,31 +94,40 @@ public class UploadServiceImpl implements UploadService {
 		String uploadFileName = file.getOriginalFilename();
 		String path = UPLOADED_FOLDER + file.getOriginalFilename();
 		
-		String errorFileNameSuffix = new SimpleDateFormat("yyyy-MM-dd-HH_mm_ss").format(new Date());
-		String errorFileNameFullPath = "C:/Users/Public/temp/error_log_" + errorFileNameSuffix + ".csv";
+		String errorFileNameSuffix = new SimpleDateFormat(ERROR_FILE_NAME_SUFFIX).format(new Date());
+		String errorFileNameFullPath = ERROR_FILE + errorFileNameSuffix + CSV_EXTENTION;
 		String errorFileName = errorFileNameFullPath.substring(errorFileNameFullPath.lastIndexOf("/") + 1).trim();
 		
 		File tempConvertFile = new File(path);
 		System.out.println(file.getOriginalFilename());
 		tempConvertFile.createNewFile();
+		FileOutputStream fout = null;
 
-		FileOutputStream fout = new FileOutputStream(tempConvertFile);
-		fout.write(file.getBytes());
-
-		// TODO Catch ImportParseException
-		productList = cSVDataMigrationParser.parseCsvData(path);
-
-		//Retrieve error details and success product records 
-		productUploadDetails = dataMigrationFieldValidator.validateFields(productList);
-		
-		//Save success products to DB
-		successListProduct = productDAO.saveProduct(productUploadDetails.getValidProductList());
-		
-		//Retrieve Error log detail list
-		errorLogDetailsList = productUploadDetails.getErrorLogDetailsList();
-		
-		//Write error details to csv
-		writeErrorDetailsInCsv(errorFileNameFullPath, errorLogDetailsList);
+		try {
+			fout = new FileOutputStream(tempConvertFile);//TODO check its use
+			fout.write(file.getBytes());
+	
+			// TODO Catch ImportParseException
+			productList = cSVDataMigrationParser.parseCsvData(path);
+	
+			//Retrieve error details and success product records 
+			productUploadDetails = dataMigrationFieldValidator.validateFields(productList);
+			
+			//Save success products to DB
+			successListProduct = productDAO.saveProduct(productUploadDetails.getValidProductList());
+			
+			//Retrieve Error log detail list
+			errorLogDetailsList = productUploadDetails.getErrorLogDetailsList();
+			
+			//Write error details to csv
+			writeErrorDetailsInCsv(errorFileNameFullPath, errorLogDetailsList);
+		}catch(ImportParseException e) {
+			//TODO
+		}catch(Exception e) {
+			//TODO
+		}finally {
+			fout.close();
+		}
 		
 		FileUploadResponse fileUploadResponse = prepareFileUploadResponse(errorLogDetailsList, successListProduct, productList, errorFileName, uploadFileName);
 
@@ -176,4 +202,62 @@ public class UploadServiceImpl implements UploadService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public String downloadCsv(HttpServletResponse response,String fileName) throws IOException {
+		String responseMessage = BLANK;
+	
+		File file = null;
+		file = new File(EXTERNAL_FILE_PATH + fileName);
+		System.out.println(EXTERNAL_FILE_PATH + fileName);
+		
+		//TODO Move this logic in Service
+
+		if (!file.exists()) {
+			String errorMessage = FILE_NOT_EXIST_MSG;
+			System.out.println(errorMessage);
+			OutputStream outputStream = response.getOutputStream();
+			outputStream.write(errorMessage.getBytes(Charset.forName("UTF-8")));
+			outputStream.close();
+			return errorMessage;
+			
+		}
+		else {
+		String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+		if (mimeType == null) {
+			System.out.println("mimetype is not detectable, will take csv as default");
+			mimeType = "text/csv";
+		}
+
+		System.out.println("mimetype : " + mimeType);
+
+		response.setContentType(mimeType);
+
+		/*
+		 * "Content-Disposition : inline" will show viewable types [like
+		 * images/text/pdf/anything viewable by browser] right on browser while
+		 * others(zip e.g) will be directly downloaded [may provide save as popup, based
+		 * on your browser setting.]
+		 */
+		// response.setHeader("Content-Disposition", String.format("inline; filename=\""
+		// + file.getName() +"\""));
+
+		/*
+		 * "Content-Disposition : attachment" will be directly download, may provide
+		 * save as popup, based on your browser setting
+		 */
+		response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", file.getName()));
+
+		response.setContentLength((int) file.length());
+	
+
+		InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+
+		// Copy bytes from source to destination(outputstream in this example), closes
+		// both streams.
+		FileCopyUtils.copy(inputStream, response.getOutputStream());
+		responseMessage = "Download completed";
+	}
+		return responseMessage;
+}
 }

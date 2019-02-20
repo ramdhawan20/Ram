@@ -50,21 +50,7 @@ public class ProductRepository implements ProductDAO {
 		
 		return listProduct;
 	}
-	@Override
-	public Serializable saveErrorLog(ErrorCsvFile errorCsvFile) {
-		 Session session = this.sessionFactory.getCurrentSession();
-		return session.save(errorCsvFile);
-		
-	}
-	@Override
-	public ErrorCsvFile findById(Long fileId) {
-		 Session session = this.sessionFactory.getCurrentSession();
-		 String queryString = "from ErrorCsvFile where fileId = :fileId";
-		  Query query = session.createQuery(queryString);
-		  query.setLong("fileId", fileId);
-		  ErrorCsvFile queryResult = (ErrorCsvFile) query.uniqueResult();
-		
-		return queryResult;
-	}
+	
+	
 
 }

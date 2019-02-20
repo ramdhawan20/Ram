@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.hcl.bss.dao.ProductDAO;
 import com.hcl.bss.dto.ProductDto;
-import com.hcl.bss.fieldValidator.DataMigrationFieldValidator;
+import com.hcl.bss.validator.DataMigrationFieldValidator;
 
 @Component
 public class XLSXDataMigrationParser {

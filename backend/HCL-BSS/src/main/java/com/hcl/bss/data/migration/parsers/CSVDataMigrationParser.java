@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
 import com.hcl.bss.dao.ProductDAO;
 import com.hcl.bss.dto.ProductDto;
 import com.hcl.bss.exceptions.ImportParseException;
-import com.hcl.bss.fieldValidator.DataMigrationFieldValidator;
+import com.hcl.bss.validator.DataMigrationFieldValidator;
+
 import static com.hcl.bss.constants.ApplicationConstants.COMMA_DELIMITER;
 import static com.hcl.bss.constants.ApplicationConstants.PRODUCT_ID_IDX;
 import static com.hcl.bss.constants.ApplicationConstants.PRODUCT_DISPLAY_NAME_IDX;
@@ -62,9 +63,9 @@ public class CSVDataMigrationParser {
 				System.out.println(prod.toString());
 			}
 		} catch (ImportParseException ipe) {// TODO - Proper Handling
-			throw new ImportParseException("Error in Parshing csv Data");
+			throw new ImportParseException("Error in Parsing csv Data");
 		} catch (Exception e) {
-			throw new ImportParseException("Error in Parshing csv Data");
+			throw new ImportParseException("Error in Parsing csv Data");
 		} finally {
 			try {
 				fileReader.close();

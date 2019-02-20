@@ -20,6 +20,10 @@ import javax.persistence.TemporalType;
 @Table(name = "product")
 public class Product implements java.io.Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "uidpk", nullable = false)

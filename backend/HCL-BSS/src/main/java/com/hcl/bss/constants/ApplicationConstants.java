@@ -1,7 +1,11 @@
 package com.hcl.bss.constants;
 
 public class ApplicationConstants {
-	
+
+		
+
+	// Error CSV file header
+	public static final String FILE_HEADER = "ROW_NO,ERROR";
 	//Delimiter used in CSV file
     public static final String COMMA_DELIMITER = ",";
      
@@ -18,5 +22,9 @@ public class ApplicationConstants {
     public static final String STATUS_FAIL = "Fail";
     public static final String EXTERNAL_FILE_PATH = "C://Users//Public//temp//";
     public static final String FILE_NOT_EXIST_MSG = "Sorry. The file you are looking for does not exist";
-
+    public static final String ERROR_FILE_NAME_SUFFIX = "yyyy-MM-dd-HH_mm_ss";
+    public static String UPLOADED_FOLDER = "C://Users//Public//temp//";
+    public static String ERROR_FILE = "C:/Users/Public/temp/error_log_";
+    public static String CSV_EXTENTION = ".csv";
+    public static final String NEW_LINE_SEPARATOR = "\n";
 }

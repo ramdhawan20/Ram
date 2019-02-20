@@ -1,29 +1,22 @@
-package com.hcl.bss.fieldValidator;
+package com.hcl.bss.validator;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import javax.validation.ConstraintViolation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.hcl.bss.dto.ProductDto;
 import com.hcl.bss.dto.ProductErrorLogDetails;
 import com.hcl.bss.dto.ProductUploadDetails;
-import com.hcl.bss.util.ValidationUtil;
-import static com.hcl.bss.constants.ApplicationConstants.DATE_FORMAT_MMDDYYYY;
 
 @Component
 public class DataMigrationFieldValidator {
-	@Autowired
-	ValidationUtil validationUtil;
+	
 
 	public ProductUploadDetails validateFields(List<ProductDto> listProduct) {
 		
@@ -60,16 +53,5 @@ public class DataMigrationFieldValidator {
 
 }
 
-	private boolean isValidDate(String productExpDate) {
-		//TODO - Put this logic in CustomDateValidator
-		 SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_MMDDYYYY);
-		 try {
-			 Date strDate= formatter.parse(productExpDate);
-		 }catch(ParseException de) {
-			 de.printStackTrace();
-		 }
-		return false;
-		
-	}
 
 }

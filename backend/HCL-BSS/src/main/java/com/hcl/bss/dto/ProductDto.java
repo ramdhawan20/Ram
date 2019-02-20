@@ -4,21 +4,20 @@ import java.util.Date;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.hcl.bss.config.CustomDateScheme;
+import com.hcl.bss.validator.CustomDateScheme;
 
 @CustomDateScheme.List({
 		@CustomDateScheme(field = "productExpDate", message = "Date format is Invalid! should be MM/dd/yyyy") })
 public class ProductDto {
 	private String productId;
 	private long uidpk;
+	
 	@NotNull(message = "SKU cannot be null")
 	@NotBlank(message = "SKU cannot be blank")
 	private String sku;
+	
 	@NotNull(message = "Product Name cannot be null")
 	@NotBlank(message = "Product Name cannot be blank")
 	@Size(max = 10)
@@ -30,6 +29,7 @@ public class ProductDto {
 	@NotBlank(message = "Product dESCRITION cannot be blank")
 	@Size(max = 10)
 	private String productDescription;
+	
 	private String updatedBy;
 	private Date updatedDate;
 	private String createdBy;
