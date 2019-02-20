@@ -25,8 +25,8 @@ public class SsRestApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... arg0) throws IOException, URISyntaxException {
-		Users users = this.userServices.findById(1);
-		System.out.println("USer Details: " + users.getUserFirstName() + ", " + users.getUserLastName());
+		/*Users users = this.userServices.findById(1);
+		System.out.println("USer Details: " + users.getUserFirstName() + ", " + users.getUserLastName());*/
 	}
 
 }
