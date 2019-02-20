@@ -3,6 +3,7 @@
   <div class="page-wrapper chiller-theme toggled">
     <nav id="sidebar" class="sidebar-wrapper">
       <div class="sidebar-content" style="position: relative;">
+        <!-- sidebar-search  -->
         <div class="sidebar-menu">
           <ul>
             <li class="sidebar-dropdown" routerLink='/dashboard'>
@@ -43,28 +44,16 @@
   </div>
 </div>
 <div id="rightSideWrapper">
-
-
   <div class="ContentBox">
-
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-3" style="border-right: 1px solid #bababa; padding-top: 13px;">
           <div class="dropdown2" style="width: auto; float: right;">
-            <button class="btn btn-info" style="    margin-left: 10px;
-                        margin-top: -4px;
-                        background-color: #007bff;
-                        border-color: #007bff;
-                        font-size: 11px; "><i
+            <button class="btn btn-info" style="margin-left: 10px;margin-top: -4px;background-color: #007bff;border-color: #007bff;font-size: 11px; "><i
                 class="fa fa-plus fa-2" aria-hidden="true"></i> New</button>
-            <div type="button" class=" dropdown-toggle float-left" data-toggle="dropdown" style="    border: 0px solid #fff;
-                        width: 33px;
-                        float: left;
+            <div type="button" class=" dropdown-toggle float-left" data-toggle="dropdown" style="    border: 0px solid #fff;width: 33px;float: left;
                         height: 28px;">
-              <i class="fa fa-bars fa-4" aria-hidden="true" style="    font-size: 32px;
-                            color: #bababa;
-                            margin-top: -4px;
-                            margin-left: 5px;"></i>
+              <i class="fa fa-bars fa-4" aria-hidden="true" style="font-size: 32px;color: #bababa;margin-top: -4px;margin-left: 5px;"></i>
             </div>
             <div class="dropdown-menu">
               <a class="dropdown-item" style="cursor: pointer;" (click)="exportImport()"><i class="fa fa-download fa-2"
@@ -72,23 +61,13 @@
             </div>
           </div>
         </div>
-
         <div class="col-lg-9">
           <main>
-
-
-
             <div style="margin-top:20px; height: 28px;">
               <flash-messages></flash-messages>
             </div>
-            <div class="upload-btn-wrapper" id="exportImportBox" style="    position: relative;
-                display: inline-block;
-                width: 100%;
-                padding: 5%;
-                text-align: left;
-                border: 1px solid #bababa;
-                border-radius: 5px;
-                margin-top:5%">
+            <div class="upload-btn-wrapper" id="exportImportBox" style="position: relative;display: inline-block;width: 100%;
+            padding: 5%;text-align: left;border: 1px solid #bababa;border-radius: 5px;margin-top:5%">
               <div style="position:relative">
                 <input type="file" class="form-control-file form-control" id="exampleFormControlFile1" (change)="inputfilename($event)"
                   style="text-indent: 9999px; width: 50%; margin-bottom: 15px; float: left" accept=".csv">
@@ -100,7 +79,7 @@
                 <ag-grid-angular #agGrid style="width: auto; height: 100%;" id="myGrid" class="ag-theme-balham"
                   [enableSorting]="true" [pagination]="true" [suppressDragLeaveHidesColumns]="true" [columnDefs]="columnDefs"
                   [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="rowSelection"
-                  [rowData]="rowData" (gridReady)="onGridReady($event)"></ag-grid-angular>
+                  [rowData]="rowData" [context]="context" [frameworkComponents]="frameworkComponents" (gridReady)="onGridReady($event)"></ag-grid-angular>
               </div>
               <!-- <div style="position: absolute; top: 10px; left: auto; width: 100%;">
                     <input type="text" class="form-control" (input)="onQuickFilterChanged()" style="width: 30%; display: inline-block;" id="quickFilter" placeholder="quick filter..." />
@@ -111,6 +90,8 @@
         </div>
       </div>
     </div>
-    <footer></footer>
+    <footer>
+
+    </footer>
   </div>
 </div>
