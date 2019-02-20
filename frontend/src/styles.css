@@ -689,3 +689,5 @@
     .form-group.statusRight{ padding: 0 10px 0 0}
     .modal{ display: block !important;}
     .modal-body{ margin: 0 auto;}
+    .modal-dialog {max-width: 64% !important;}
+    .modal-header{    border-bottom: 2px solid #117a8b !important;}

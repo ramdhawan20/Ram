@@ -6,19 +6,13 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
     selector: 'child-cell',
     template: `<ng-template #content let-modal>
     <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+      <h4 class="modal-title" id="modal-basic-title">Profile Update</h4>
       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     <div class="modal-body">
       <form>
-      <div class="row">
-        <div class="col-lg-6">
-        </div>
-        <div class="col-lg-6">
-        </div>
-      </div>
       <div class="row">
         <div class="col-lg-6">
           <div class="form-group">
@@ -46,15 +40,7 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
               <input type="email" class="form-control"  value={{params.data.userId}} name="email">
             </div>
         </div>
-      </div>
-
-      <div class="row">
-        <div class="col-lg-6">
-        </div>
-        <div class="col-lg-6">
-        </div>
-      </div>
-    
+      </div>  
         <div class="form-group">
           <label for="dateOfBirth"> Date:</label>
           <div class="input-group">
@@ -69,12 +55,42 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+      <button type="button" class="btn btn-info" (click)="modal.close('Save click')">Save</button>
     </div>
   </ng-template>
-  
-  
-  <span><button style="height: 20px; font-size:12px;    padding: 0 10px;" (click)="open(content)" class="btn btn-info">Edit</button></span>
+  <!--reset start-->
+  <ng-template #reset let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Password Reset</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form>
+      <div class="row">
+        <div class="col-lg-6">
+        <div class="form-group">
+            <label for="email">Enter Password:</label>
+            <input type="password" class="form-control"  value={{params.data.userProfile}}>
+          </div> 
+        </div>
+        <div class="col-lg-6">
+        <div class="form-group">
+            <label for="email">Confirm Password:</label>
+            <input type="password" class="form-control"  value={{params.data.userProfile}}>
+          </div> 
+        </div>
+      </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-info" (click)="modal.close('Save click')">Save</button>
+    </div>
+  </ng-template>
+  <!--reset end-->
+  <span><button style="height: 20px; font-size:12px;padding: 0 10px;" (click)="open(content)" class="btn btn-info">Edit</button></span>
+  <span><button style="height: 20px; font-size:12px;padding: 0 10px; margin-left:3px;" (click)="open(reset)" class="btn btn-info">Reset</button></span>
   <hr>
   
   <pre>{{closeResult}}</pre>`,
