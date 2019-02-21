@@ -30,10 +30,10 @@ public class AuthenticationController{
 
     @ApiOperation(value = "Get user details after successfull login", response = UserDetails.class)
     @RequestMapping(value = "/login",
-    produces = { "application/json" }, method = RequestMethod.POST)
-    public ResponseEntity<UserDetails> login(@RequestParam(value = "userId", required = true) String userID, @RequestParam(value = "pwd", required = true) String pwd) {
+    produces = { "application/json" }, method = RequestMethod.GET)
+    public ResponseEntity<UserDetails> login(@RequestParam(value = "userID", required = true) String userID, @RequestParam(value = "pwd", required = true) String pwd) {
 		UserDetails userDetails = new UserDetails();
-		if("ranjan479".equalsIgnoreCase(userID) && "myPassword".equalsIgnoreCase(pwd)) {
+		if("nikita@gmail.com".equalsIgnoreCase(userID) && "singh".equalsIgnoreCase(pwd)) {
 		userDetails.setUserId(userID);
 		userDetails.setUserFirstName("Ranjan");
 		userDetails.setUserMiddleName("Kumar");
