@@ -41,7 +41,7 @@ export class UsermanagementComponent implements OnInit {
     this.rowSelection = "multiple";
     this.rowGroupPanelShow = "always";
     this.pivotPanelShow = "always";
-    this.paginationPageSize = 15;
+    this.paginationPageSize = 10;
     // this.paginationStartPage =  0;
     this.paginationNumberFormatter = function (params) {
       return "[" + params.value.toLocaleString() + "]";
@@ -74,6 +74,11 @@ export class UsermanagementComponent implements OnInit {
         this.rowData = data;
         params.api.paginationGoToPage(1);
       });
+    // this.globalServiceService.getUserData().subscribe(
+    //   data => {
+    //     this.rowData = data;
+    //     params.api.paginationGoToPage(1);
+    //   });
   }
   onQuickFilterChanged() {
     var inputElement = <HTMLInputElement>document.getElementById("quickFilter");

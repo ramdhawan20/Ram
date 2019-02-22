@@ -1,8 +1,4 @@
-*{ 
-    margin: 0px;
-  }
-  
-  #sidebar {
+#sidebar {
   /*Strictly Necessary */
   position:fixed; 
   height: 100%;

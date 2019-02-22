@@ -102,7 +102,59 @@
                   <option value="1000">1000</option>
                 </select>
               </div> -->
-   
+              <div class="container-fluid custom_search" style="padding: 0px;">
+                <div class="col-lg-12" style="padding: 0px;color: #117a8b; text-transform: uppercase; line-height: 40px;">
+                  <h5>User Management</h5>
+                  <div class="col-lg-12" style="border:2px solid #bababa; border-radius: 5px; padding:0px 10px; text-transform: none; margin-top:0px;">
+                    <form action="#">
+                      <div class="row">
+                        <div class="col-lg-2">
+                          <div class="form-group">
+                            <label for="sel1">User Profile:</label>
+                            <select class="form-control form-control-sm" id="sel1" name="sellist1">
+                              <option>1</option>
+                              <option>2</option>
+                              <option>3</option>
+                              <option>4</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-lg-2">
+                          <div class="form-group">
+                            <label for="usr">User Name:</label>
+                            <input type="text" class="form-control form-control-sm" id="usr">
+                          </div>
+                        </div>
+                        <div class="col-lg-2">
+                          <div class="form-group">
+                            <label for="usr">First Name:</label>
+                            <input type="text" class="form-control form-control-sm" id="usr">
+                          </div>
+                        </div>
+                        <div class="col-lg-2">
+                          <div class="form-group">
+                            <label for="sel1">Status:</label>
+                            <select class="form-control form-control-sm" id="sel1" name="sellist1">
+                              <option>1</option>
+                              <option>2</option>
+                              <option>3</option>
+                              <option>4</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label style="width:100%;"></label>
+                            <button type="button" class="btn btn-info float-right" style=" margin-left: 5px; line-height:17px;"> Search
+                                <i class="fa fa-search" aria-hidden="true" style="color:#ffffff;margin-top: -4px;margin-left: 5px; "></i>
+                              </button>
+                          <button type="button" class="btn btn-info float-right" style="line-height:17px;" > Add User
+                            <i class="fa fa-user-o" aria-hidden="true" style="color:#ffffff;margin-top: -4px;margin-left: 5px;"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
   
               <div id="productGrid" style="position: relative;">
               <div style="height: 100%; padding-top: 63px; box-sizing: border-box; width: auto;">
@@ -137,6 +189,7 @@
                 <label style="margin-left: 20px;"> <button (click)="onBtExport()" class="btn btn-info" style="margin-top: -7px;">Export to CSV</button> </label>
               </div>
               
+  </div>
   </div>
 
 <!-- 

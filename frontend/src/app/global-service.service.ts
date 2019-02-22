@@ -1,30 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-//import { Observable } from 'rxjs';
 import { Http, Headers, Response } from '@angular/http';
 import { map } from 'rxjs/operators';
 
 @Injectable()
 export class GlobalServiceService {
 
-  url = 'http://10.191.234.10:9090';
+  url = 'http://localhost:8080';
   logindata;
+  editdata;
   getUserIdprofile;
+  addUserData;
+  activeDeactiveDta;
+  pwdResetData;
   constructor(private http: HttpClient) { }
-
-
-  
-  // loginservice(username, password) {
-
-  //   this.logindata = JSON.stringify(
-  //     {
-  //       "userId": username,
-  //       "password": password
-  //     });
-
-  //   return this.http.post(this.url + '/integration/services/restService/userLogin', this.logindata)
-
-  // }
 
   loginservice(username, password) {
 
@@ -34,7 +23,7 @@ export class GlobalServiceService {
         "password": password
       });
 
-    return this.http.post('http://10.97.192.176:8080/login', this.logindata, {
+    return this.http.post(this.url+'/login', this.logindata, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
       })
@@ -43,9 +32,6 @@ export class GlobalServiceService {
       return response;
     }));
   }
-
-
-
 
   jsonCalling() {
   
@@ -99,6 +85,96 @@ export class GlobalServiceService {
       return response;
     }));
   }
+
+
+  //add user
+  addUser(userId,profile,firstName,middleName,lastName){
+    this.addUserData = JSON.stringify(
+      {
+        "userId":userId,  
+        "userProfile":profile,       
+        "userFirstName":firstName,
+       "userMiddleName":middleName,
+       "userLastName":lastName,
+      });
+  
+    return this.http.post(this.url + '/addUser', this.addUserData, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      })
+    }).pipe(map((response: Response) => {
+      console.log(response);
+      return response;
+    }));
+  }
+
+    //edit user
+    editUser(userId,profile,firstName,middleName,lastName){
+      this.editdata = JSON.stringify(
+        {
+          "userId":userId,  
+          "userProfile":profile,       
+          "userFirstName":firstName,
+         "userMiddleName":middleName,
+         "userLastName":lastName,
+        });
+    
+      return this.http.post(this.url + '/editUser', this.editdata, {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+        })
+      }).pipe(map((response: Response) => {
+        console.log(response);
+        return response;
+      }));
+    }
+  //active-deactive user
+  activeDeactive(userId){
+    this.activeDeactiveDta = JSON.stringify(
+      {
+        "userId":userId
+      });
+  
+    return this.http.post(this.url + '/activateUser', this.activeDeactiveDta, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      })
+    }).pipe(map((response: Response) => {
+      console.log(response);
+      return response;
+    }));
+  }
+
+    //pwd reset user
+    resetPwd(userId,newpwd){
+      this.pwdResetData = JSON.stringify(
+        {
+          "userId":userId,
+          "newAttribute":newpwd, 
+        });
+    
+      return this.http.post(this.url + '/reset', this.pwdResetData, {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+        })
+      }).pipe(map((response: Response) => {
+        console.log(response);
+        return response;
+      }));
+    }
+
+     //All user data
+     getUserData(){
+     
+      return this.http.get(this.url + '/getAllUsers',{
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+        })
+      }).pipe(map((response: Response) => {
+        console.log(response);
+        return response;
+      }));
+    }
 
 }
 
