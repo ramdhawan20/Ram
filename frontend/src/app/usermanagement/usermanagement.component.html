@@ -1,0 +1,229 @@
+<!-- <ul>
+  <li routerLink='/login' routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a>Dashboard</a></li>
+  <li routerLink='/product' ><a>Products</a></li>
+ 
+</ul> -->
+<app-header></app-header>
+      <div id="sidebar">   
+          <div class="page-wrapper chiller-theme toggled">
+            <nav id="sidebar" class="sidebar-wrapper">
+              <div class="sidebar-content" style="position: relative;">
+                <!-- sidebar-search  -->
+                <div class="sidebar-menu">
+                  <ul>             
+                    <li class="sidebar-dropdown" routerLink='/dashboard'>
+                      <a  href="javascript:void(0)">
+                          <i class="fa fa-tachometer" aria-hidden="true"></i>
+                        <span>Dashboard</span>
+                      </a>
+                    </li>
+                    <li class="sidebar-dropdown" routerLink='/product'>
+                      <a  href="javascript:void(0)">
+                          <i class="fa fa-bitbucket" aria-hidden="true"></i>
+                        <span>Products</span>
+                      </a>
+                    </li>
+                    <!-- <li class="sidebar-dropdown" routerLink='/customers'>
+                      <a  href="javascript:void(0)">
+                          <i class="fa fa-user-o" aria-hidden="true"></i>
+                        <span>Customers</span>
+                      </a>
+                    </li> -->
+                    <li class="sidebar-dropdown" routerLink='/subscriptions'>
+                      <a  href="javascript:void(0)">
+                          <i class="fa fa-circle-o-notch" aria-hidden="true"></i>
+                        <span>Subscriptions</span>
+                      </a>
+                    </li>
+                    <!-- <li class="sidebar-dropdown" routerLink='/invoices'>
+                      <a  href="javascript:void(0)">
+                          <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                         
+                        <span>Invoices</span>
+                      </a>
+                    </li> 
+                    <li class="sidebar-dropdown" routerLink='/transactions'>
+                      <a  href="javascript:void(0)">
+                       
+                        <i class="fa fa-usd" aria-hidden="true"></i>
+                        <span>Transactions</span>
+                      </a>
+                    </li>
+                    <li class="sidebar-dropdown" routerLink='/events'>
+                      <a  href="javascript:void(0)">
+                          <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                        <span>Events</span>
+                      </a>
+                    </li>
+                    <li class="sidebar-dropdown" routerLink='/reports'>
+                      <a  href="javascript:void(0)">
+                          <i class="fa fa-bar-chart-o" aria-hidden="true"></i>
+                        <span>Reports</span>
+                      </a>
+                    </li>-->
+                   
+                  </ul>
+                </div>   
+                <!-- <button type="button" class="btn btn-info" style="position: absolute;
+                bottom: 33px;
+                left: 10px;">User Management</button>        -->
+                <div class="sidebar-menu" style="    position: absolute;
+                bottom: 33px;
+                left: 0;
+                width: 100%;">
+                  <ul>             
+                    <li class="sidebar-dropdown active" routerLink='/usermanagement'>
+                      <a  href="javascript:void(0)">
+                          <i class="fa fa-user-circle" aria-hidden="true" style="font-size: 20px;"></i>
+                        <span>User Management</span>
+                      </a>
+                    </li>
+    
+                   
+                  </ul>
+                </div>  
+              </div>
+            </nav>
+            </div>
+        </div>
+        <div id="rightSideWrapper">
+         
+          
+          <div class="ContentBox" style="display: block;">
+            <main> 
+              <!-- Main Content 
+  
+              <div class="test-header">
+                Page Size:
+                <select (change)="onPageSizeChanged()" id="page-size">
+                  <option value="10" selected="">10</option>
+                  <option value="100">100</option>
+                  <option value="500">500</option>
+                  <option value="1000">1000</option>
+                </select>
+              </div> -->
+   
+  
+              <div id="productGrid" style="position: relative;">
+              <div style="height: 100%; padding-top: 63px; box-sizing: border-box; width: auto;">
+              <!-- <button class="btn btn-info" (click)="openModal('addUser')">Add User</button> -->
+              <ag-grid-angular
+              #agGrid
+              style="width: 100%; height: 100%;"
+              id="myGrid"
+              class="ag-theme-balham"                        
+              [rowSelection]="rowSelection"
+              [rowGroupPanelShow]="rowGroupPanelShow"
+              [pivotPanelShow]="pivotPanelShow"
+              [enableRangeSelection]="true"
+              [pagination]="true"
+              [defaultColDef]="defaultColDef"
+              [suppressRowClickSelection]="true"
+              [rowSelection]="rowSelection"
+              [paginationPageSize]="paginationPageSize"              
+              [enableSorting]="true" 
+              [enableFilter]="true"
+              [pagination]="true" 
+              [rowData]="rowData"
+              [columnDefs]="columnDefs"
+              (gridReady)="onGridReady($event)"
+              [frameworkComponents]="frameworkComponents"
+            ></ag-grid-angular>
+
+          </div>
+            <div style="position: absolute; top: 10px; left: auto; width: 100%;">
+                <input type="text" class="form-control" (input)="onQuickFilterChanged()" style="width: 30%; display: inline-block;" id="quickFilter" placeholder="quick filter..." />
+                <!-- <label> File Name: <input type="text" id="fileName" /> </label> -->
+                <label style="margin-left: 20px;"> <button (click)="onBtExport()" class="btn btn-info" style="margin-top: -7px;">Export to CSV</button> </label>
+              </div>
+              
+  </div>
+
+<!-- 
+  <modal id="addUser">
+      <div class="modal">
+         <div class="modal-body">
+            <span class="crossButton"  (click)="closeModal('addUser')">X</span>
+            <div class="page-header">
+               <h3>Add User</h3>
+            </div>
+            <form action="/action_page.php">
+            <div class="form-group">
+                <label >User Profile:</label>
+                <input type="text" class="form-control"  name="profile">
+              </div>
+              <div class="form-group">
+              <label >Email:</label>
+              <input type="email" class="form-control" name="email">
+            </div>
+          
+              <div class="form-group">
+                <label for="fname">First Name:</label>
+                <input type="text" class="form-control" name="fname">
+              </div>
+              <div class="form-group">
+                <label for="lname">Last Name:</label>
+                <input type="text" class="form-control" name="lname">
+              </div>
+              <div class="form-group">
+                <label for="mname">Middle Name:</label>
+                <input type="text" class="form-control" name="mname">
+              </div> 
+    
+              <div class="form-group">
+              <label for="islocked">Expiration:</label>
+              <input type="text" class="form-control"  name="islocked">
+            </div>
+             
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+         </div>
+      </div>
+      <div class="modal-background"></div>
+    </modal> -->
+              <!-- <ejs-grid [dataSource]='data' [allowPaging]='true' [allowSorting]='true' [allowFiltering]='true' [filterSettings]='filterSettings'>
+                      <e-columns>
+                          <e-column field='OrderID' headerText='Order ID' textAlign='Right' width='120'></e-column>
+                          <e-column field='CustomerID' headerText='Customer ID' width='120'></e-column>
+                          <e-column field='Freight' textAlign='Right' format='c2' width='120'></e-column>
+                          <e-column field='ShipCountry' headerText='Ship Country' width='140'></e-column>
+                      </e-columns>
+                  </ejs-grid> 
+  
+  
+              Main content-2
+              <ejs-grid [dataSource]='data' [allowPaging]='true' [allowSorting]='true' [allowFiltering]='true' [filterSettings]='filterSettings' [allowGrouping]='true'>
+                      <e-columns>
+                          <e-column field='Num' headerText='S No' textAlign='Right' width='120'></e-column>
+                          <e-column field='OrderID' headerText='Order ID' textAlign='Right' width='120'></e-column>
+                          <e-column field='CustomerID' headerText='Customer ID' width='120'></e-column>
+                          <e-column field='Freight' textAlign='Right' format='c2' width='120'></e-column>
+                          <e-column field='ShipCountry' headerText='Ship Country' width='140'></e-column>
+                      </e-columns>
+                  </ejs-grid>  
+  
+                  <div class="control-section">
+                          <ejs-grid #grid [dataSource]='data' allowPaging="true" [pageSettings]='pageSettings' [toolbar]='toolbar'>
+                              <e-columns>
+                                  <e-column field='Num' headerText='Category Name' width='150'></e-column>
+                                  <e-column field='OrderID' headerText='Product Name' width='150'></e-column>
+                                  <e-column field='CustomerID' headerText='Quantity per unit' width='180' textAlign='Right'></e-column>
+                                  <e-column field='Freight' headerText='Units In Stock' width='150' textAlign='Right'></e-column>
+                              </e-columns>
+                          </ejs-grid>  
+                  </div>
+                  <ejs-grid [dataSource]='data' [allowPaging]='true' [allowSorting]='true' [allowFiltering]='true' [filterSettings]='filterSettings' [allowGrouping]='true'>
+                          <e-columns>
+                              <e-column field='OrderID' headerText='Order ID' textAlign='Right' width='120'></e-column>
+                              <e-column field='CustomerID' headerText='Customer ID' width='120'></e-column>
+                              <e-column field='Freight' textAlign='Right' format='c2' width='120'></e-column>
+                              <e-column field='ShipCountry' headerText='Ship Country' width='140'></e-column>
+                          </e-columns>
+                      </ejs-grid> -->
+  
+            </main>
+            <footer> 
+              
+            </footer>
+          </div> 
+        </div>

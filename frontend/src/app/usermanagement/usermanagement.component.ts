@@ -4,12 +4,13 @@ import { GlobalServiceService } from '../global-service.service';
 
 import { HttpClient } from "@angular/common/http";
 import { ChildMessageRenderer } from "../child-message-renderer.component";
+
 @Component({
-  selector: 'app-contact-list',
-  templateUrl: './contact-list.component.html',
-  styleUrls: ['./contact-list.component.css']
+  selector: 'app-usermanagement',
+  templateUrl: './usermanagement.component.html',
+  styleUrls: ['./usermanagement.component.css']
 })
-export class ContactListComponent implements OnInit {
+export class UsermanagementComponent implements OnInit {
   private gridApi;
   private gridColumnApi;
   private columnDefs;
@@ -17,26 +18,22 @@ export class ContactListComponent implements OnInit {
   private rowGroupPanelShow;
   private pivotPanelShow;
   private paginationPageSize;
+  private paginationStartPage;
   private paginationNumberFormatter;
   private rowData;
   private context;
   private frameworkComponents;
-  private fileName;
-
-  constructor(private http: HttpClient, private modalService: ModalsService, private globalServiceService: GlobalServiceService,private childMessageRenderer: ChildMessageRenderer) {
-
+  constructor(private http: HttpClient, private modalService: ModalsService, private globalServiceService: GlobalServiceService, private childMessageRenderer: ChildMessageRenderer) {
     this.columnDefs = [
-      { headerName: 'CREATED ON', field: 'create' },
-      { headerName: 'ACTIVATED ON', field: 'activated' },
-      { headerName: 'CUSTOMER NAME', field: 'customer' },
-      { headerName: 'PLAN NAME', field: 'plan', width:200},
-      { headerName: 'AMOUNT', field: 'amount' },
-      // { headerName: 'AMOUNT', field: 'amount',cellRenderer: "childMessageRenderer",
-      // colId: "params" },
-      { headerName: 'LAST BILLED ON', field: 'lastbilled' },
-      { headerName: 'NEXT', field: 'next', editable: true }
+      { headerName: 'User Profile', field: 'userProfile' },
+      { headerName: 'First Name', field: 'userFirstName' },
+      { headerName: 'Middle Name', field: 'userMiddleName' },
+      { headerName: 'Last Name', field: 'userLastName' },
+      { headerName: 'User Id', field: 'userId' },
+      { headerName: 'Is Locked', field: 'isLocked' },
+      { headerName: 'Status', cellRenderer: "childMessageRenderer", colId: "params" }
     ];
-    this.rowData = this.createRowData();
+    // this.rowData = this.createRowData();
     this.context = { componentParent: this };
     this.frameworkComponents = {
       childMessageRenderer: ChildMessageRenderer
@@ -44,7 +41,8 @@ export class ContactListComponent implements OnInit {
     this.rowSelection = "multiple";
     this.rowGroupPanelShow = "always";
     this.pivotPanelShow = "always";
-    this.paginationPageSize = 10;
+    this.paginationPageSize = 15;
+    // this.paginationStartPage =  0;
     this.paginationNumberFormatter = function (params) {
       return "[" + params.value.toLocaleString() + "]";
     };
@@ -54,17 +52,7 @@ export class ContactListComponent implements OnInit {
     this.modalService.open(id);
   }
   //open popup code end
-   createRowData() {
-    var rowData = [];
-    for (var i = 0; i < 15; i++) {
-      rowData.push({
-        row: "Row " + i,
-        value: i,
-        currency: i + Number(Math.random().toFixed(2))
-      });
-    }
-    return rowData;
-  }
+
   //close popup code start
   closeModal(id: string) {
     this.modalService.close(id);
@@ -81,29 +69,29 @@ export class ContactListComponent implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
-    this.globalServiceService.SubscriptionCalling().subscribe(
+    this.globalServiceService.usermanagementCalling().subscribe(
       data => {
         this.rowData = data;
-        params.api.paginationGoToPage(4);
+        params.api.paginationGoToPage(1);
       });
   }
   onQuickFilterChanged() {
-    var inputElement= <HTMLInputElement>document.getElementById("quickFilter");
+    var inputElement = <HTMLInputElement>document.getElementById("quickFilter");
     this.gridApi.setQuickFilter(inputElement.value);
   }
 
-  exportImport(){
-    document.getElementById("exportImportBox").style.display="block";
+  exportImport() {
+    document.getElementById("exportImportBox").style.display = "block";
   }
   // export to Csv code start
   onBtExport() {
     // var inputElements= <HTMLInputElement>document.getElementById("#fileName");
     var params = {
-     fileName : "subscriptions",
-      // fileName: inputElements.value
+      fileName: "usermanagement",
+      // fileName: inputElements.value,
     };
     this.gridApi.exportDataAsCsv(params);
   }
-// export to Csv code end
-} 
+  // export to Csv code end
+}
 

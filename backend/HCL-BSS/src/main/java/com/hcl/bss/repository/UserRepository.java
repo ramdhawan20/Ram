@@ -1,42 +1,27 @@
 package com.hcl.bss.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.hcl.bss.domain.Users;
-import com.hcl.bss.dao.UserDAO;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.hcl.bss.dto.UserDetails;
-
-import javax.persistence.TypedQuery;
+import java.util.List;
 
 
-@Repository
-public class UserRepository implements UserDAO {
+public interface UserRepository extends JpaRepository<Users, Long> {
 
-    private SessionFactory sessionFactory;
+    public Users findById(int id) ;
+
+    public List<Users> findByUserFirstName(String firstName);
+
+/*    private SessionFactory sessionFactory;
     @Autowired
     public UserRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
-    }
-    @Override
-    public Users findById(int id) {
-        Session session = this.sessionFactory.getCurrentSession();
-        TypedQuery<Users> query = session.getNamedQuery("findUserById");
-        query.setParameter("id", id);
-        Users user = query.getSingleResult();
-        return user;
-    }
+    }*/
 
 
 
-    @Autowired
+
+/*    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     private static final String SQL = "select * from user";
@@ -57,5 +42,5 @@ public class UserRepository implements UserDAO {
         }
 
         return users;
-    }
+    }*/
 }

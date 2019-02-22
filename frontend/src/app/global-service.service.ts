@@ -13,7 +13,7 @@ export class GlobalServiceService {
   constructor(private http: HttpClient) { }
 
 
-
+  
   // loginservice(username, password) {
 
   //   this.logindata = JSON.stringify(
@@ -44,9 +44,53 @@ export class GlobalServiceService {
     }));
   }
 
+
+
+
   jsonCalling() {
   
     return this.http.get('/assets/dummy.json', {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      })
+    }).pipe(map((response: Response) => {
+      console.log(response);
+      return response;
+    }));
+  }
+
+
+  SubscriptionCalling() {
+  
+    return this.http.get('/assets/Subscription.json', {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      })
+    }).pipe(map((response: Response) => {
+      console.log(response);
+      return response;
+    }));
+  }
+
+  //upload case
+  uploadExpData(formData) {
+			
+    return this.http.post(this.url + '/uploadMigData', formData, {
+        headers: new HttpHeaders({
+            'Content-Type': 'multipart/form-data',
+            'Accept': 'application/json',
+            
+        })
+    }).pipe(map((response: Response) => {
+      console.log(response);
+      return response;
+    }));
+  }
+
+
+  usermanagementCalling() {
+  
+    return this.http.get('/assets/usermanagement.json', {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
       })
