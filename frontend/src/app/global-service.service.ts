@@ -13,6 +13,7 @@ export class GlobalServiceService {
   addUserData;
   activeDeactiveDta;
   pwdResetData;
+  searchData;
   constructor(private http: HttpClient) { }
 
   loginservice(username, password) {
@@ -32,7 +33,38 @@ export class GlobalServiceService {
       return response;
     }));
   }
+sidebar(){
+  jQuery(function ($) {
+    $(".sidebar-dropdown > a").click(function() {
+  $(".sidebar-submenu").slideUp(200);
+  if (
+    $(this)
+      .parent()
+      .hasClass("active")
+  ) {
+    $(".sidebar-dropdown").removeClass("active");
+    $(this)
+      .parent()
+      .removeClass("active");
+  } else {
+    $(".sidebar-dropdown").removeClass("active");
+    $(this)
+      .next(".sidebar-submenu")
+      .slideDown(200);
+    $(this)
+      .parent()
+      .addClass("active");
+  }
+});
 
+$("#close-sidebar").click(function() {
+  $(".page-wrapper").removeClass("toggled");
+});
+$("#show-sidebar").click(function() {
+  $(".page-wrapper").addClass("toggled");
+});    
+});
+}
   jsonCalling() {
   
     return this.http.get('/assets/dummy.json', {
@@ -167,6 +199,29 @@ export class GlobalServiceService {
      getUserData(){
      
       return this.http.get(this.url + '/getAllUsers',{
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+        })
+      }).pipe(map((response: Response) => {
+        console.log(response);
+        return response;
+      }));
+    }
+
+    
+     //search user data
+     searchUserData(user_profile,user_name,first_name,status_val){
+     
+      this.searchData = JSON.stringify(
+        {
+          "userProfile":user_profile,
+          "username":user_name, 
+          "firstname":first_name,
+          "status":status_val,
+          
+        });
+    
+      return this.http.post(this.url + '/search', this.searchData, {
         headers: new HttpHeaders({
           'Content-Type': 'application/json',
         })

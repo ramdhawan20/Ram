@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { AgGridModule } from 'ag-grid-angular';
 import { ModalsService } from '../modal.service';
 import { GlobalServiceService } from '../global-service.service';
 
 import { HttpClient } from "@angular/common/http";
 import { ChildMessageRenderer } from "../child-message-renderer.component";
-
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-usermanagement',
   templateUrl: './usermanagement.component.html',
@@ -23,14 +24,14 @@ export class UsermanagementComponent implements OnInit {
   private rowData;
   private context;
   private frameworkComponents;
-  constructor(private http: HttpClient, private modalService: ModalsService, private globalServiceService: GlobalServiceService, private childMessageRenderer: ChildMessageRenderer) {
+  closeResult: string;
+  constructor(private modalService: NgbModal,private http: HttpClient, private globalServiceService: GlobalServiceService, private childMessageRenderer: ChildMessageRenderer) {
     this.columnDefs = [
       { headerName: 'User Profile', field: 'userProfile' },
       { headerName: 'First Name', field: 'userFirstName' },
       { headerName: 'Middle Name', field: 'userMiddleName' },
       { headerName: 'Last Name', field: 'userLastName' },
       { headerName: 'User Id', field: 'userId' },
-      { headerName: 'Is Locked', field: 'isLocked' },
       { headerName: 'Status', cellRenderer: "childMessageRenderer", colId: "params" }
     ];
     // this.rowData = this.createRowData();
@@ -47,17 +48,17 @@ export class UsermanagementComponent implements OnInit {
       return "[" + params.value.toLocaleString() + "]";
     };
   }
-  //open popup code start
-  openModal(id: string) {
-    this.modalService.open(id);
-  }
-  //open popup code end
+  // //open popup code start
+  // openModal(id: string) {
+  //   this.modalService.open(id);
+  // }
+  // //open popup code end
 
-  //close popup code start
-  closeModal(id: string) {
-    this.modalService.close(id);
-  }
-  //close popup code end
+  // //close popup code start
+  // closeModal(id: string) {
+  //   this.modalService.close(id);
+  // }
+  // //close popup code end
 
   ngOnInit() { }
   onPageSizeChanged(newPageSize) {
@@ -98,5 +99,35 @@ export class UsermanagementComponent implements OnInit {
     this.gridApi.exportDataAsCsv(params);
   }
   // export to Csv code end
+  open(content) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
+  addUserData(firstName,middleName,lastName,email,userProfile){
+    this.globalServiceService.addUser(email,userProfile,firstName,middleName,lastName).subscribe(
+      data => {
+      console.log(data);
+      });
+  }
+  searchUser(user_profile,user_name,first_name,status_val){
+
+    console.log(user_profile,user_name,first_name,status_val);
+    this.globalServiceService.searchUserData(user_profile,user_name,first_name,status_val).subscribe(
+      data => {
+      console.log(data);
+      });
+  }
 }
 

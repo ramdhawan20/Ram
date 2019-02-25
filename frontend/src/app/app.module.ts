@@ -7,8 +7,8 @@ import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProductsComponent } from './products/products.component';
 import { HeaderComponent } from './header/header.component';
+import {NgbModule,NgbPaginationModule, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
 import { TabComponent } from './tab/tab.component';
-import { NgbModule,NgbPaginationModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { ContactListComponent } from './contact-list/contact-list.component';
 import { GlobalServiceService} from './global-service.service'
 import {HttpClientModule} from '@angular/common/http';
@@ -25,6 +25,9 @@ import { UsermanagementComponent } from './usermanagement/usermanagement.compone
 import { FlashMessagesModule } from 'angular2-flash-messages';
 import { ErrorDownloadComponent } from "./error-download.component";
 import { FileDownloadComponent } from './file-download.component';
+import { PlanComponent } from './plan/plan.component';
+import { SidebarnavigationComponent } from './sidebarnavigation/sidebarnavigation.component';
+import { AuthGuard } from './auth.guard';
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,7 +42,9 @@ import { FileDownloadComponent } from './file-download.component';
     ChildMessageRenderer,
     UsermanagementComponent,
     ErrorDownloadComponent,
-    FileDownloadComponent
+    FileDownloadComponent,
+    PlanComponent,
+    SidebarnavigationComponent
   ],
 
   imports: [
@@ -49,7 +54,7 @@ import { FileDownloadComponent } from './file-download.component';
     AgGridModule.withComponents([FileDownloadComponent])  
   ],
  
-  providers: [GlobalServiceService, ModalsService, PageService, SortService, FilterService, GroupService,ChildMessageRenderer],
+  providers: [GlobalServiceService, ModalsService, PageService, SortService, FilterService, GroupService,ChildMessageRenderer, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

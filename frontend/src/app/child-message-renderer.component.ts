@@ -153,12 +153,12 @@ import { GlobalServiceService } from './global-service.service';
             box-sizing: border-box;
         }
         .onoffswitch-inner:before {
-            content: "ON";
+            content: "Active";
             padding-left: 4px;
             background-color: #17a2b8; color: #FFFFFF; font-size:9px;
         }
         .onoffswitch-inner:after {
-            content: "OFF";
+            content: "Deactive";
             padding-right: 4px;
             background-color: #EEEEEE; color: #999999;font-size:9px;
             text-align: right;
@@ -181,6 +181,13 @@ import { GlobalServiceService } from './global-service.service';
         #cnfmpwd{
           borderColor:"red"
       }
+      .onoffswitch-switch {
+        right: 37px;
+      }
+      .onoffswitch {
+        width: 55px;
+      }
+
       `
   ]
 })

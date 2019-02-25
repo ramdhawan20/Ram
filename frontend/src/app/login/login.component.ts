@@ -1,17 +1,21 @@
 import { Component, OnInit } from '@angular/core';
+import{Router} from '@angular/router'
 import { GlobalServiceService } from '../global-service.service'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { LoginserviceService } from '../loginservice.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  providers:[LoginserviceService]
 })
 export class LoginComponent implements OnInit {
  registerForm: FormGroup;
     submitted = false;
     isDisabled: boolean = true;
     validEmail:boolean = false;
-  constructor(private globalServiceService: GlobalServiceService, private formBuilder: FormBuilder) { }
+    msg;
+  constructor(private globalServiceService: GlobalServiceService,private loginserviceService: LoginserviceService, private formBuilder: FormBuilder,  private routes: Router) { }
   
   ngOnInit() {
      this.registerForm = this.formBuilder.group({
@@ -22,6 +26,17 @@ export class LoginComponent implements OnInit {
         });
         
 
+  }
+  check(uname: string, p: string)
+  {
+    var output = this.loginserviceService.checkusernameandpassword(uname,p);
+    if(output == true)
+    {
+      this.routes.navigate(['/dashboard']);
+    }
+    else{
+      this.msg = 'Invalid username or password';
+    }
   }
   get f() { return this.registerForm.controls; }
   onSubmit() {

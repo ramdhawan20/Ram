@@ -3,89 +3,7 @@
   <li routerLink='/product' ><a>Products</a></li>
  
 </ul> -->
-<app-header></app-header>
-      <div id="sidebar">   
-          <div class="page-wrapper chiller-theme toggled">
-            <nav id="sidebar" class="sidebar-wrapper">
-              <div class="sidebar-content" style="position: relative;">
-                <!-- sidebar-search  -->
-                <div class="sidebar-menu">
-                  <ul>             
-                    <li class="sidebar-dropdown" routerLink='/dashboard'>
-                      <a  href="javascript:void(0)">
-                          <i class="fa fa-tachometer" aria-hidden="true"></i>
-                        <span>Dashboard</span>
-                      </a>
-                    </li>
-                    <li class="sidebar-dropdown" routerLink='/product'>
-                      <a  href="javascript:void(0)">
-                          <i class="fa fa-bitbucket" aria-hidden="true"></i>
-                        <span>Products</span>
-                      </a>
-                    </li>
-                    <!-- <li class="sidebar-dropdown" routerLink='/customers'>
-                      <a  href="javascript:void(0)">
-                          <i class="fa fa-user-o" aria-hidden="true"></i>
-                        <span>Customers</span>
-                      </a>
-                    </li> -->
-                    <li class="sidebar-dropdown" routerLink='/subscriptions'>
-                      <a  href="javascript:void(0)">
-                          <i class="fa fa-circle-o-notch" aria-hidden="true"></i>
-                        <span>Subscriptions</span>
-                      </a>
-                    </li>
-                    <!-- <li class="sidebar-dropdown" routerLink='/invoices'>
-                      <a  href="javascript:void(0)">
-                          <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                         
-                        <span>Invoices</span>
-                      </a>
-                    </li> 
-                    <li class="sidebar-dropdown" routerLink='/transactions'>
-                      <a  href="javascript:void(0)">
-                       
-                        <i class="fa fa-usd" aria-hidden="true"></i>
-                        <span>Transactions</span>
-                      </a>
-                    </li>
-                    <li class="sidebar-dropdown" routerLink='/events'>
-                      <a  href="javascript:void(0)">
-                          <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
-                        <span>Events</span>
-                      </a>
-                    </li>
-                    <li class="sidebar-dropdown" routerLink='/reports'>
-                      <a  href="javascript:void(0)">
-                          <i class="fa fa-bar-chart-o" aria-hidden="true"></i>
-                        <span>Reports</span>
-                      </a>
-                    </li>-->
-                   
-                  </ul>
-                </div>   
-                <!-- <button type="button" class="btn btn-info" style="position: absolute;
-                bottom: 33px;
-                left: 10px;">User Management</button>        -->
-                <div class="sidebar-menu" style="    position: absolute;
-                bottom: 33px;
-                left: 0;
-                width: 100%;">
-                  <ul>             
-                    <li class="sidebar-dropdown active" routerLink='/usermanagement'>
-                      <a  href="javascript:void(0)">
-                          <i class="fa fa-user-circle" aria-hidden="true" style="font-size: 20px;"></i>
-                        <span>User Management</span>
-                      </a>
-                    </li>
-    
-                   
-                  </ul>
-                </div>  
-              </div>
-            </nav>
-            </div>
-        </div>
+
         <div id="rightSideWrapper">
          
           
@@ -111,43 +29,43 @@
                         <div class="col-lg-2">
                           <div class="form-group">
                             <label for="sel1">User Profile:</label>
-                            <select class="form-control form-control-sm" id="sel1" name="sellist1">
-                              <option>1</option>
-                              <option>2</option>
-                              <option>3</option>
-                              <option>4</option>
+                            <select class="form-control form-control-sm" id="sel1" name="sellist1" [(ngModel)]="user_profile">
+                              <option>Admin</option>
+                              <option>Normal</option>
+                              <!-- <option>3</option>
+                              <option>4</option> -->
                             </select>
                           </div>
                         </div>
                         <div class="col-lg-2">
                           <div class="form-group">
                             <label for="usr">User Name:</label>
-                            <input type="text" class="form-control form-control-sm" id="usr">
+                            <input type="text" class="form-control form-control-sm" id="usr" name="user_name" [(ngModel)]="user_name">
                           </div>
                         </div>
                         <div class="col-lg-2">
                           <div class="form-group">
                             <label for="usr">First Name:</label>
-                            <input type="text" class="form-control form-control-sm" id="usr">
+                            <input type="text" class="form-control form-control-sm" id="usr" name="first_name" [(ngModel)]="first_name">
                           </div>
                         </div>
                         <div class="col-lg-2">
                           <div class="form-group">
                             <label for="sel1">Status:</label>
-                            <select class="form-control form-control-sm" id="sel1" name="sellist1">
-                              <option>1</option>
-                              <option>2</option>
-                              <option>3</option>
-                              <option>4</option>
+                            <select class="form-control form-control-sm" id="sel1" name="sellist1" [(ngModel)]="status_val">
+                              <option>Active</option>
+                              <option>Deactive</option>
+                              <!-- <option>3</option>
+                              <option>4</option> -->
                             </select>
                           </div>
                         </div>
                         <div class="col-lg-4">
                             <label style="width:100%;"></label>
-                            <button type="button" class="btn btn-info float-right" style=" margin-left: 5px; line-height:17px;"> Search
+                            <button type="button" class="btn btn-info float-right" style=" margin-left: 5px; line-height:17px;" (click)="searchUser(user_profile,user_name,first_name,status_val)"> Search
                                 <i class="fa fa-search" aria-hidden="true" style="color:#ffffff;margin-top: -4px;margin-left: 5px; "></i>
                               </button>
-                          <button type="button" class="btn btn-info float-right" style="line-height:17px;" > Add User
+                          <button type="button" class="btn btn-info float-right" style="line-height:17px;" (click)="open(addUser)"> Add User
                             <i class="fa fa-user-o" aria-hidden="true" style="color:#ffffff;margin-top: -4px;margin-left: 5px;"></i>
                           </button>
                         </div>
@@ -155,7 +73,7 @@
                     </form>
                   </div>
                 </div>
-  
+                
               <div id="productGrid" style="position: relative;">
               <div style="height: 100%; padding-top: 63px; box-sizing: border-box; width: auto;">
               <!-- <button class="btn btn-info" (click)="openModal('addUser')">Add User</button> -->
@@ -191,6 +109,73 @@
               
   </div>
   </div>
+  
+<ng-template #addUser let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Add User</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+     
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label for="firstName">First Name:</label>
+            <input type="text" class="form-control"  name="firstName" [(ngModel)]="firstName" >
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label for="middleName">Middle Name:</label>
+            <input type="text" class="form-control"  name="middleName" [(ngModel)]="middleName"
+              >
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label for="lastName">Last Name:</label>
+            <input type="text" class="form-control"  name="lastName" [(ngModel)]="lastName"
+              >
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label for="email">user ID:</label>
+            <input type="email" class="form-control"  name="email" [(ngModel)]="email"
+             >
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label for="userProfile">User Profile:</label>
+            <input type="text" class="form-control"  name="userProfile" [(ngModel)]="userProfile"
+             >
+          </div>
+        </div>
+        <div class="col-lg-6">
+         
+        </div>
+      </div>
+    
+    </form>
+  </div>
+  <div class="modal-footer">
+     
+    <button type="button" class="btn btn-info" (click)="addUserData(firstName,middleName,lastName,email,userProfile)">Save</button>
+    <button type="button" class="btn btn-info" (click)="modal.close('Save click')">Close</button>
+  </div>
+</ng-template>
+
+
+
+
 
 <!-- 
   <modal id="addUser">
@@ -275,8 +260,8 @@
                       </ejs-grid> -->
   
             </main>
-            <footer> 
+            <!-- <footer> 
               
-            </footer>
+            </footer> -->
           </div> 
         </div>

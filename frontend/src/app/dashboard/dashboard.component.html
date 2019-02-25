@@ -1,69 +1,35 @@
-<app-header></app-header>
-<div id="sidebar">
-  <div class="page-wrapper chiller-theme toggled">
 
-    <nav id="sidebar" class="sidebar-wrapper">
-      <div class="sidebar-content" style="position: relative;">
-        <div class="sidebar-menu">
-          <ul>
-            <li class="sidebar-dropdown active" routerLink='/dashboard'>
-              <a href="javascript:void(0)">
-                <i class="fa fa-tachometer" aria-hidden="true"></i>
-                <span>Dashboard</span>
-              </a>
-            </li>
-            <li class="sidebar-dropdown" routerLink='/product'>
-              <a href="javascript:void(0)">
-                <i class="fa fa-bitbucket" aria-hidden="true"></i>
-                <span>Products</span>
-              </a>
-            </li>
-            <li class="sidebar-dropdown" routerLink='/subscriptions'>
-              <a href="javascript:void(0)">
-                <i class="fa fa-circle-o-notch" aria-hidden="true"></i>
-                <span>Subscriptions</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div class="sidebar-menu" style="position: absolute;
-          bottom: 33px;
-          left: 0;
-          width: 100%;">
-          <ul>
-            <li class="sidebar-dropdown" routerLink='/usermanagement'>
-              <a href="javascript:void(0)">
-                <i class="fa fa-user-circle" aria-hidden="true" style="font-size: 20px;"></i>
-                <span>User Management</span>
-              </a>
-            </li>
-
-
-          </ul>
+      <div id="rightSideWrapper">
+        <div class="ContentBox">
+          <main>
+            <div class="test-header" style="margin-bottom: 10px;">
+              Page Size:
+              <select (change)="onPageSizeChanged()" id="page-size">
+                <option value="10" selected="">10</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+              </select>
+            </div>
+      
+            <ag-grid-angular #agGrid style="width: 603px; height: 100%;" id="myGrid" class="ag-theme-balham" [rowSelection]="rowSelection"
+              [rowGroupPanelShow]="rowGroupPanelShow" [pivotPanelShow]="pivotPanelShow" [enableRangeSelection]="true"
+              [pagination]="true" [paginationPageSize]="paginationPageSize" [paginationNumberFormatter]="paginationNumberFormatter"
+              [enableSorting]="true" [enableFilter]="true" [pagination]="true" [rowData]="rowData" [columnDefs]="columnDefs"
+              (gridReady)="onGridReady($event)"></ag-grid-angular>
+          </main>
+         
         </div>
       </div>
-    </nav>
-  </div>
-</div>
-<div id="rightSideWrapper">
-  <div class="ContentBox">
-    <main>
-      <div class="test-header" style="margin-bottom: 10px;">
-        Page Size:
-        <select (change)="onPageSizeChanged()" id="page-size">
-          <option value="10" selected="">10</option>
-          <option value="100">100</option>
-          <option value="500">500</option>
-          <option value="1000">1000</option>
-        </select>
-      </div>
+     
 
-      <ag-grid-angular #agGrid style="width: 603px; height: 100%;" id="myGrid" class="ag-theme-balham" [rowSelection]="rowSelection"
-        [rowGroupPanelShow]="rowGroupPanelShow" [pivotPanelShow]="pivotPanelShow" [enableRangeSelection]="true"
-        [pagination]="true" [paginationPageSize]="paginationPageSize" [paginationNumberFormatter]="paginationNumberFormatter"
-        [enableSorting]="true" [enableFilter]="true" [pagination]="true" [rowData]="rowData" [columnDefs]="columnDefs"
-        (gridReady)="onGridReady($event)"></ag-grid-angular>
-    </main>
-    <footer></footer>
-  </div>
-</div>
+
+<!-- <app-header></app-header>
+<div class="page-wrapper chiller-theme toggled">
+<app-sidebarnavigation></app-sidebarnavigation>
+  <main class="page-content">
+    <div class="container-fluid">
+      
+    </div>
+  </main>  
+  </div> -->

@@ -131,3 +131,4 @@ h6{font-size: 18px;
   *:focus {
       outline: none;
   } 
+  body{ overflow-x: hidden;}

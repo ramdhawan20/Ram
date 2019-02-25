@@ -23,8 +23,8 @@ export class DashboardComponent implements OnInit {
   constructor(private http: HttpClient, private modalService: ModalsService, private globalServiceService: GlobalServiceService) {
 
     this.columnDefs = [
-      { headerName: 'Make', field: 'make' },
-      { headerName: 'Model', field: 'model' },
+      { headerName: 'Make', field: 'make'},
+      { headerName: 'Model', field: 'model'},
       { headerName: 'Price', field: 'price', editable: true }
     ];
 

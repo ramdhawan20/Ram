@@ -20,7 +20,7 @@
     "@angular/platform-browser": "~7.2.0",
     "@angular/platform-browser-dynamic": "~7.2.0",
     "@angular/router": "~7.2.0",
-    "@ng-bootstrap/ng-bootstrap": "^4.0.2",
+    "@ng-bootstrap/ng-bootstrap": "^4.0.4",
     "@syncfusion/ej2": "^16.4.52",
     "@syncfusion/ej2-angular-grids": "^16.4.52",
     "@types/jquery": "^3.3.29",
@@ -41,7 +41,7 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.13.0",
     "@angular/cli": "~7.3.0",
-    "@angular/compiler-cli": "^7.2.5",
+    "@angular/compiler-cli": "^7.2.6",
     "@angular/language-service": "~7.2.0",
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
