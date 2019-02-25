@@ -4,6 +4,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MustMatch } from './_helpers/must-match.validator';
 import { GlobalServiceService } from './global-service.service';
+import { FlashMessagesService } from 'angular2-flash-messages';
 @Component({
   selector: 'child-cell',
   template: `<ng-template #content let-modal>
@@ -13,6 +14,9 @@ import { GlobalServiceService } from './global-service.service';
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
+   
+    <flash-messages></flash-messages>
+  
     <div class="modal-body">
       <form>
       <div class="row">
@@ -197,7 +201,7 @@ export class ChildMessageRenderer implements ICellRendererAngularComp, OnInit {
   closeResult: string;
   registerForm: FormGroup;
   submitted = false;
-  constructor(private modalService: NgbModal, private formBuilder: FormBuilder, private globalServiceService:GlobalServiceService) { }
+  constructor(private modalService: NgbModal, private flashMessage: FlashMessagesService,private formBuilder: FormBuilder, private globalServiceService:GlobalServiceService) { }
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
@@ -269,6 +273,10 @@ export class ChildMessageRenderer implements ICellRendererAngularComp, OnInit {
      this.globalServiceService.editUser(userId,profile,firstName,middleName,lastName).subscribe(
       result => {
         console.log(result);
+        this.flashMessage.show('edit successfully!!', { cssClass: 'alert-danger', timeout: 2000 });
+      },
+      error=>{
+        this.flashMessage.show('getting error!!', { cssClass: 'alert-danger', timeout: 2000 });
       }
      );
   }

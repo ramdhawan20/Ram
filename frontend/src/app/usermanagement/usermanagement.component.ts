@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
 import { ModalsService } from '../modal.service';
 import { GlobalServiceService } from '../global-service.service';
-
+import { FlashMessagesService } from 'angular2-flash-messages';
 import { HttpClient } from "@angular/common/http";
 import { ChildMessageRenderer } from "../child-message-renderer.component";
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
@@ -25,7 +25,7 @@ export class UsermanagementComponent implements OnInit {
   private context;
   private frameworkComponents;
   closeResult: string;
-  constructor(private modalService: NgbModal,private http: HttpClient, private globalServiceService: GlobalServiceService, private childMessageRenderer: ChildMessageRenderer) {
+  constructor(private flashMessage: FlashMessagesService,private modalService: NgbModal,private http: HttpClient, private globalServiceService: GlobalServiceService, private childMessageRenderer: ChildMessageRenderer) {
     this.columnDefs = [
       { headerName: 'User Profile', field: 'userProfile' },
       { headerName: 'First Name', field: 'userFirstName' },
@@ -119,7 +119,11 @@ export class UsermanagementComponent implements OnInit {
     this.globalServiceService.addUser(email,userProfile,firstName,middleName,lastName).subscribe(
       data => {
       console.log(data);
-      });
+      this.flashMessage.show('user added successfully!!', { cssClass: 'alert-success', timeout: 2000 });
+      },
+    error=>{
+      this.flashMessage.show('User not added !!', { cssClass: 'alert-danger', timeout: 2000 });
+    });
   }
   searchUser(user_profile,user_name,first_name,status_val){
 
