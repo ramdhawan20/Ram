@@ -15,6 +15,7 @@ export class GlobalServiceService {
   activeDeactiveDta;
   pwdResetData;
   searchData;
+  newProductData;
   constructor(private http: HttpClient) { }
 
   loginservice(username, password) {
@@ -142,6 +143,28 @@ $("#show-sidebar").click(function() {
   }
 
 
+//addProduct 
+
+addProduct(name,description,sku,startDate,endDate){
+  this.newProductData = JSON.stringify(
+    {
+      "name":name,
+      "description":description, 
+      "sku":sku,
+      "startDate":startDate,
+      "endDate":endDate,
+      
+    });
+
+  return this.http.post(this.url + '/newProduct', this.newProductData, {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+    })
+  }).pipe(map((response: Response) => {
+    console.log(response);
+    return response;
+  }));
+}
     //search Subcription
     searchSubcription(Subscription_id,customber_email,first_name,status,Created_on,Activated_on,Customber_name,plan_name,amount,last_bill,next){
       this.searchSubcriptionData = JSON.stringify(

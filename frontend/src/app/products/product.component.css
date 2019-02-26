@@ -1,0 +1,17 @@
+.headerStrip{
+  
+    border:2px solid #bababa; 
+    border-radius: 5px; 
+    /* padding:0px 10px;  */
+    text-transform: none; 
+    /* margin-top:0px; */
+    background: lightgray;
+    
+}
+
+.modal-body{
+    width: 100%;
+  }
+
+
+  

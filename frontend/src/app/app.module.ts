@@ -5,10 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { ProductsComponent } from './products/products.component';
 import { HeaderComponent } from './header/header.component';
 import {NgbModule,NgbPaginationModule, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
-import { TabComponent } from './tab/tab.component';
 import { ContactListComponent } from './contact-list/contact-list.component';
 import { GlobalServiceService} from './global-service.service'
 import {HttpClientModule} from '@angular/common/http';
@@ -29,14 +27,13 @@ import { PlanComponent } from './plan/plan.component';
 import { SidebarnavigationComponent } from './sidebarnavigation/sidebarnavigation.component';
 import { AuthGuard } from './auth.guard';
 import { ImportPlanComponent } from './import-plan/import-plan.component';
+import { ProductComponent } from './products/product.component';
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     DashboardComponent,
-    ProductsComponent,
     HeaderComponent,
-    TabComponent,
     ContactListComponent,
     ModalPopUpComponent,
     TransactionsComponent,
@@ -46,7 +43,8 @@ import { ImportPlanComponent } from './import-plan/import-plan.component';
     FileDownloadComponent,
     PlanComponent,
     SidebarnavigationComponent,
-    ImportPlanComponent
+    ImportPlanComponent,
+    ProductComponent
   ],
 
   imports: [

@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import {LoginComponent} from './login/login.component';
 import {HeaderComponent} from './header/header.component';
-import {TabComponent} from './tab/tab.component';
-import {ProductsComponent} from './products/products.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {ContactListComponent} from './contact-list/contact-list.component';
 import{UsermanagementComponent} from './usermanagement/usermanagement.component';
@@ -11,11 +9,13 @@ import{TransactionsComponent} from './transactions/transactions.component';
 import{PlanComponent} from './plan/plan.component';
 import { AuthGuard } from './auth.guard';
 import { ImportPlanComponent } from './import-plan/import-plan.component';
+import { ProductComponent } from './products/product.component';
+
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'header', component: HeaderComponent, canActivate :[AuthGuard] },
-  { path: 'product', component: ProductsComponent,
+  { path: 'product', component: ProductComponent,
   children: [
     {
       path: 'import',
