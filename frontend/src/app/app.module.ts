@@ -28,6 +28,7 @@ import { FileDownloadComponent } from './file-download.component';
 import { PlanComponent } from './plan/plan.component';
 import { SidebarnavigationComponent } from './sidebarnavigation/sidebarnavigation.component';
 import { AuthGuard } from './auth.guard';
+import { ImportPlanComponent } from './import-plan/import-plan.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,7 +45,8 @@ import { AuthGuard } from './auth.guard';
     ErrorDownloadComponent,
     FileDownloadComponent,
     PlanComponent,
-    SidebarnavigationComponent
+    SidebarnavigationComponent,
+    ImportPlanComponent
   ],
 
   imports: [

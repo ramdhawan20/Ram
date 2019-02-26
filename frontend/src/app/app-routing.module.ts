@@ -10,11 +10,19 @@ import{UsermanagementComponent} from './usermanagement/usermanagement.component'
 import{TransactionsComponent} from './transactions/transactions.component';
 import{PlanComponent} from './plan/plan.component';
 import { AuthGuard } from './auth.guard';
+import { ImportPlanComponent } from './import-plan/import-plan.component';
+
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'header', component: HeaderComponent, canActivate :[AuthGuard] },
-  { path: 'tab', component: TabComponent, canActivate :[AuthGuard] },
-  { path: 'product', component: ProductsComponent, canActivate :[AuthGuard] },
+  { path: 'product', component: ProductsComponent,
+  children: [
+    {
+      path: 'import',
+      component: ImportPlanComponent
+    }],
+  
+  canActivate :[AuthGuard] },
   { path: 'dashboard', component: DashboardComponent, canActivate :[AuthGuard] },
   { path: 'subscriptions', component: ContactListComponent, canActivate :[AuthGuard] },
   { path: 'usermanagement', component: UsermanagementComponent, canActivate :[AuthGuard] },
@@ -26,7 +34,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes),RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

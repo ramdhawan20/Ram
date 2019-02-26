@@ -11,6 +11,7 @@ export class GlobalServiceService {
   editdata;
   getUserIdprofile;
   addUserData;
+  searchSubcriptionData;
   activeDeactiveDta;
   pwdResetData;
   searchData;
@@ -139,6 +140,34 @@ $("#show-sidebar").click(function() {
       return response;
     }));
   }
+
+
+    //search Subcription
+    searchSubcription(Subscription_id,customber_email,first_name,status,Created_on,Activated_on,Customber_name,plan_name,amount,last_bill,next){
+      this.searchSubcriptionData = JSON.stringify(
+        {
+          "Subscription_id" : Subscription_id,
+          "customber_email" : customber_email,
+          "first_name"  : first_name,
+          "status" : status,
+          "Created_on" : Created_on,
+          "Activated_on" : Activated_on,
+          "Customber_name" : Customber_name,
+          "plan_name" : plan_name,
+          "amount": amount,
+          "last_bill" :last_bill,
+          "next" : next
+        });
+    
+      return this.http.post(this.url + '/searchSubcription', this.searchSubcriptionData, {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+        })
+      }).pipe(map((response: Response) => {
+        console.log(response);
+        return response;
+      }));
+    }
 
     //edit user
     editUser(userId,profile,firstName,middleName,lastName){

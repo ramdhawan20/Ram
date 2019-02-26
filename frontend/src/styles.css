@@ -1177,5 +1177,15 @@ body {
     .modal-dialog {max-width: 64% !important;}
     .modal-header{    border-bottom: 2px solid #117a8b !important;}
     main{height: 100%;}
-    .border_btm{ border-bottom: 2px solid #117a8b !important;}
+    .border_btm{ border-bottom: 2px solid #117a8b !important;    padding-bottom: 5px;}
     body{overflow: hidden;}
+    app-import-plan{
+      width: 100%;
+  }
+  #sidebar{ top:0px; height: 100%}
+  .ContentBox{ margin-top: 0px;}
+  #show-sidebar{ top:0px;}
+  label {    margin-bottom: 0 !important;}
+  .form-group {
+    margin-bottom: 0.4rem !important;
+}

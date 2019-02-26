@@ -27,10 +27,10 @@ export class UsermanagementComponent implements OnInit {
   closeResult: string;
   constructor(private flashMessage: FlashMessagesService,private modalService: NgbModal,private http: HttpClient, private globalServiceService: GlobalServiceService, private childMessageRenderer: ChildMessageRenderer) {
     this.columnDefs = [
-      { headerName: 'User Profile', field: 'userProfile' },
-      { headerName: 'First Name', field: 'userFirstName' },
-      { headerName: 'Middle Name', field: 'userMiddleName' },
-      { headerName: 'Last Name', field: 'userLastName' },
+      { headerName: 'User Profile', field: 'userProfile', width:120 },
+      { headerName: 'First Name', field: 'userFirstName', width:120 },
+      { headerName: 'Middle Name', field: 'userMiddleName', width:120 },
+      { headerName: 'Last Name', field: 'userLastName', width:120 },
       { headerName: 'User Id', field: 'userId' },
       { headerName: 'Status', cellRenderer: "childMessageRenderer", colId: "params" }
     ];

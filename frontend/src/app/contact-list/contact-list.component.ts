@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalsService } from '../modal.service';
 import { GlobalServiceService } from '../global-service.service';
-
+import { FlashMessagesService } from 'angular2-flash-messages';
 import { HttpClient } from "@angular/common/http";
 import { ChildMessageRenderer } from "../child-message-renderer.component";
 @Component({
@@ -23,9 +23,12 @@ export class ContactListComponent implements OnInit {
   private frameworkComponents;
   private fileName;
 
-  constructor(private http: HttpClient, private modalService: ModalsService, private globalServiceService: GlobalServiceService,private childMessageRenderer: ChildMessageRenderer) {
+  constructor(private flashMessage: FlashMessagesService,private http: HttpClient, private modalService: ModalsService, private globalServiceService: GlobalServiceService,private childMessageRenderer: ChildMessageRenderer) {
 
     this.columnDefs = [
+      { headerName: 'SUBSCRIPTION ID', field: 'subscriptionid' },
+      { headerName: 'CUSTOMBER NAME', field: 'customberemail' },
+      { headerName: 'STATUS', field: 'status' },
       { headerName: 'CREATED ON', field: 'create' },
       { headerName: 'ACTIVATED ON', field: 'activated' },
       { headerName: 'CUSTOMER NAME', field: 'customer' },
@@ -77,6 +80,20 @@ export class ContactListComponent implements OnInit {
     var value = inputElement.value;
     this.gridApi.paginationSetPageSize(Number(value));
   }
+
+
+  searchSubcription(Subscription_id,customber_email,first_name,status,Created_on,Activated_on,Customber_name,plan_name,amount,last_bill,next){
+    this.globalServiceService.searchSubcription(Subscription_id,customber_email,first_name,status,Created_on,Activated_on,Customber_name,plan_name,amount,last_bill,next).subscribe(
+      data => {
+      console.log(data);
+      this.flashMessage.show('Search successfully!!', { cssClass: 'alert-success', timeout: 2000 });
+      },
+    error=>{
+      this.flashMessage.show('Search unsuccessfully!! !!', { cssClass: 'alert-danger', timeout: 2000 });
+    });
+  }
+
+
 
   onGridReady(params) {
     this.gridApi = params.api;

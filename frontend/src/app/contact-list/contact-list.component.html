@@ -1,4 +1,3 @@
-
 <div id="rightSideWrapper">
   <div class="ContentBox" style="display: block;">
     <main>
@@ -20,48 +19,88 @@
               <div class="row">
                 <div class="col-lg-2">
                   <div class="form-group">
-                    <label for="sel1">User Profile:</label>
-                    <select class="form-control form-control-sm" id="sel1" name="sellist1">
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                    </select>
+                    <label for="sel1">Subscription Id:</label>
+                    <input type="text" class="form-control form-control-sm" id=" " name="Subscription_id" [(ngModel)]="Subscription_id" >
+                   
                   </div>
                 </div>
                 <div class="col-lg-2">
                   <div class="form-group">
-                    <label for="usr">User Name:</label>
-                    <input type="text" class="form-control form-control-sm" id="usr">
+                    <label for=" ">Customber Email:</label>
+                    <input type="text" class="form-control form-control-sm" id=" " name="customber_email" [(ngModel)]="customber_email" >
                   </div>
                 </div>
                 <div class="col-lg-2">
                   <div class="form-group">
-                    <label for="usr">First Name:</label>
-                    <input type="text" class="form-control form-control-sm" id="usr">
+                    <label for=" ">First Name:</label>
+                    <input type="text" class="form-control form-control-sm" id=" " name="first_name" [(ngModel)]="first_name">
                   </div>
                 </div>
                 <div class="col-lg-2">
                   <div class="form-group">
-                    <label for="sel1">Status:</label>
-                    <select class="form-control form-control-sm" id="sel1" name="sellist1">
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                    </select>
+                    <label for=" ">Status:</label>
+                    <select class="form-control form-control-sm" id="sel1" name="sellist1" name="status" [(ngModel)]="status">
+                        <option>Active</option>
+                        <option>Active</option>
+                      </select>
                   </div>
                 </div>
-                <div class="col-lg-4">
-                    <label style="width:100%;"></label>
-                    <button type="button" class="btn btn-info float-right" style=" margin-left: 5px; line-height:17px;"> Search
-                        <i class="fa fa-search" aria-hidden="true" style="color:#ffffff;margin-top: -4px;margin-left: 5px; "></i>
-                      </button>
-                  <button type="button" class="btn btn-info float-right" style="line-height:17px;" > Add User
-                    <i class="fa fa-user-o" aria-hidden="true" style="color:#ffffff;margin-top: -4px;margin-left: 5px;"></i>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label for=" ">Created On:</label>
+                    <input type="text" class="form-control form-control-sm" id=" " name="Created_on" [(ngModel)]="Created_on">
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label for="sel1">Activated On:</label>
+                    <input type="text" class="form-control form-control-sm" id=" " name="Activated_on" [(ngModel)]="Activated_on">
+                   
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label for=" ">Customber Name:</label>
+                    <input type="text" class="form-control form-control-sm" id=" " name="Customber_name" [(ngModel)]="Customber_name">
+                  </div>
+                </div>
+
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label for=" ">Plan Name:</label>
+                    <input type="text" class="form-control form-control-sm" id="" name="plan_name" [(ngModel)]="plan_name">
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label for="">Amount:</label>
+                    <input type="text" class="form-control form-control-sm" id="" name="amount" [(ngModel)]="amount">
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label for="">Last Billed On:</label>
+                    <input type="text" class="form-control form-control-sm" id="" name="last_bill" [(ngModel)]="last_bill">
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label for=" ">Next:</label>
+                    <input type="text" class="form-control form-control-sm" id="" name="next" [(ngModel)]="next">
+                  </div>
+                </div>
+
+                <div class="col-lg-2">
+                  <label style="width:100%;"></label>
+                  <button type="button" class="btn btn-info float-right" style=" margin-left: 5px; line-height:17px;" (click)="searchSubcription(Subscription_id,customber_email,first_name,status,Created_on,Activated_on,Customber_name,plan_name,amount,last_bill,next)">
+                    Search
+                    <i class="fa fa-search" aria-hidden="true" style="color:#ffffff;margin-top: -4px;margin-left: 5px; "></i>
                   </button>
                 </div>
               </div>
+
             </form>
           </div>
         </div>
@@ -78,7 +117,7 @@
             <input type="text" class="form-control" (input)="onQuickFilterChanged()" style="width: 30%; display: inline-block;"
               id="quickFilter" placeholder="quick filter..." />
             <label style="margin-left: 20px;"> <button (click)="onBtExport()" class="btn btn-info" style="margin-top: -7px;">Export
-                to CSV</button> </label>
+                to CSV <i class="fa fa-cloud-download" aria-hidden="true"></i></button> </label>
           </div>
         </div>
 
