@@ -26,17 +26,18 @@ export class ProductComponent implements OnInit {
   private context;
   private frameworkComponents;
   closeResult: string;
+ 
 
 
   constructor(private router : Router,private modalService: NgbModal,private flashMessage: FlashMessagesService,private childMessageRenderer: ChildMessageRenderer,private globalServiceService: GlobalServiceService) {
     this.columnDefs = [
-      { headerName: 'Name', field: 'name',editable:true },
-      { headerName: 'Code', field: 'code',editable:true  },
-      { headerName: 'Description', field: 'description',editable:true  },
+      { headerName: 'Name', field: 'productDispName',editable:true },
+      { headerName: 'Code', field: 'productTypeCode.productTypeCode',editable:true  },
+      { headerName: 'Description', field: 'productDescription',editable:true  },
       { headerName: 'SKU', field: 'sku' ,editable:true },
-      { headerName: 'Start Date', field: 'startdate',editable:true  },
-      { headerName: 'End Date', field: 'enddate',editable:true  },
-      { headerName: 'Start Date', field: 'startdate',editable:true  },
+      { headerName: 'Start Date', field: 'productStartDate',editable:true  },
+      { headerName: 'End Date', field: 'productExpDate',editable:true  },
+      // { headerName: 'Start Date', field: 'startdate',editable:true  },
       //{ headerName: 'Status', cellRenderer: "childMessageRenderer", colId: "params",editable:true  },
       { headerName: 'Status', field:'status',editable:true  },
       { headerName: 'Plans', field: 'plans',editable:true  },
@@ -91,6 +92,7 @@ export class ProductComponent implements OnInit {
     this.globalServiceService.usermanagementCalling().subscribe(
       data => {
         this.rowData = data;
+    
         params.api.paginationGoToPage(1);
       });
     // this.globalServiceService.getUserData().subscribe(
@@ -125,8 +127,11 @@ export class ProductComponent implements OnInit {
   }
 
   
-  addProductData(name,description,sku,startDate,endDate){
-    this.globalServiceService.addProduct(name,description,sku,startDate,endDate).subscribe(
+  addProductData(name,description,sku,startDate,endDate,pCode){
+
+    let sDate=startDate.day+'/'+startDate.month+'/'+startDate.year;
+    let eDate=endDate.day+'/'+endDate.month+'/'+endDate.year;
+    this.globalServiceService.addProduct(name,description,sku,sDate,eDate,pCode).subscribe(
       data => {
       console.log(data);
       this.flashMessage.show('New Product added successfully!!', { cssClass: 'alert-success', timeout: 2000 });
@@ -134,5 +139,5 @@ export class ProductComponent implements OnInit {
     error=>{
       this.flashMessage.show('Product not added !!', { cssClass: 'alert-danger', timeout: 2000 });
     });
-  }
+   }
 }

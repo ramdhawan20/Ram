@@ -160,11 +160,11 @@
                     </div>
               </div>
               <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <div class="form-group">
                         <label for="dateOfBirth">Start Date:</label>
                         <div class="input-group">
-                          <input id="startDateId" class="form-control" placeholder="YYYY-MM-DD"  name="startDate" [(ngModel)]="startDate" ngbDatepicker #startdate="ngbDatepicker">
+                          <input id="startDateId" class="form-control" placeholder="YYYY-MM-DD"   name="startDate" [(ngModel)]="startDate" ngbDatepicker #startdate="ngbDatepicker">
                           <div class="input-group-append">
                             <button class="btn btn-outline-secondary calendar" (click)="startdate.toggle()" type="button">
                             <i class="fa fa-calendar fa-2" aria-hidden="true"></i>
@@ -173,7 +173,7 @@
                         </div>
                   </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <div class="form-group">
                         <label for="dateOfBirth"> End Date:</label>
                         <div class="input-group">
@@ -186,12 +186,24 @@
                         </div>
                   </div>
                 </div>
+                 <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="dateOfBirth"> Product Type:</label>
+                        <select class="form-control" id="sel1" name="producttype" [(ngModel)]="producttype">
+                          <option  [ngValue]="Select" hidden>Select</option> 
+                          <option>PR1</option>
+                          <option>PR2</option>
+                           <option>PR3</option>
+                          <!--<option>4</option> -->
+                        </select>
+                  </div>
+                </div>
               </div>  
             </form>
           </div>
           <div class="modal-footer">
              
-            <button type="button" class="btn btn-info" (click)="addProductData(name,description,sku,email,userProfile)">Save</button>
+            <button type="button" class="btn btn-info" (click)="addProductData(name,description,sku,startDate,endDate,producttype)">Save</button>
             <button type="button" class="btn btn-info" (click)="modal.close('Save click')">Close</button>
           </div>
         </ng-template>

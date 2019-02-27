@@ -91,7 +91,7 @@ $("#show-sidebar").click(function() {
       return response;
     }));
   }
-
+  
   //SubscriptionReportCalling
   SubscriptionreportCalling() {
   
@@ -108,7 +108,7 @@ $("#show-sidebar").click(function() {
   //upload case
   uploadExpData(formData) {
 			
-    return this.http.post(this.url + '/uploadMigData', formData, {
+    return this.http.post(this.url + '/uploadProductData', formData, {
         headers: new HttpHeaders({
             'Content-Type': 'multipart/form-data',
             'Accept': 'application/json',
@@ -123,7 +123,7 @@ $("#show-sidebar").click(function() {
 
   usermanagementCalling() {
   
-    return this.http.get('/assets/usermanagement.json', {
+    return this.http.get(this.url + '/getProducts', {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
       })
@@ -138,18 +138,23 @@ $("#show-sidebar").click(function() {
 
 //addProduct 
 
-addProduct(name,description,sku,startDate,endDate){
+addProduct(name,description,sku,startDate,endDate,pCode){
   this.newProductData = JSON.stringify(
     {
-      "name":name,
-      "description":description, 
-      "sku":sku,
-      "startDate":startDate,
-      "endDate":endDate,
+      
+       
+        "productDescription": description,
+        "productDispName": name,
+        "productExpDate": endDate,
+        "productStartDate": startDate,
+        "productTypeCode": pCode,
+        "sku": sku,
+        
+      
       
     });
 
-  return this.http.post(this.url + '/newProduct', this.newProductData, {
+  return this.http.post(this.url + '/product', this.newProductData, {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
     })
