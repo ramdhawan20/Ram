@@ -119,8 +119,16 @@
                 </div>
                 <div class="col-lg-2">
                   <div class="form-group">
-                    <label for=" ">Next:</label>
-                    <input type="text" class="form-control form-control-sm" id="" name="nextBillDate" [(ngModel)]="nextBillDate">
+                    <label for=" ">Next Billed On:</label>
+                    <!-- <input type="text" class="form-control form-control-sm" id="" name="nextBillDate" [(ngModel)]="nextBillDate"> -->
+                    <div class="input-group">
+                        <input  class="form-control" placeholder="YYYY-MM-DD"  name="nextBillDate"  [(ngModel)]="nextBillDate" ngbDatepicker #nextbilldate="ngbDatepicker">
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-secondary calendar" (click)="nextbilldate.toggle()" type="button">
+                          <i class="fa fa-calendar fa-2" aria-hidden="true"></i>
+                          </button>
+                        </div>
+                      </div>
                   </div>
                 </div>
 

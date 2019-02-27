@@ -505,9 +505,9 @@ body {
   .navbar-nav div li{ display: inline-block;}
   h4{color:#393939; margin-top: 30px;}
   .bdre2 {
-    border-bottom: 2px solid #999;
+    border-bottom: 2px solid #117a8b;
     height: 1px;
-    margin: 6px auto;
+    margin: 6px auto 10px;
     width: 100px;
     margin-bottom: 30px;
 }
@@ -1196,3 +1196,4 @@ main{ width: 100%;}
   background-color: #FDFCE7 !important;
 }
 .input-group input::placeholder,.input-group input{ font-size: 12px;}
+h4.modal-title{color:#117a8b !important; text-transform: uppercase;}

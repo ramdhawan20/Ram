@@ -6,7 +6,7 @@
     
   <div class="col-lg-4 text-center fadeInDown">
     <div class="round-paddind">
-        <div class="fadeIn first">
+        <div class="fadeIn first" style="display: inline-block; margin: 10px 0px;">
     <img src="/assets/logo3.png" >
     </div>
     <h4>One account. Access all services.</h4>
@@ -29,7 +29,7 @@
   </div>
       <div class="form-group">
           <!-- <button class="btn btn-primary fadeIn fourth" type="submit" [disabled]="!registerForm.valid"  (click)="loginvalidation(emailvalue,pwdvalue)">Sign In</button> -->
-          <button class="btn btn-primary fadeIn fourth" type="submit"  (click)="loginvalidation(emailvalue,pwdvalue); check(u1.value, p2.value)">Sign In</button>
+          <button class="btn btn-info fadeIn fourth" type="submit"  (click)="loginvalidation(emailvalue,pwdvalue); check(u1.value, p2.value)">Sign In</button>
       </div>
       <span style="color:red;">{{msg}}</span>
   </form>

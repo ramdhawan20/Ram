@@ -38,7 +38,7 @@ export class ContactListComponent implements OnInit {
       { headerName: 'LAST BILLED ON', field: 'lastBillDate' },
       { headerName: 'NEXT BILL DATE', field: 'nextBillDate', width:200},
     ];
-    this.rowData = this.createRowData();
+   // this.rowData = this.createRowData();
     this.context = { componentParent: this };
     this.frameworkComponents = {
       childMessageRenderer: ChildMessageRenderer
@@ -106,7 +106,7 @@ export class ContactListComponent implements OnInit {
     this.globalServiceService.SubscriptionCalling().subscribe(
       data => {
         this.rowData = data;
-        params.api.paginationGoToPage(4);
+        params.api.paginationGoToPage(1);
       });
   }
   onQuickFilterChanged() {

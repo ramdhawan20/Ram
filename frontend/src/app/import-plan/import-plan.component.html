@@ -15,10 +15,10 @@
           (input)="inputfilename($event)" style="text-indent: 9999px; width: 50%; margin-bottom: 15px; float: left"
           accept=".csv" name="selectedfile" [(ngModel)]="selectedfile">
         </div>
-        <button type="button" id="uploadbtn" class="btn btn-primary" style="margin-left:10px"
-        (click)="postMethod1()">UPLOAD</button>
-      <button type="button" id="samplebtn" class="btn btn-outline-success" style="margin-left:10px"
-        (click)="downloadSample()">SAMPLE</button>
+        <button type="button" id="uploadbtn" class="btn btn-info" style="margin-left:10px"
+        (click)="postMethod1()">Upload</button>
+      <button type="button" id="samplebtn" class="btn btn-outline-info" style="margin-left:10px"
+        (click)="downloadSample()">Sample CSV File</button>
       </div>
       <!-- <div style="position:relative">
         <input type="file" class="form-control-file form-control" id="exampleFormControlFile1"

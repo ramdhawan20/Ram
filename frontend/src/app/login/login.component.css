@@ -102,8 +102,8 @@ h6{font-size: 18px;
     animation-delay: 1s;
   }
     form{width: 75%; display: inline-block;}
-    .btn-primary{ width: 100%;}
-
+    .btn{ width: 100%;}
+h4{color: #117a8b;}
     /* Simple CSS3 Fade-in Animation */
 .underlineHover:after {
     display: block;
@@ -115,7 +115,9 @@ h6{font-size: 18px;
     content: "";
     transition: width 0.2s;
   }
-  
+  .form-group {
+    margin-bottom: 1.5rem !important;
+}
   .underlineHover:hover {
     color: #0d0d0d;
   }
