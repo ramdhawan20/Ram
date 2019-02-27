@@ -19,7 +19,7 @@ import java.util.Properties;
 
 @Configuration
 @EntityScan("com.hcl.bss.*")
-@EnableTransactionManagement
+//@EnableTransactionManagement
 @PropertySource("classpath:application.properties")
 
 public class DBConnectionConfig {

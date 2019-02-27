@@ -1,16 +1,19 @@
 package com.hcl.bss.repository;
 
-import com.hcl.bss.domain.Users;
+import com.hcl.bss.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+/**
+ *
+ * @author- Aditya gupta
+ */
+public interface UserRepository extends JpaRepository<User, Long> {
 
-public interface UserRepository extends JpaRepository<Users, Long> {
+    public User findById(int id) ;
 
-    public Users findById(int id) ;
-
-    public List<Users> findByUserFirstName(String firstName);
+    public List<User> findByUserFirstName(String firstName);
 
 /*    private SessionFactory sessionFactory;
     @Autowired
