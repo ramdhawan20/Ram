@@ -2,7 +2,6 @@ package com.hcl.bss.schedulers;
 
 import com.hcl.bss.domain.*;
 import com.hcl.bss.repository.*;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -21,7 +20,6 @@ import java.util.*;
  */
 @Component
 public class SubscriptionScheduler {
-    static Logger logger = Logger.getLogger(SubscriptionScheduler.class);
     @PersistenceContext
     EntityManager entityManager;
 
@@ -97,7 +95,6 @@ public class SubscriptionScheduler {
         customer.setSoldTo(dataMap.get("soldTo"));
         customer.setCompanyId(dataMap.get("companyId"));
         customer.setSubscriptions(subscription);
-        logger.trace(customer);
         if(!"Fail".equals(order.getStatus())){
             Customer cust = customerRepository.save(customer);
             order.setStatus("Pass");
