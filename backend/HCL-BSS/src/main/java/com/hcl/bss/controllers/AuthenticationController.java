@@ -1,6 +1,6 @@
 package com.hcl.bss.controllers;
 
-import com.hcl.bss.domain.Users;
+import com.hcl.bss.domain.User;
 import com.hcl.bss.dto.Greeting;
 import com.hcl.bss.dto.UserDetails;
 import com.hcl.bss.repository.UserRepository;
@@ -9,7 +9,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @CrossOrigin(origins = "*")
@@ -67,9 +66,9 @@ public class AuthenticationController{
     @RequestMapping(value = "/getUserById",
             produces = { "application/json" }, method = RequestMethod.GET
     )
-    public Users findUserById(@RequestParam(required=true, defaultValue="1") int id) {
-        Users users = this.userServices.findById(id);
-        return users;
+    public User findUserById(@RequestParam(required=true, defaultValue="1") int id) {
+        User user = this.userServices.findById(id);
+        return user;
     }
 
 
