@@ -20,7 +20,7 @@
               <div class="row">
                 <div class="col-lg-2">
                   <div class="form-group">
-                    <label for="sel1">Subscription Id:</label>
+                    <label for="sel1">Subscription No:</label>
                     <input type="text" class="form-control form-control-sm" id=" " name="Subscription_id" [(ngModel)]="Subscription_id" >
                    
                   </div>
@@ -40,7 +40,7 @@
                 <div class="col-lg-2">
                   <div class="form-group">
                     <label for=" ">Status:</label>
-                    <select class="form-control form-control-sm" id="sel1" name="sellist1" name="status" [(ngModel)]="status">
+                    <select class="form-control form-control-sm" placeholder="select" id=" " name="sellist1" name="status" [(ngModel)]="status">
                         <option>Active</option>
                         <option>Active</option>
                       </select>
@@ -49,14 +49,29 @@
                 <div class="col-lg-2">
                   <div class="form-group">
                     <label for=" ">Created On:</label>
-                    <input type="text" class="form-control form-control-sm" id=" " name="Created_on" [(ngModel)]="Created_on">
+                    <div class="input-group">
+                        <input id="endDateId" class="form-control" placeholder="YYYY-MM-DD"  name="Created_on"  [(ngModel)]="Created_on" ngbDatepicker #enddate="ngbDatepicker">
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-secondary calendar" (click)="enddate.toggle()" type="button">
+                          <i class="fa fa-calendar fa-2" aria-hidden="true"></i>
+                          </button>
+                        </div>
+                      </div>
+                    <!-- <input type="text" class="form-control form-control-sm" id=" " name="Created_on" [(ngModel)]="Created_on"> -->
                   </div>
                 </div>
                 <div class="col-lg-2">
                   <div class="form-group">
                     <label for="sel1">Activated On:</label>
-                    <input type="text" class="form-control form-control-sm" id=" " name="Activated_on" [(ngModel)]="Activated_on">
-                   
+                    <!-- <input type="text" class="form-control form-control-sm" id=" " name="Activated_on" [(ngModel)]="Activated_on"> -->
+                    <div class="input-group">
+                        <input  class="form-control" placeholder="YYYY-MM-DD"  name="Activated_on"  [(ngModel)]="Activated_on" ngbDatepicker #activedate="ngbDatepicker">
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-secondary calendar" (click)="activedate.toggle()" type="button">
+                          <i class="fa fa-calendar fa-2" aria-hidden="true"></i>
+                          </button>
+                        </div>
+                      </div>
                   </div>
                 </div>
               </div>
@@ -83,7 +98,15 @@
                 <div class="col-lg-2">
                   <div class="form-group">
                     <label for="">Last Billed On:</label>
-                    <input type="text" class="form-control form-control-sm" id="" name="last_bill" [(ngModel)]="last_bill">
+                    <!-- <input type="text" class="form-control form-control-sm" id="" name="last_bill" [(ngModel)]="last_bill"> -->
+                    <div class="input-group">
+                        <input  class="form-control" placeholder="YYYY-MM-DD"  name="last_bill"  [(ngModel)]="last_bill" ngbDatepicker #lastbilldate="ngbDatepicker">
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-secondary calendar" (click)="lastbilldate.toggle()" type="button">
+                          <i class="fa fa-calendar fa-2" aria-hidden="true"></i>
+                          </button>
+                        </div>
+                      </div>
                   </div>
                 </div>
                 <div class="col-lg-2">

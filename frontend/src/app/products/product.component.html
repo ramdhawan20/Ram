@@ -14,8 +14,8 @@
         </div> -->
       <div class="container-fluid custom_search" style="padding: 0px;">
         <div class="col-lg-12" style="padding: 0px;color: #117a8b; text-transform: uppercase; line-height: 40px;">
-          <h5 *ngIf="isValid()">Products <button class="btn btn-info float-right" style="margin:-12px 0 0 5px" (click)="open(addUser)">Add Product <i class="fa fa-user-plus" aria-hidden="true"></i></button>
-            <button class="btn btn-info float-right"  style="margin:-12px 0 0 5px" >Associate Plans <i class="fa fa-sellsy" aria-hidden="true"></i></button></h5>
+          <h5 *ngIf="isValid()">Products <button class="btn btn-outline-warning float-right" style="margin:-12px 0 0 5px" (click)="open(addUser)">Add Product <i class="fa fa-user-plus" aria-hidden="true"></i></button>
+            <button class="btn btn-outline-danger float-right"  style="margin:-12px 0 0 5px" >Associate Plans <i class="fa fa-sellsy" aria-hidden="true"></i></button></h5>
           <router-outlet></router-outlet>
           <!-- <div class="row headerStrip" *ngIf="isValid()">
             <button class="btn btn-info" style="margin:3px" (click)="open(addUser)">Add</button>
@@ -62,7 +62,7 @@
                   <div class="form-group">
                     <label for="dateOfBirth">Start Date:</label>
                     <div class="input-group">
-                      <input id="startDateId" class="form-control"   placeholder="Choose a date.." name="startDate"
+                      <input id="startDateId" class="form-control"   placeholder="YYYY-MM-DD" name="startDate"
                         [(ngModel)]="startDate" ngbDatepicker #startdate="ngbDatepicker">
                       <div class="input-group-append">
                         <button class="btn btn-outline-secondary calendar" (click)="startdate.toggle()" type="button">
@@ -76,7 +76,7 @@
                     <div class="form-group">
                         <label for="dateOfBirth"> End Date:</label>
                         <div class="input-group">
-                          <input id="endDateId" class="form-control" placeholder="Choose a date.."  name="endDate"  [(ngModel)]="endDate" ngbDatepicker #enddate="ngbDatepicker">
+                          <input id="endDateId" class="form-control" placeholder="YYYY-MM-DD"  name="endDate"  [(ngModel)]="endDate" ngbDatepicker #enddate="ngbDatepicker">
                           <div class="input-group-append">
                             <button class="btn btn-outline-secondary calendar" (click)="enddate.toggle()" type="button">
                             <i class="fa fa-calendar fa-2" aria-hidden="true"></i>
@@ -164,7 +164,7 @@
                     <div class="form-group">
                         <label for="dateOfBirth">Start Date:</label>
                         <div class="input-group">
-                          <input id="startDateId" class="form-control" placeholder="Choose a date.."   name="startDate" [(ngModel)]="startDate" ngbDatepicker #startdate="ngbDatepicker">
+                          <input id="startDateId" class="form-control" placeholder="YYYY-MM-DD"  name="startDate" [(ngModel)]="startDate" ngbDatepicker #startdate="ngbDatepicker">
                           <div class="input-group-append">
                             <button class="btn btn-outline-secondary calendar" (click)="startdate.toggle()" type="button">
                             <i class="fa fa-calendar fa-2" aria-hidden="true"></i>
@@ -177,7 +177,7 @@
                     <div class="form-group">
                         <label for="dateOfBirth"> End Date:</label>
                         <div class="input-group">
-                          <input id="endDateId" class="form-control" placeholder="Choose a date.."  name="endDate"  [(ngModel)]="endDate" ngbDatepicker #enddate="ngbDatepicker">
+                          <input id="endDateId" class="form-control" placeholder="YYYY-MM-DD"  name="endDate"  [(ngModel)]="endDate" ngbDatepicker #enddate="ngbDatepicker">
                           <div class="input-group-append">
                             <button class="btn btn-outline-secondary calendar" (click)="enddate.toggle()" type="button">
                             <i class="fa fa-calendar fa-2" aria-hidden="true"></i>
