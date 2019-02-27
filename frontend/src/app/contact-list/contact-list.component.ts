@@ -4,6 +4,7 @@ import { GlobalServiceService } from '../global-service.service';
 import { FlashMessagesService } from 'angular2-flash-messages';
 import { HttpClient } from "@angular/common/http";
 import { ChildMessageRenderer } from "../child-message-renderer.component";
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-contact-list',
   templateUrl: './contact-list.component.html',
@@ -23,7 +24,7 @@ export class ContactListComponent implements OnInit {
   private frameworkComponents;
   private fileName;
 
-  constructor(private flashMessage: FlashMessagesService,private http: HttpClient, private modalService: ModalsService, private globalServiceService: GlobalServiceService,private childMessageRenderer: ChildMessageRenderer) {
+  constructor(private router : Router,private flashMessage: FlashMessagesService,private http: HttpClient, private modalService: ModalsService, private globalServiceService: GlobalServiceService,private childMessageRenderer: ChildMessageRenderer) {
 
     this.columnDefs = [
       { headerName: 'SUBSCRIPTION ID', field: 'subscriptionid' },
@@ -93,7 +94,12 @@ export class ContactListComponent implements OnInit {
     });
   }
 
-
+  isValid(): boolean {
+    if (this.router.url != '/subscriptions/report') {
+              return true;
+      }
+    return false;
+  }
 
   onGridReady(params) {
     this.gridApi = params.api;

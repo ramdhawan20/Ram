@@ -92,6 +92,19 @@ $("#show-sidebar").click(function() {
     }));
   }
 
+  //SubscriptionReportCalling
+  SubscriptionreportCalling() {
+  
+    return this.http.get('/assets/Subscription.json', {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      })
+    }).pipe(map((response: Response) => {
+      console.log(response);
+      return response;
+    }));
+  }
+
   //upload case
   uploadExpData(formData) {
 			

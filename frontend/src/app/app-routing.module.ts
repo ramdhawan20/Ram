@@ -10,6 +10,7 @@ import{PlanComponent} from './plan/plan.component';
 import { AuthGuard } from './auth.guard';
 import { ImportPlanComponent } from './import-plan/import-plan.component';
 import { ProductComponent } from './products/product.component';
+import { SubscriptionreportComponent } from './subscriptionreport/subscriptionreport.component';
 
 
 const routes: Routes = [
@@ -24,7 +25,13 @@ const routes: Routes = [
   
   canActivate :[AuthGuard] },
   { path: 'dashboard', component: DashboardComponent, canActivate :[AuthGuard] },
-  { path: 'subscriptions', component: ContactListComponent, canActivate :[AuthGuard] },
+  { path: 'subscriptions', component: ContactListComponent,
+  children: [
+    {
+      path: 'report',
+      component: SubscriptionreportComponent
+    }],
+  canActivate :[AuthGuard] },
   { path: 'usermanagement', component: UsermanagementComponent, canActivate :[AuthGuard] },
   { path: 'transactions', component: TransactionsComponent, canActivate :[AuthGuard] },
   { path: 'plan', component: PlanComponent, canActivate :[AuthGuard] },

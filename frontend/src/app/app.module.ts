@@ -28,6 +28,7 @@ import { SidebarnavigationComponent } from './sidebarnavigation/sidebarnavigatio
 import { AuthGuard } from './auth.guard';
 import { ImportPlanComponent } from './import-plan/import-plan.component';
 import { ProductComponent } from './products/product.component';
+import { SubscriptionreportComponent } from './subscriptionreport/subscriptionreport.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,7 +45,8 @@ import { ProductComponent } from './products/product.component';
     PlanComponent,
     SidebarnavigationComponent,
     ImportPlanComponent,
-    ProductComponent
+    ProductComponent,
+    SubscriptionreportComponent
   ],
 
   imports: [

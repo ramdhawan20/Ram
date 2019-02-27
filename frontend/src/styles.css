@@ -1177,7 +1177,7 @@ body {
     .modal-dialog {max-width: 64% !important;}
     .modal-header{    border-bottom: 2px solid #117a8b !important;}
     main{height: 100%;}
-    .border_btm{ border-bottom: 2px solid #117a8b !important;    padding-bottom: 5px;}
+    .border_btm{ border-bottom: 2px solid #117a8b !important; color: #117a8b;text-transform: uppercase;line-height: 40px;   padding-bottom: 5px;}
     body{overflow: hidden;}
     app-import-plan{
       width: 100%;
@@ -1192,3 +1192,6 @@ body {
 main{ width: 100%;}
 .form-group label{line-height: 24px !important;}
 .btn-outline-secondary{ border-color: #ced4da !important;}
+.ag-theme-balham .ag-row-even {
+  background-color: #FDFCE7 !important;
+}

@@ -1,6 +1,7 @@
 <div id="rightSideWrapper">
   <div class="ContentBox" style="display: block;">
     <main>
+        <router-outlet></router-outlet>
       <!-- Main Content  -->
       <!-- <div class="test-header">
               Page Size:
@@ -11,7 +12,7 @@
                 <option value="1000">1000</option>
               </select>
             </div> -->
-      <div class="container-fluid custom_search" style="padding: 0px;">
+      <div class="container-fluid custom_search" *ngIf="isValid()" style="padding: 0px;">
         <div class="col-lg-12" style="padding: 0px;color: #117a8b; text-transform: uppercase; line-height: 40px;">
           <h5>Subscription</h5>
           <div class="col-lg-12" style="border:2px solid #bababa; border-radius: 5px; padding:0px 10px; text-transform: none; margin-top:0px;">
