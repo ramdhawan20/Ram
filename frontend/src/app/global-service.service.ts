@@ -159,20 +159,20 @@ addProduct(name,description,sku,startDate,endDate){
   }));
 }
     //search Subcription
-    searchSubcription(Subscription_id,customber_email,first_name,status,Created_on,Activated_on,Customber_name,plan_name,amount,last_bill,next){
+    searchSubcription(subscriptionNo,customerName,email,planName,status,price,createdDate,activatedDate,lastBillDate,nextBillDate,first_name){
       this.searchSubcriptionData = JSON.stringify(
         {
-          "Subscription_id" : Subscription_id,
-          "customber_email" : customber_email,
+          "subscriptionNo" : subscriptionNo,
+          "email" : email,
           "first_name"  : first_name,
           "status" : status,
-          "Created_on" : Created_on,
-          "Activated_on" : Activated_on,
-          "Customber_name" : Customber_name,
-          "plan_name" : plan_name,
-          "amount": amount,
-          "last_bill" :last_bill,
-          "next" : next
+          "createdDate" : createdDate,
+          "activatedDate" : activatedDate,
+          "customerName" : customerName,
+          "planName" : planName,
+          "price": price,
+          "lastBillDate" :lastBillDate,
+          "nextBillDate" : nextBillDate
         });
     
       return this.http.post(this.url + '/searchSubcription', this.searchSubcriptionData, {

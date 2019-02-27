@@ -27,18 +27,16 @@ export class ContactListComponent implements OnInit {
   constructor(private router : Router,private flashMessage: FlashMessagesService,private http: HttpClient, private modalService: ModalsService, private globalServiceService: GlobalServiceService,private childMessageRenderer: ChildMessageRenderer) {
 
     this.columnDefs = [
-      { headerName: 'SUBSCRIPTION ID', field: 'subscriptionid' },
-      { headerName: 'CUSTOMBER NAME', field: 'customberemail' },
+      { headerName: 'SUBSCRIPTION ID', field: 'subscriptionNo' },
+      { headerName: 'CUSTOMBER NAME', field: 'customerName' },
+      { headerName: 'EMAIL', field: 'email' },
+      { headerName: 'PLAN NAME', field: 'planName' },
       { headerName: 'STATUS', field: 'status' },
-      { headerName: 'CREATED ON', field: 'create' },
-      { headerName: 'ACTIVATED ON', field: 'activated' },
-      { headerName: 'CUSTOMER NAME', field: 'customer' },
-      { headerName: 'PLAN NAME', field: 'plan', width:200},
-      { headerName: 'AMOUNT', field: 'amount' },
-      // { headerName: 'AMOUNT', field: 'amount',cellRenderer: "childMessageRenderer",
-      // colId: "params" },
-      { headerName: 'LAST BILLED ON', field: 'lastbilled' },
-      { headerName: 'NEXT', field: 'next', editable: true }
+      { headerName: 'PRICE', field: 'price' },
+      { headerName: 'CREATED ON', field: 'createdDate' },
+      { headerName: 'ACTIVATED ON', field: 'activatedDate' },
+      { headerName: 'LAST BILLED ON', field: 'lastBillDate' },
+      { headerName: 'NEXT BILL DATE', field: 'nextBillDate', width:200},
     ];
     this.rowData = this.createRowData();
     this.context = { componentParent: this };
@@ -83,11 +81,12 @@ export class ContactListComponent implements OnInit {
   }
 
 
-  searchSubcription(Subscription_id,customber_email,first_name,status,Created_on,Activated_on,Customber_name,plan_name,amount,last_bill,next){
-    this.globalServiceService.searchSubcription(Subscription_id,customber_email,first_name,status,Created_on,Activated_on,Customber_name,plan_name,amount,last_bill,next).subscribe(
+  searchSubcription(subscriptionNo,customerName,email,planName,status,price,createdDate,activatedDate,lastBillDate,nextBillDate,first_name){
+    this.globalServiceService.searchSubcription(subscriptionNo,customerName,email,planName,status,price,createdDate,activatedDate,lastBillDate,nextBillDate,first_name).subscribe(
       data => {
       console.log(data);
       this.flashMessage.show('Search successfully!!', { cssClass: 'alert-success', timeout: 2000 });
+      
       },
     error=>{
       this.flashMessage.show('Search unsuccessfully!! !!', { cssClass: 'alert-danger', timeout: 2000 });
