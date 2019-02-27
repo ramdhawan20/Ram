@@ -3,7 +3,7 @@ import {ICellRendererAngularComp} from "ag-grid-angular";
 
 @Component({
   selector: 'app-file-download',
-  template: `<a href="JavaScript:void(0);" (click)="invokeParentMethod()">{{this.params.data.uploadFileName}}</a>`,
+  template: `<a href="JavaScript:void(0);" style = "text-transform: capitalize; text-decoration:underline;" (click)="invokeParentMethod()">{{this.params.data.uploadFileName}}</a>`,
   styles: [
     `.btn {
         line-height: 0.5

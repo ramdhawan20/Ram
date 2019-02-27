@@ -1,21 +1,24 @@
 <div class="col-lg-12">
     <main>
     
-        <flash-messages></flash-messages>
+        <flash-messages style="text-transform: capitalize;"></flash-messages>
     
-      <h4 class="border_btm">Import Plans</h4>
-      <div class="upload-btn-wrapper" id="exportImportBox" style="position: relative;display: inline-block;width: 100%;
+      <h5 class="border_btm">Import Plans</h5>
+      <div class="upload-btn-wrapper" id="exportImportBox" style="text-transform: capitalize;position: relative;display: inline-block;width: 100%;
       padding: 2%;text-align: left;border: 2px solid #bababa;border-radius: 5px;margin-top:5%">
-        <div style="position:relative">
+      <label><strong>Choose CSV File :</strong></label>  
+      <div style="position:relative">
+          
           <input type="file" class="form-control-file form-control" id="exampleFormControlFile1" (input)="inputfilename($event)"
             style="text-indent: 9999px; width: 50%; margin-bottom: 15px; float: left" accept=".csv" name="selectedfile" [(ngModel)]="selectedfile">
         </div>
-        <button type="button" class="btn btn-primary" style="margin-left:10px" (click)="fileChange()">UPLOAD</button>
+        <button type="button" class="btn btn-info" style="margin-left:10px" (click)="fileChange()">Upload <i class="fa fa-cloud-upload" aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-info" style="margin-left:10px">Sample Template <i class="fa fa-file" aria-hidden="true"></i></button>
       </div>
       <div id="productGrid">
         <div style="height: 100%; padding-top: 63px; box-sizing: border-box; width: auto;">
           <ag-grid-angular #agGrid style="width: 780px; height: 100%;" id="myGrid" class="ag-theme-balham"
-            [enableSorting]="true" [pagination]="true" [suppressDragLeaveHidesColumns]="true" [columnDefs]="columnDefs"
+            [enableSorting]="true" [pagination]="false" [suppressDragLeaveHidesColumns]="true" [columnDefs]="columnDefs"
             [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="rowSelection"
             [rowData]="rowData" [context]="context" [frameworkComponents]="frameworkComponents" (gridReady)="onGridReady($event)"></ag-grid-angular>
         </div>

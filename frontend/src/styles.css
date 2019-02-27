@@ -1190,3 +1190,5 @@ body {
     margin-bottom: 0.4rem !important;
 }
 main{ width: 100%;}
+.form-group label{line-height: 24px !important;}
+.btn-outline-secondary{ border-color: #ced4da !important;}

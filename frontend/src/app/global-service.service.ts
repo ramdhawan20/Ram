@@ -121,26 +121,6 @@ $("#show-sidebar").click(function() {
   }
 
 
-  //add user
-  addUser(userId,profile,firstName,middleName,lastName){
-    this.addUserData = JSON.stringify(
-      {
-        "userId":userId,  
-        "userProfile":profile,       
-        "userFirstName":firstName,
-       "userMiddleName":middleName,
-       "userLastName":lastName,
-      });
-  
-    return this.http.post(this.url + '/addUser', this.addUserData, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      })
-    }).pipe(map((response: Response) => {
-      console.log(response);
-      return response;
-    }));
-  }
 
 
 //addProduct 
@@ -192,6 +172,28 @@ addProduct(name,description,sku,startDate,endDate){
       }));
     }
 
+  //add user
+  addUser(userId,profile,firstName,middleName,lastName,password){
+    this.addUserData = JSON.stringify(
+      {
+        "userId":userId,  
+        "userProfile":profile,       
+        "userFirstName":firstName,
+       "userMiddleName":middleName,
+       "userLastName":lastName,
+	   "attribute": password
+      });
+  
+    return this.http.post(this.url + '/user', this.addUserData, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      })
+    }).pipe(map((response: Response) => {
+      console.log(response);
+      return response;
+    }));
+  }
+
     //edit user
     editUser(userId,profile,firstName,middleName,lastName){
       this.editdata = JSON.stringify(
@@ -203,7 +205,7 @@ addProduct(name,description,sku,startDate,endDate){
          "userLastName":lastName,
         });
     
-      return this.http.post(this.url + '/editUser', this.editdata, {
+	return this.http.put(this.url + '/user', this.editdata, {
         headers: new HttpHeaders({
           'Content-Type': 'application/json',
         })
@@ -211,7 +213,9 @@ addProduct(name,description,sku,startDate,endDate){
         console.log(response);
         return response;
       }));
+	  
     }
+	
   //active-deactive user
   activeDeactive(userId){
     this.activeDeactiveDta = JSON.stringify(
@@ -219,7 +223,7 @@ addProduct(name,description,sku,startDate,endDate){
         "userId":userId
       });
   
-    return this.http.post(this.url + '/activateUser', this.activeDeactiveDta, {
+    return this.http.post(this.url + '/activate', this.activeDeactiveDta, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
       })
@@ -237,7 +241,7 @@ addProduct(name,description,sku,startDate,endDate){
           "newAttribute":newpwd, 
         });
     
-      return this.http.post(this.url + '/reset', this.pwdResetData, {
+      return this.http.put(this.url + '/reset', this.pwdResetData, {
         headers: new HttpHeaders({
           'Content-Type': 'application/json',
         })
@@ -250,7 +254,7 @@ addProduct(name,description,sku,startDate,endDate){
      //All user data
      getUserData(){
      
-      return this.http.get(this.url + '/getAllUsers',{
+      return this.http.get(this.url + '/users',{
         headers: new HttpHeaders({
           'Content-Type': 'application/json',
         })
@@ -259,7 +263,6 @@ addProduct(name,description,sku,startDate,endDate){
         return response;
       }));
     }
-
     
      //search user data
      searchUserData(user_profile,user_name,first_name,status_val){
@@ -282,6 +285,7 @@ addProduct(name,description,sku,startDate,endDate){
         return response;
       }));
     }
+
 
 }
 

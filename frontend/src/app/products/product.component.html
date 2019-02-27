@@ -14,12 +14,13 @@
         </div> -->
       <div class="container-fluid custom_search" style="padding: 0px;">
         <div class="col-lg-12" style="padding: 0px;color: #117a8b; text-transform: uppercase; line-height: 40px;">
-          <h5 *ngIf="isValid()">Products</h5>
+          <h5 *ngIf="isValid()">Products <button class="btn btn-info float-right" style="margin:-12px 0 0 5px" (click)="open(addUser)">Add Product <i class="fa fa-user-plus" aria-hidden="true"></i></button>
+            <button class="btn btn-info float-right"  style="margin:-12px 0 0 5px" >Associate Plans <i class="fa fa-sellsy" aria-hidden="true"></i></button></h5>
           <router-outlet></router-outlet>
-          <div class="row headerStrip" *ngIf="isValid()">
+          <!-- <div class="row headerStrip" *ngIf="isValid()">
             <button class="btn btn-info" style="margin:3px" (click)="open(addUser)">Add</button>
             <button class="btn btn-info " style="margin:3px" >Associate Plans</button>
-          </div>
+          </div> -->
           <div *ngIf="isValid()" class="col-lg-12"
             style="border:2px solid #bababa; border-radius: 5px; padding:0px 10px; text-transform: none; margin-top:0px;">
             <form action="#">
@@ -89,7 +90,7 @@
                 </div>                
                 <div class="col-lg-3">
                     <div class="form-group">               
-                      <label style="margin-left: 20px;float: right;"> <button class="btn btn-info" style="margin-top: 48px;">Search <i class="fa fa-search" aria-hidden="true" style="color:#ffffff;margin-top: -4px;margin-left: 5px; "></i></button> </label>
+                      <label style="margin-left: 20px;float: right;"> <button class="btn btn-info" style="margin-top: 41px;">Search <i class="fa fa-search" aria-hidden="true" style="color:#ffffff;margin-top: -4px;margin-left: 5px; "></i></button> </label>
                     </div>
                 </div>
               </div>
@@ -115,7 +116,7 @@
               style="width: 30%; display: inline-block;" id="quickFilter" placeholder="quick filter..." />
             <!-- <label> File Name: <input type="text" id="fileName" /> </label> -->
             <label style="margin-left: 20px;"> <button (click)="onBtExport()" class="btn btn-info"
-                style="margin-top: -7px;">Export to CSV</button> </label>
+                style="margin-top: -7px;">Export to CSV <i aria-hidden="true" class="fa fa-cloud-download"></i></button> </label>
           </div>
 
         </div>
@@ -137,30 +138,26 @@
             <form>
              
               <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                   <div class="form-group">
                     <label for="firstName"> Name:</label>
                     <input type="text" class="form-control"  name="name" [(ngModel)]="name" >
                   </div>
-                </div></div>
-
-                <div class="row">
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label for="middleName">Description:</label>
-                    <input type="text" class="form-control"  name="description" [(ngModel)]="description"
-                      >
-                  </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label for="lastName">SKU:</label>
-                    <input type="text" class="form-control"  name="sku" [(ngModel)]="sku"
-                      >
+                <div class="col-lg-4">
+                    <div class="form-group">
+                      <label for="middleName">Description:</label>
+                      <input type="text" class="form-control"  name="description" [(ngModel)]="description"
+                        >
+                    </div>
                   </div>
-                </div>
+                  <div class="col-lg-4">
+                      <div class="form-group">
+                        <label for="lastName">SKU:</label>
+                        <input type="text" class="form-control"  name="sku" [(ngModel)]="sku"
+                          >
+                      </div>
+                    </div>
               </div>
               <div class="row">
                 <div class="col-lg-6">
@@ -176,8 +173,6 @@
                         </div>
                   </div>
                 </div>
-              </div>
-                <div class="row">
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label for="dateOfBirth"> End Date:</label>
@@ -191,8 +186,7 @@
                         </div>
                   </div>
                 </div>
-              </div>
-            
+              </div>  
             </form>
           </div>
           <div class="modal-footer">

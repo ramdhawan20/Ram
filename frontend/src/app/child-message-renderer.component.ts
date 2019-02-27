@@ -117,7 +117,7 @@ import { FlashMessagesService } from 'angular2-flash-messages';
   </ng-template>
   <!--reset end-->
   <span><button style="height: 20px; font-size:12px;padding: 0 10px;" (click)="open(content)" class="btn btn-info">Edit</button></span>
-  <span><button style="height: 20px; font-size:12px;padding: 0 10px; margin-left:3px;" (click)="open(reset)" class="btn btn-info">Reset</button></span>
+  <span><button title="Reset Password" style="height: 20px; font-size:12px;padding: 0 10px; margin-left:3px;" (click)="open(reset)" class="btn btn-info">Reset Password</button></span>
   <span style="float:left;margin-right: 3px;margin-top: 4px;">
     <div class="onoffswitch">
       <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="{{params.data.userProfile}}" checked>
@@ -256,7 +256,16 @@ export class ChildMessageRenderer implements ICellRendererAngularComp, OnInit {
       this.globalServiceService.resetPwd(email,this.registerForm.value.confirmPassword).subscribe(
         result => {
           console.log(result);
-        }
+        },
+		error=>{
+			
+			 if(error.status==200){
+          this.flashMessage.show('Password changed successfully!', { cssClass: 'alert-success', timeout: 3000 });
+		  }
+		  else{
+			  this.flashMessage.show('Password changed unsuccessfull!', { cssClass: 'alert-danger', timeout: 3000 });
+		  }
+		}
        );      
     }
 
@@ -273,10 +282,15 @@ export class ChildMessageRenderer implements ICellRendererAngularComp, OnInit {
      this.globalServiceService.editUser(userId,profile,firstName,middleName,lastName).subscribe(
       result => {
         console.log(result);
-        this.flashMessage.show('edit successfully!!', { cssClass: 'alert-danger', timeout: 2000 });
+        this.flashMessage.show('User updated successfully!', { cssClass: 'alert-danger', timeout: 3000 });
       },
       error=>{
-        this.flashMessage.show('getting error!!', { cssClass: 'alert-danger', timeout: 2000 });
+		  if(error.status==200){
+          this.flashMessage.show('User updated successfully!', { cssClass: 'alert-success', timeout: 3000 });
+		  }
+		  else{
+			  this.flashMessage.show('User updation failed!', { cssClass: 'alert-danger', timeout: 3000 });
+		  }
       }
      );
   }

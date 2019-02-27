@@ -27,12 +27,12 @@ export class UsermanagementComponent implements OnInit {
   closeResult: string;
   constructor(private flashMessage: FlashMessagesService,private modalService: NgbModal,private http: HttpClient, private globalServiceService: GlobalServiceService, private childMessageRenderer: ChildMessageRenderer) {
     this.columnDefs = [
-      { headerName: 'User Profile', field: 'userProfile', width:120 },
-      { headerName: 'First Name', field: 'userFirstName', width:120 },
-      { headerName: 'Middle Name', field: 'userMiddleName', width:120 },
-      { headerName: 'Last Name', field: 'userLastName', width:120 },
-      { headerName: 'User Id', field: 'userId' },
-      { headerName: 'Status', cellRenderer: "childMessageRenderer", colId: "params" }
+      { headerName: 'User Profile', field: 'userProfile' , width: 125},
+      { headerName: 'First Name', field: 'userFirstName' , width: 145},
+      { headerName: 'Middle Name', field: 'userMiddleName' , width: 145},
+      { headerName: 'Last Name', field: 'userLastName', width: 145 },
+      { headerName: 'User Id', field: 'userId' , width: 145},
+      { headerName: 'Status', cellRenderer: "childMessageRenderer", colId: "params", width: 250 }
     ];
     // this.rowData = this.createRowData();
     this.context = { componentParent: this };
@@ -70,16 +70,19 @@ export class UsermanagementComponent implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
-    this.globalServiceService.usermanagementCalling().subscribe(
+    /* this.globalServiceService.usermanagementCalling().subscribe(
       data => {
         this.rowData = data;
         params.api.paginationGoToPage(1);
-      });
-    // this.globalServiceService.getUserData().subscribe(
-    //   data => {
-    //     this.rowData = data;
-    //     params.api.paginationGoToPage(1);
-    //   });
+      }); */
+    this.globalServiceService.getUserData().subscribe(
+		data => {
+			 this.rowData = data;
+			 params.api.paginationGoToPage(1);
+        },
+    error=>{
+     // this.flashMessage.show('Record not found !!', { cssClass: 'alert-danger', timeout: 2000 });
+    });
   }
   onQuickFilterChanged() {
     var inputElement = <HTMLInputElement>document.getElementById("quickFilter");
@@ -115,14 +118,21 @@ export class UsermanagementComponent implements OnInit {
       return `with: ${reason}`;
     }
   }
-  addUserData(firstName,middleName,lastName,email,userProfile){
-    this.globalServiceService.addUser(email,userProfile,firstName,middleName,lastName).subscribe(
-      data => {
-      console.log(data);
-      this.flashMessage.show('user added successfully!!', { cssClass: 'alert-success', timeout: 2000 });
+  addUserData(firstName,middleName,lastName,email,userProfile,password){
+    this.globalServiceService.addUser(email,userProfile,firstName,middleName,lastName,password).subscribe(
+      result => {
+      console.log(result);
+      this.flashMessage.show('User created successfully!!', { cssClass: 'alert-success', timeout: 3000 });
       },
-    error=>{
-      this.flashMessage.show('User not added !!', { cssClass: 'alert-danger', timeout: 2000 });
+		error=>{
+			console.log(error.status );
+			if(error.status===200){
+				this.flashMessage.show('User created successfully!!', { cssClass: 'alert-success', timeout: 3000 });
+			}
+			else{
+			
+      this.flashMessage.show('User creation  failed !!', { cssClass: 'alert-danger', timeout: 3000 });
+			}
     });
   }
   searchUser(user_profile,user_name,first_name,status_val){

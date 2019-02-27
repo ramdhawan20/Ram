@@ -3,7 +3,7 @@ import {ICellRendererAngularComp} from "ag-grid-angular";
 
 @Component({
   selector: 'app-error-download',
-  template: `<a href="JavaScript:void(0);" (click)="invokeParentMethod()">{{this.params.data.errorLogFileName}}</a>`,
+  template: `<a href="JavaScript:void(0);" style="color:#980303;text-transform: capitalize;text-decoration:underline;" (click)="invokeParentMethod()">{{this.params.data.errorLogFileName}}</a>`,
   styles: [
     `.btn {
         line-height: 0.5
