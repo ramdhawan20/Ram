@@ -29,7 +29,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.hcl.bss.dto.ErrorResponseDTO;
 import com.hcl.bss.dto.FileUploadResponse;
-import com.hcl.bss.exceptions.CustomDBException;
 import com.hcl.bss.exceptions.ImportParseException;
 import com.hcl.bss.services.datamigration.UploadService;
 

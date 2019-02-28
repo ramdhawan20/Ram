@@ -1,7 +1,7 @@
 package com.hcl.bss.dao;
 
-import com.hcl.bss.domain.Users;
+import com.hcl.bss.domain.User;
 
 public interface UserDAO {
-    Users findById(int id);
+    User findById(int id);
 }
