@@ -13,7 +13,7 @@
           </select>
         </div> -->
       <div class="container-fluid custom_search" style="padding: 0px;">
-        <div class="col-lg-12" style="padding: 0px;color: #117a8b; text-transform: uppercase; line-height: 40px;">
+        <div class="col-lg-12 search_box" style="padding: 0px;color: #117a8b; text-transform: uppercase; line-height: 40px;">
           <h5 *ngIf="isValid()">Products <button class="btn btn-outline-info float-right" style="margin:-12px 0 0 5px" (click)="open(addUser)">Add Product <i class="fa fa-user-plus" aria-hidden="true"></i></button>
             <button class="btn btn-outline-danger float-right"  style="margin:-12px 0 0 5px" >Associate Plans <i class="fa fa-sellsy" aria-hidden="true"></i></button></h5>
           <router-outlet></router-outlet>
@@ -89,9 +89,15 @@
                     
                 </div>                
                 <div class="col-lg-3">
-                    <div class="form-group">               
-                      <label style="margin-left: 20px;float: right;"> <button class="btn btn-info" style="margin-top: 41px;">Search <i class="fa fa-search" aria-hidden="true" style="color:#ffffff;margin-top: -4px;margin-left: 5px; "></i></button> </label>
-                    </div>
+                    <label style="width: 100%;"></label>   
+                          
+                        <button type="button" id="searchBtn" class="btn btn-info float-right" style=" margin-left: 5px; line-height:17px;">
+                            Search
+                            <i class="fa fa-search" aria-hidden="true" style="color:#ffffff;margin-top: -4px;margin-left: 5px; "></i>
+                          </button>        
+                      <!-- <button class="btn btn-info" style="margin-top: 41px;">Search <i class="fa fa-search" aria-hidden="true" style="color:#ffffff;margin-top: -4px;margin-left: 5px; "></i>
+                      </button> -->
+                   
                 </div>
               </div>
               

@@ -1190,17 +1190,23 @@ body {
     margin-bottom: 0.4rem !important;
 }
 main{ width: 100%;}
-.form-group label{line-height: 24px !important;}
+.form-group label{line-height: 16px !important; font-size: 12px;}
 .btn-outline-secondary{ border-color: #ced4da !important;}
 .ag-theme-balham .ag-row-even {
   background-color: #FDFCE7 !important;
 }
 .input-group input::placeholder,.input-group input{ font-size: 12px;}
+.col-lg-12 .form-group{ line-height: 26px !important;}
 h4.modal-title{color:#117a8b !important; text-transform: uppercase; font-size: 20px;}
-.alert {
- 
-  padding: .1rem 1.25rem !important;}
+.search_box .btn.btn-info{     margin-left: 5px;
+  margin-top: -15px;
+  font-size: 12px;
+  line-height: 17px;}
+  .search_box #uploadbtn{margin-top: 0px !important;}
+.alert { padding: .1rem 1.25rem !important;}
+.sidebar-wrapper ul{ font-size: 13px;}
   flash-messages{ position: absolute;
-    width: 97%;
+    width: 100%;
     top: 50px;
   z-index:9999}
+  .btn{ font-size: 12px !important;}
