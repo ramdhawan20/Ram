@@ -1,4 +1,4 @@
-package com.hcl.bss.data.migration.parsers;
+package com.hcl.bss.datamigration.parsers;
 
 import static com.hcl.bss.constants.ApplicationConstants.BLANK;
 import static com.hcl.bss.constants.ApplicationConstants.COMMA_DELIMITER;

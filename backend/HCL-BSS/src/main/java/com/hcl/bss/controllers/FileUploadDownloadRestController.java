@@ -5,7 +5,6 @@ import static com.hcl.bss.constants.ApplicationConstants.CSV_WRONG_DATA;
 import static com.hcl.bss.constants.ApplicationConstants.INVALID_FILE_TYPE;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.text.ParseException;
 
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +28,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.hcl.bss.dto.ErrorResponseDTO;
 import com.hcl.bss.dto.FileUploadResponse;
-import com.hcl.bss.exceptions.CustomDBException;
 import com.hcl.bss.exceptions.ImportParseException;
 import com.hcl.bss.services.datamigration.UploadService;
 

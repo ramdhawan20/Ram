@@ -52,7 +52,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.hcl.bss.data.migration.parsers.CSVDataMigrationParser;
+import com.hcl.bss.datamigration.parsers.CSVDataMigrationParser;
 import com.hcl.bss.domain.ErrorCsvFile;
 import com.hcl.bss.domain.Product;
 import com.hcl.bss.domain.ProductTypeMaster;
@@ -60,7 +60,6 @@ import com.hcl.bss.dto.FileUploadResponse;
 import com.hcl.bss.dto.ProductDto;
 import com.hcl.bss.dto.ProductErrorLogDetails;
 import com.hcl.bss.dto.ProductUploadDetails;
-import com.hcl.bss.exceptions.CustomDBException;
 import com.hcl.bss.repository.ProductRepository;
 import com.hcl.bss.validator.DataMigrationFieldValidator;
 @Service

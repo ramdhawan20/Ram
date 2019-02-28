@@ -257,7 +257,7 @@ public class SubscriptionScheduler {
             orderRepository.save(order);
             return false;
         }
-        System.out.println("Product "+ product.get().getProductName()+" is present");
+        System.out.println("Product "+ product.get().getProductDispName()+" is present");
         // product is found
         return true;
 
