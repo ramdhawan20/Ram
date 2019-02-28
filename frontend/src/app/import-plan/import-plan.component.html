@@ -1,9 +1,10 @@
 <div class="col-lg-12">
   <main>
-
-    <flash-messages style="text-transform: capitalize;"></flash-messages>
-
+    
+    
+ 
     <h5 class="border_btm">Import product</h5>
+    <flash-messages style="text-transform: capitalize;"></flash-messages>
     <div class="upload-btn-wrapper" id="exportImportBox" style="text-transform: capitalize;position: relative;display: inline-block;width: 100%;
       padding: 2%;text-align: left;border: 2px solid #bababa;border-radius: 5px;margin-top:5%">
       <label><strong>Upload Csv File :</strong></label>
@@ -31,7 +32,7 @@
       </div> -->
       <div id="productGrid">
         <div style="height: 100%; padding-top: 63px; box-sizing: border-box; width: auto;">
-          <ag-grid-angular #agGrid style="width: 680px; height: 100%;" id="myGrid" class="ag-theme-balham"
+          <ag-grid-angular #agGrid style="width: 1010px; height: 100%;" id="myGrid" class="ag-theme-balham"
             [enableSorting]="true" [pagination]="false" [suppressDragLeaveHidesColumns]="true" [columnDefs]="columnDefs"
             [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="rowSelection"
             [rowData]="rowData" [context]="context" [frameworkComponents]="frameworkComponents"
