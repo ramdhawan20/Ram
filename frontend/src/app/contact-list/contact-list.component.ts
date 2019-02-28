@@ -27,7 +27,7 @@ export class ContactListComponent implements OnInit {
   constructor(private router : Router,private flashMessage: FlashMessagesService,private http: HttpClient, private modalService: ModalsService, private globalServiceService: GlobalServiceService,private childMessageRenderer: ChildMessageRenderer) {
 
     this.columnDefs = [
-      { headerName: 'SUBSCRIPTION ID', field: 'subscriptionNo' },
+      { headerName: 'SUBSCRIPTION NO', field: 'subscriptionId' },
       { headerName: 'CUSTOMBER NAME', field: 'customerName' },
       { headerName: 'EMAIL', field: 'email' },
       { headerName: 'PLAN NAME', field: 'planName' },
@@ -56,17 +56,7 @@ export class ContactListComponent implements OnInit {
     this.modalService.open(id);
   }
   //open popup code end
-   createRowData() {
-    var rowData = [];
-    for (var i = 0; i < 15; i++) {
-      rowData.push({
-        row: "Row " + i,
-        value: i,
-        currency: i + Number(Math.random().toFixed(2))
-      });
-    }
-    return rowData;
-  }
+ 
   //close popup code start
   closeModal(id: string) {
     this.modalService.close(id);
@@ -81,15 +71,18 @@ export class ContactListComponent implements OnInit {
   }
 
 
-  searchSubcription(subscriptionNo,customerName,email,planName,status,price,createdDate,activatedDate,lastBillDate,nextBillDate,first_name){
-    this.globalServiceService.searchSubcription(subscriptionNo,customerName,email,planName,status,price,createdDate,activatedDate,lastBillDate,nextBillDate,first_name).subscribe(
+  searchSubcription(subscriptionNo,customerName,email,planName,status,price,createdDate,activatedDate,lastBillDate,nextBillDate){
+    this.globalServiceService.searchSubcription(subscriptionNo,customerName,email,planName,status,price,createdDate,activatedDate,lastBillDate,nextBillDate).subscribe(
       data => {
+      this.rowData=[];
       console.log(data);
-      this.flashMessage.show('Search successfully!!', { cssClass: 'alert-success', timeout: 2000 });
+      this.rowData = data;
+      this.rowData=this.rowData.subscriptionList;
+    //  this.flashMessage.show('Search successfully!!', { cssClass: 'alert-success', timeout: 2000 });
       
       },
     error=>{
-      this.flashMessage.show('Search unsuccessfully!! !!', { cssClass: 'alert-danger', timeout: 2000 });
+      this.flashMessage.show('No data found!!', { cssClass: 'alert-danger', timeout: 2000 });
     });
   }
 
@@ -101,11 +94,13 @@ export class ContactListComponent implements OnInit {
   }
 
   onGridReady(params) {
+    this.rowData = [];
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
     this.globalServiceService.SubscriptionCalling().subscribe(
       data => {
         this.rowData = data;
+        this.rowData=this.rowData.subscriptionList;
         params.api.paginationGoToPage(1);
       });
   }
