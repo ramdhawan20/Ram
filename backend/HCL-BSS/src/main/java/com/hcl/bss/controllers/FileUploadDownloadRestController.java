@@ -5,6 +5,7 @@ import static com.hcl.bss.constants.ApplicationConstants.CSV_WRONG_DATA;
 import static com.hcl.bss.constants.ApplicationConstants.INVALID_FILE_TYPE;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 
 import javax.servlet.http.HttpServletResponse;
