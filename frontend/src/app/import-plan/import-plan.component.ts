@@ -45,12 +45,12 @@ export class ImportPlanComponent implements OnInit {
   constructor(private modalService: NgbModal, private globalServiceService: GlobalServiceService, private http: HttpClient, private flashMessage: FlashMessagesService) {
 
     this.columnDefs = [
-      { headerName: 'Date Added', field: 'dateAdded' },
-      { headerName: 'File Name', field: 'uploadFileName', cellRenderer: "FileDownloadComponent", colId: "params" },
-      { headerName: 'No.of Records', field: 'noOfRecords' },
-      { headerName: 'Updated Records', field: 'noOfSuccessRecords' },
-      { headerName: 'Status', field: 'status' },
-      { headerName: 'Error', field: 'errorLogFileName', cellRenderer: "ErrorDownloadComponent", colId: "params" },
+      { headerName: 'Date Added', field: 'dateAdded', width: 160 },
+      { headerName: 'File Name', field: 'uploadFileName', cellRenderer: "FileDownloadComponent", colId: "params", width: 160 },
+      { headerName: 'No.of Records', field: 'noOfRecords', width: 160 },
+      { headerName: 'Updated Records', field: 'noOfSuccessRecords', width: 160 },
+      { headerName: 'Status', field: 'status', width: 160 },
+      { headerName: 'Error', field: 'errorLogFileName', cellRenderer: "ErrorDownloadComponent", colId: "params", width: 180 },
     ];
 
     this.context = { componentParent: this };
@@ -194,6 +194,9 @@ export class ImportPlanComponent implements OnInit {
       } 
       else if(error.error.status==500){
         let msg=error.error.error;
+        this.flashMessage.show(msg, { cssClass: 'alert-danger', timeout: 3000 });
+      } else  if(error.error.errorCode==1062){       
+        let msg=error.error.message;
         this.flashMessage.show(msg, { cssClass: 'alert-danger', timeout: 3000 });
       }     
     });

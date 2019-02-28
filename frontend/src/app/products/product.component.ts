@@ -26,6 +26,12 @@ export class ProductComponent implements OnInit {
   private context;
   private frameworkComponents;
   closeResult: string;
+  producttype;
+  name;
+  description;
+  sku;
+  startDate;
+  endDate;
  
 
 
@@ -134,10 +140,29 @@ export class ProductComponent implements OnInit {
     this.globalServiceService.addProduct(name,description,sku,sDate,eDate,pCode).subscribe(
       data => {
       console.log(data);
+      this.rowData=[];
+      this.globalServiceService.usermanagementCalling().subscribe(
+        data => {
+          this.rowData = data;  
+          this.producttype="";
+          this.name="";
+          this.description="";
+          this.sku="";
+          this.startDate="";
+          this.endDate="";
+          
+        });
+
       this.flashMessage.show('New Product added successfully!!', { cssClass: 'alert-success', timeout: 2000 });
       },
     error=>{
-      this.flashMessage.show('Product not added !!', { cssClass: 'alert-danger', timeout: 2000 });
+      if(error.error.errorCode==1062){       
+        let msg=error.error.message;
+        this.flashMessage.show(msg, { cssClass: 'alert-danger', timeout: 3000 });
+      }else{
+        this.flashMessage.show('Product not added !!', { cssClass: 'alert-danger', timeout: 2000 });
+      }    
+      
     });
    }
 }

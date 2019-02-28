@@ -1197,3 +1197,9 @@ main{ width: 100%;}
 }
 .input-group input::placeholder,.input-group input{ font-size: 12px;}
 h4.modal-title{color:#117a8b !important; text-transform: uppercase; font-size: 20px;}
+.alert {
+ 
+  padding: .1rem 1.25rem !important;}
+  flash-messages{ position: absolute;
+    width: 97%;
+    top: 50px;}

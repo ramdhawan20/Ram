@@ -29,28 +29,28 @@
                   <div class="form-group">
                     <label for="username">Name:</label>
                     <input type="text" class="form-control form-control-sm" id="username_product" name="name"
-                      [(ngModel)]="name">
+                      [(ngModel)]="nameMain">
                   </div>
                 </div>
                 <div class="col-lg-3">
                   <div class="form-group">
                     <label for="code">Code:</label>
                     <input type="text" class="form-control form-control-sm" id="code_product" name="code"
-                      [(ngModel)]="code">
+                      [(ngModel)]="codeMain">
                   </div>
                 </div>
                 <div class="col-lg-3">
                   <div class="form-group">
                     <label for="sku">SKU:</label>
                     <input type="text" class="form-control form-control-sm" id="sku_product" name="sku"
-                      [(ngModel)]="sku">
+                      [(ngModel)]="skuMain">
                   </div>
                 </div>
                 <div class="col-lg-3">
                     <div class="form-group">
                       <label for="status">Status:</label>
                       <select class="form-control form-control-sm" id="status_product" name="status_val"
-                        [(ngModel)]="status_val">
+                        [(ngModel)]="status_valMain">
                         <option>Active</option>
                         <option>Inactive</option>
                       </select>
@@ -63,7 +63,7 @@
                     <label for="dateOfBirth">Start Date:</label>
                     <div class="input-group">
                       <input id="startDateId" class="form-control"   placeholder="YYYY-MM-DD" name="startDate"
-                        [(ngModel)]="startDate" ngbDatepicker #startdate="ngbDatepicker">
+                        [(ngModel)]="startDateMain" ngbDatepicker #startdate="ngbDatepicker">
                       <div class="input-group-append">
                         <button class="btn btn-outline-secondary calendar" (click)="startdate.toggle()" type="button">
                           <i class="fa fa-calendar fa-2" aria-hidden="true"></i>
@@ -76,7 +76,7 @@
                     <div class="form-group">
                         <label for="dateOfBirth"> End Date:</label>
                         <div class="input-group">
-                          <input id="endDateId" class="form-control" placeholder="YYYY-MM-DD"  name="endDate"  [(ngModel)]="endDate" ngbDatepicker #enddate="ngbDatepicker">
+                          <input id="endDateId" class="form-control" placeholder="YYYY-MM-DD"  name="endDate"  [(ngModel)]="endDateMain" ngbDatepicker #enddate="ngbDatepicker">
                           <div class="input-group-append">
                             <button class="btn btn-outline-secondary calendar" (click)="enddate.toggle()" type="button">
                             <i class="fa fa-calendar fa-2" aria-hidden="true"></i>
