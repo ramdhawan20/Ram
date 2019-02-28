@@ -28,6 +28,7 @@ public class SsRestApplication implements CommandLineRunner {
 		SpringApplication.run(SsRestApplication.class, args);
 	}
 
+	/*TO run SubscriptionBatch*/
 	@Override
 	public void run(String... arg0) throws IOException, URISyntaxException {
 		subscriptionScheduler.runSubscriptionBatch();
