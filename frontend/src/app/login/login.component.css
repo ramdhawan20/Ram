@@ -20,6 +20,8 @@ h6{font-size: 18px;
       background-color: #6c757d;
     border-color: #6c757d;
    }
+   button.btn.btn-info{ font-size: 14px; text-transform: uppercase;}
+   img{ height: 47px;}
 /* ANIMATIONS */
 
 /* Simple CSS3 Fade-in-down Animation */
