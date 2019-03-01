@@ -90,7 +90,9 @@
                 </div>                
                 <div class="col-lg-3">
                     <label style="width: 100%;"></label>   
-                          
+                    <button type="button" id="searchBtn" class="btn btn-info float-right" style=" margin-left: 5px; line-height:17px;">
+                        Export to Csv <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                    </button>
                         <button type="button" id="searchBtn" class="btn btn-info float-right" style=" margin-left: 5px; line-height:17px;">
                             Search
                             <i class="fa fa-search" aria-hidden="true" style="color:#ffffff;margin-top: -4px;margin-left: 5px; "></i>
@@ -117,13 +119,13 @@
             </ag-grid-angular>
 
           </div>
-          <div style="position: absolute; top: 10px; left: auto; width: 100%;">
+          <!-- <div style="position: absolute; top: 10px; left: auto; width: 100%;">
             <input type="text" class="form-control" (input)="onQuickFilterChanged()"
               style="width: 30%; display: inline-block;" id="quickFilter" placeholder="quick filter..." />
-            <!-- <label> File Name: <input type="text" id="fileName" /> </label> -->
+            
             <label style="margin-left: 20px;"> <button (click)="onBtExport()" class="btn btn-info"
                 style="margin-top: -7px;">Export to CSV <i aria-hidden="true" class="fa fa-cloud-download"></i></button> </label>
-          </div>
+          </div> -->
 
         </div>
       </div>
