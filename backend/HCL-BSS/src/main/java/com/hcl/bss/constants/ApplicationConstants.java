@@ -40,5 +40,11 @@ public class ApplicationConstants {
     public static final String LINE_SEPERATOR = "line.separator";
     public static final String UTF_8 = "UTF-8";
 
-
+    //subscription batch
+    public static final String PASS_STATUS = "Pass";
+    public static final String FAIL_STATUS = "Fail";
+    public static final String BILL_TO = "billTo";
+    public static final String SOLD_TO = "soldTo";
+    public static final String COMPANY_ID = "companyId";
+    public static final String VOLUME = "VOLUME";
 }
