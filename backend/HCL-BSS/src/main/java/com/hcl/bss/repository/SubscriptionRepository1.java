@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.hcl.bss.domain.Subscription1;
+import org.springframework.data.repository.query.Param;
 
 public interface SubscriptionRepository1 extends JpaRepository<Subscription1, Long> {
 
@@ -21,6 +22,6 @@ public interface SubscriptionRepository1 extends JpaRepository<Subscription1, Lo
 			"    and (:customerName is null OR subscription.SUBSCRIPTION_ID = :customerName)\r\n" + 
 			"    and (:email is null OR subscription.SUBSCRIPTION_ID = :email)\r\n" + 
 			"    ORDER BY subscription.CRE_DT DESC", nativeQuery = true)	
-	public List<Subscription1> findAll(String subscriptionId, String customerName, String email);
+	public List<Subscription1> findAll(@Param("subscriptionId") String subscriptionId, @Param("customerName") String customerName, @Param("email") String email);
 	
 }

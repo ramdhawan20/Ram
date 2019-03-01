@@ -7,7 +7,7 @@ import { GlobalServiceService } from '../global-service.service';
 import { ErrorDownloadComponent } from "../error-download.component";
 import { FileDownloadComponent } from '../file-download.component';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-import-plan',
   templateUrl: './import-plan.component.html',
@@ -33,6 +33,8 @@ export class ImportPlanComponent implements OnInit {
   f_Name;
   selectedfile;
  
+  
+ 
   ngOnInit() {
 
     document.getElementById("exportImportBox").style.display = "block";
@@ -42,15 +44,15 @@ export class ImportPlanComponent implements OnInit {
     this.flashMessage.show('Choose a file', { cssClass: 'alert-danger', timeout: 2000 });
   }
 
-  constructor(private modalService: NgbModal, private globalServiceService: GlobalServiceService, private http: HttpClient, private flashMessage: FlashMessagesService) {
+  constructor(private router: Router,private modalService: NgbModal, private globalServiceService: GlobalServiceService, private http: HttpClient, private flashMessage: FlashMessagesService) {
 
     this.columnDefs = [
-      { headerName: 'Date Added', field: 'dateAdded', width: 160 },
-      { headerName: 'File Name', field: 'uploadFileName', cellRenderer: "FileDownloadComponent", colId: "params", width: 160 },
-      { headerName: 'No.of Records', field: 'noOfRecords', width: 160 },
-      { headerName: 'Updated Records', field: 'noOfSuccessRecords', width: 160 },
-      { headerName: 'Status', field: 'status', width: 160 },
-      { headerName: 'Error', field: 'errorLogFileName', cellRenderer: "ErrorDownloadComponent", colId: "params", width: 180 },
+      { headerName: 'Date Added', field: 'dateAdded' },
+      { headerName: 'File Name', field: 'uploadFileName', cellRenderer: "FileDownloadComponent", colId: "params" },
+      { headerName: 'No.of Records', field: 'noOfRecords' },
+      { headerName: 'Updated Records', field: 'noOfSuccessRecords' },
+      { headerName: 'Status', field: 'status' },
+      { headerName: 'Error', field: 'errorLogFileName', cellRenderer: "ErrorDownloadComponent", colId: "params" },
     ];
 
     this.context = { componentParent: this };
@@ -122,6 +124,10 @@ export class ImportPlanComponent implements OnInit {
 
     }
 
+  }
+  reload(){
+    //window.location.reload();
+    this.router.navigate(['/product/import']);
   }
   fileChange() {
 
