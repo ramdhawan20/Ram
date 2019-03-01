@@ -33,7 +33,7 @@ export class ProductComponent implements OnInit {
   sku;
   startDate;
   endDate;
- 
+  DrodownArray;
 
 
   constructor(private spinnerService: Ng4LoadingSpinnerService,private router : Router,private modalService: NgbModal,private flashMessage: FlashMessagesService,private childMessageRenderer: ChildMessageRenderer,private globalServiceService: GlobalServiceService) {
@@ -65,6 +65,11 @@ export class ProductComponent implements OnInit {
    }
 
   ngOnInit() {
+    this.globalServiceService.fetchdropdownvalues().subscribe(
+      data => {
+        this.DrodownArray=data;
+        console.log(this.DrodownArray);
+      });
   }
 
 
@@ -170,4 +175,6 @@ export class ProductComponent implements OnInit {
       
     });
    }
+  
+   
 }
