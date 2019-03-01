@@ -47,12 +47,12 @@ export class ImportPlanComponent implements OnInit {
   constructor(private router: Router,private modalService: NgbModal, private globalServiceService: GlobalServiceService, private http: HttpClient, private flashMessage: FlashMessagesService) {
 
     this.columnDefs = [
-      { headerName: 'Date Added', field: 'dateAdded', width: 160 },
-      { headerName: 'File Name', field: 'uploadFileName', cellRenderer: "FileDownloadComponent", colId: "params", width: 160 },
-      { headerName: 'No.of Records', field: 'noOfRecords', width: 160 },
-      { headerName: 'Updated Records', field: 'noOfSuccessRecords', width: 160 },
-      { headerName: 'Status', field: 'status', width: 160 },
-      { headerName: 'Error', field: 'errorLogFileName', cellRenderer: "ErrorDownloadComponent", colId: "params", width: 180 },
+      { headerName: 'Date Added', field: 'dateAdded' },
+      { headerName: 'File Name', field: 'uploadFileName', cellRenderer: "FileDownloadComponent", colId: "params" },
+      { headerName: 'No.of Records', field: 'noOfRecords' },
+      { headerName: 'Updated Records', field: 'noOfSuccessRecords' },
+      { headerName: 'Status', field: 'status' },
+      { headerName: 'Error', field: 'errorLogFileName', cellRenderer: "ErrorDownloadComponent", colId: "params" },
     ];
 
     this.context = { componentParent: this };
