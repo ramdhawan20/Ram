@@ -22,11 +22,11 @@ public class ApplicationConstants {
     public static final String STATUS_PARTIAL_SUCCESS = "Partial Success";
     public static final String STATUS_SUCCESS = "Success";
     public static final String STATUS_FAIL = "Fail";
-    public static final String EXTERNAL_FILE_PATH = "C://Users//Public//temp//";
+    public static final String EXTERNAL_FILE_PATH = "/PROJECTS/SUBSCRIPTION/files/";//"C://Users//Public//temp//";
     public static final String FILE_NOT_EXIST_MSG = "Sorry. The file you are looking for does not exist";
     public static final String ERROR_FILE_NAME_SUFFIX = "yyyy-MM-dd-HH_mm_ss";
-    public static final String UPLOADED_FOLDER = "C://Users//Public//temp//";
-    public static final String ERROR_FILE = "C:/Users/Public/temp/error_log_";
+    public static final String UPLOADED_FOLDER = "/PROJECTS/SUBSCRIPTION/files/";//C://Users//Public//temp//";
+    public static final String ERROR_FILE = "/PROJECTS/SUBSCRIPTION/files/error_log_";
     public static final String CSV_EXTENTION = ".csv";
     public static final String TEXT_EXTENTION = ".txt";
     public static final String NEW_LINE_SEPARATOR = "\n";
@@ -39,4 +39,6 @@ public class ApplicationConstants {
     public static final String ERROR = "Error : ";
     public static final String LINE_SEPERATOR = "line.separator";
     public static final String UTF_8 = "UTF-8";
+
+
 }
