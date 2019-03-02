@@ -1,7 +1,10 @@
 package com.hcl.bss.repository;
 
+import com.hcl.bss.domain.RatePlanVolume;
 import com.hcl.bss.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -11,8 +14,9 @@ import java.util.List;
  */
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    @Query(value= "SELECT * from tb_user_details where user_id=?1 and password=?2",nativeQuery = true)
+    public User isUserExists(@Param("userId") String userId, @Param("userId") String password);
     public User findById(int id) ;
-
     public List<User> findByUserFirstName(String firstName);
 
 /*    private SessionFactory sessionFactory;

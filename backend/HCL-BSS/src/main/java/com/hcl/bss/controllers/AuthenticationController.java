@@ -1,12 +1,18 @@
 package com.hcl.bss.controllers;
 
+import com.hcl.bss.domain.Product;
 import com.hcl.bss.domain.User;
 import com.hcl.bss.dto.Greeting;
+import com.hcl.bss.dto.LoginRequest;
 import com.hcl.bss.dto.UserDetails;
+import com.hcl.bss.exceptions.AuthenticationException;
 import com.hcl.bss.repository.UserRepository;
 import com.hcl.bss.services.UserServices;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -24,11 +30,21 @@ public class AuthenticationController{
 
 	@ApiOperation(value = "Get user details after successfull login", response = UserDetails.class)
     @RequestMapping(value = "/login", produces = { "application/json" }, method = RequestMethod.POST)
-    public UserDetails login(@RequestBody  UserDetails userDetails) {
-    	System.out.print("## Incoming request for login ::"+userDetails.getUserId());
-		userDetails.setUserLastName("Srivastava");
-	    userDetails.setUserId(userDetails.getUserId());
-        return userDetails;
+    public ResponseEntity<UserDetails> login(@RequestBody LoginRequest loginRequest) {
+
+	     User user = userRepository.isUserExists(loginRequest.getUserId(),loginRequest.getPassword());
+	     if (user == null) {
+             throw new AuthenticationException("Invalid User Id / Pwd");
+         }else if (user.getIsLocked() == 1) {
+             throw new AuthenticationException("User is Locked. Please contact System Admin !!");
+        }
+
+    	UserDetails userDetails = new UserDetails();
+        userDetails.setUserId(user.getUserId());
+		userDetails.setUserFirstName(user.getUserFirstName());
+        userDetails.setUserLastName(user.getUserLastName());
+        return new ResponseEntity<>(userDetails, HttpStatus.OK);
+
     }
 
     /*@ApiOperation(value = "Get whole list of users", response = UserDetails.class)
