@@ -326,6 +326,17 @@ export class GlobalServiceService {
       return response;
     }));
   }
+  fetchdropdownvalues(){
+  
+    return this.http.get(this.url + '/getProductType', {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      })
+    }).pipe(map((response: Response) => {
+      console.log(response);
+      return response;
+    }));
+  }
 
 
 }

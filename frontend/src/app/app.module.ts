@@ -29,6 +29,7 @@ import { AuthGuard } from './auth.guard';
 import { ImportPlanComponent } from './import-plan/import-plan.component';
 import { ProductComponent } from './products/product.component';
 import { SubscriptionreportComponent } from './subscriptionreport/subscriptionreport.component';
+import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,7 +54,8 @@ import { SubscriptionreportComponent } from './subscriptionreport/subscriptionre
     BrowserModule,FormsModule,HttpClientModule,HttpModule,GridModule,ReactiveFormsModule,
     AppRoutingModule,NgbModule.forRoot(),FlashMessagesModule.forRoot(),  
     AgGridModule.withComponents([ChildMessageRenderer]),NgbPaginationModule, NgbAlertModule,AgGridModule.withComponents([ErrorDownloadComponent])  ,
-    AgGridModule.withComponents([FileDownloadComponent])  
+    AgGridModule.withComponents([FileDownloadComponent]) ,
+    [ Ng4LoadingSpinnerModule.forRoot() ] 
   ],
  
   providers: [GlobalServiceService, ModalsService, PageService, SortService, FilterService, GroupService,ChildMessageRenderer, AuthGuard],

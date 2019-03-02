@@ -5,6 +5,7 @@ import { FlashMessagesService } from 'angular2-flash-messages';
 import { HttpClient } from "@angular/common/http";
 import { ChildMessageRenderer } from "../child-message-renderer.component";
 import { Router } from '@angular/router';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 @Component({
   selector: 'app-contact-list',
   templateUrl: './contact-list.component.html',
@@ -24,7 +25,7 @@ export class ContactListComponent implements OnInit {
   private frameworkComponents;
   private fileName;
 
-  constructor(private router : Router,private flashMessage: FlashMessagesService,private http: HttpClient, private modalService: ModalsService, private globalServiceService: GlobalServiceService,private childMessageRenderer: ChildMessageRenderer) {
+  constructor(private spinnerService: Ng4LoadingSpinnerService, private router : Router,private flashMessage: FlashMessagesService,private http: HttpClient, private modalService: ModalsService, private globalServiceService: GlobalServiceService,private childMessageRenderer: ChildMessageRenderer) {
 
     this.columnDefs = [
       { headerName: 'SUBSCRIPTION NO', field: 'subscriptionId' },
@@ -76,9 +77,10 @@ export class ContactListComponent implements OnInit {
     //   this.flashMessage.show('Please enter filter criteria', { cssClass: 'alert-danger', timeout: 2000 });
     // }
     // else{
-     
+      this.spinnerService.show();
       this.globalServiceService.searchSubcription(subscriptionNo,customerName,email,planName,status,price,createdDate,activatedDate,lastBillDate,nextBillDate).subscribe(
         data => {
+        this.spinnerService.hide();
         this.rowData=[];
         console.log(data);
         this.rowData = data;
@@ -87,6 +89,7 @@ export class ContactListComponent implements OnInit {
         
         },
       error=>{
+        this.spinnerService.hide();
         this.flashMessage.show('No data found!!', { cssClass: 'alert-danger', timeout: 2000 });
       });
     // }

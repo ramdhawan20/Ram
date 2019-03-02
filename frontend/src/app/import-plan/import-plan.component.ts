@@ -8,6 +8,7 @@ import { ErrorDownloadComponent } from "../error-download.component";
 import { FileDownloadComponent } from '../file-download.component';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 @Component({
   selector: 'app-import-plan',
   templateUrl: './import-plan.component.html',
@@ -32,6 +33,7 @@ export class ImportPlanComponent implements OnInit {
   valarr = [];
   f_Name;
   selectedfile;
+  
  
   
  
@@ -44,7 +46,7 @@ export class ImportPlanComponent implements OnInit {
     this.flashMessage.show('Choose a file', { cssClass: 'alert-danger', timeout: 2000 });
   }
 
-  constructor(private router: Router,private modalService: NgbModal, private globalServiceService: GlobalServiceService, private http: HttpClient, private flashMessage: FlashMessagesService) {
+  constructor( private spinnerService: Ng4LoadingSpinnerService,private router: Router,private modalService: NgbModal, private globalServiceService: GlobalServiceService, private http: HttpClient, private flashMessage: FlashMessagesService) {
 
     this.columnDefs = [
       { headerName: 'Date Added', field: 'dateAdded' },
@@ -182,7 +184,9 @@ export class ImportPlanComponent implements OnInit {
     console.log(this.fileToUpload1);
     let formData = new FormData();
     formData.append('file', this.fileToUpload1, this.fileToUpload1.name);
+    this.spinnerService.show();
     this.http.post(this.globalServiceService.url + '/uploadProductData', formData).subscribe((val) => {
+      this.spinnerService.hide();
       this.valarr.push(val);
       this.rowData = this.valarr;
       document.getElementById("productGrid").style.display = "block";
@@ -192,6 +196,7 @@ export class ImportPlanComponent implements OnInit {
       this.inputvalue=false;
     },
     error=>{
+      this.spinnerService.hide();
       this.selectedfile = "";  
       this.inputvalue=false;
       if(error.error.errorCode==412){       

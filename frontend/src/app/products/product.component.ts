@@ -5,6 +5,7 @@ import { ChildMessageRenderer } from "../child-message-renderer.component";
 import { ModalsService } from '../modal.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
@@ -32,10 +33,10 @@ export class ProductComponent implements OnInit {
   sku;
   startDate;
   endDate;
- 
+  DrodownArray;
 
 
-  constructor(private router : Router,private modalService: NgbModal,private flashMessage: FlashMessagesService,private childMessageRenderer: ChildMessageRenderer,private globalServiceService: GlobalServiceService) {
+  constructor(private spinnerService: Ng4LoadingSpinnerService,private router : Router,private modalService: NgbModal,private flashMessage: FlashMessagesService,private childMessageRenderer: ChildMessageRenderer,private globalServiceService: GlobalServiceService) {
     this.columnDefs = [
       { headerName: 'Name', field: 'productDispName',editable:true },
       { headerName: 'Code', field: 'productTypeCode.productTypeCode',editable:true  },
@@ -64,6 +65,11 @@ export class ProductComponent implements OnInit {
    }
 
   ngOnInit() {
+    this.globalServiceService.fetchdropdownvalues().subscribe(
+      data => {
+        this.DrodownArray=data;
+        console.log(this.DrodownArray);
+      });
   }
 
 
@@ -137,12 +143,15 @@ export class ProductComponent implements OnInit {
 
     let sDate=startDate.day+'/'+startDate.month+'/'+startDate.year;
     let eDate=endDate.day+'/'+endDate.month+'/'+endDate.year;
+    this.spinnerService.show();
     this.globalServiceService.addProduct(name,description,sku,sDate,eDate,pCode).subscribe(
       data => {
       console.log(data);
       this.rowData=[];
+      
       this.globalServiceService.usermanagementCalling().subscribe(
         data => {
+          this.spinnerService.hide();
           this.rowData = data;  
           this.producttype="";
           this.name="";
@@ -156,6 +165,7 @@ export class ProductComponent implements OnInit {
       this.flashMessage.show('New Product added successfully!!', { cssClass: 'alert-success', timeout: 2000 });
       },
     error=>{
+      this.spinnerService.hide();
       if(error.error.errorCode==1062){       
         let msg=error.error.message;
         this.flashMessage.show(msg, { cssClass: 'alert-danger', timeout: 3000 });
@@ -165,4 +175,6 @@ export class ProductComponent implements OnInit {
       
     });
    }
+  
+   
 }

@@ -43,9 +43,6 @@ public class SubscriptionScheduler {
     @Autowired
     private OrderErrorsRepository orderErrorsRepository;
 
-    //@Autowired
-    //private RatePlanRepository ratePlanRepository;
-
     @Autowired
     private SubscriptionRepository subscriptionRepository;
 
@@ -121,8 +118,6 @@ public class SubscriptionScheduler {
             customer.setLastName(order.getBillToLastName());
             customer.setEmail(order.getBillToEmail());
             customer.setPhone(order.getBillToPhone());
-            //customer.setBillTo(dataMap.get(BILL_TO));
-            //customer.setSoldTo(dataMap.get(SOLD_TO));
             customer.setBillTo(billToId);
             customer.setSoldTo(soldToId);
 
@@ -135,11 +130,12 @@ public class SubscriptionScheduler {
             }
         }
         catch(Exception ex){
-            OrderErrors error = addOrderError(order, "Customer could not be created : "+ex.getMessage());
+/*            OrderErrors error = addOrderError(order, "Customer could not be created : "+ex.getMessage());
             //OrderErrors error = addOrderError(order, "Customer could not be created");
             order.setStatus(FAIL_STATUS);
             orderErrorsRepository.save(error);
-            orderRepository.save(order);
+            orderRepository.save(order);*/
+            updateOrder(order, "Customer could not be created : "+ex.getMessage());
         }
     }
 
@@ -162,10 +158,11 @@ public class SubscriptionScheduler {
         }
         catch(Exception ex){
             //OrderErrors error = addOrderError(order, "Company could not be created : "+ex.getMessage());
-            OrderErrors error = addOrderError(order, "Company could not be created");
+/*            OrderErrors error = addOrderError(order, "Company could not be created");
             order.setStatus(FAIL_STATUS);
             orderErrorsRepository.save(error);
-            orderRepository.save(order);
+            orderRepository.save(order);*/
+            updateOrder(order,"Company could not be created : "+ex.getMessage());
         }
     }
 
@@ -182,10 +179,11 @@ public class SubscriptionScheduler {
             billToAddr.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
             Country country = entityManager.find(Country.class,order.getBillToCountry());
             if(country==null){
-                OrderErrors error = addOrderError(order, "Country: "+ order.getBillToCountry() + " is not configured");
+/*                OrderErrors error = addOrderError(order, "Country: "+ order.getBillToCountry() + " is not configured");
                 order.setStatus(FAIL_STATUS);
                 orderErrorsRepository.save(error);
-                orderRepository.save(order);
+                orderRepository.save(order);*/
+                updateOrder(order, "Country: "+ order.getBillToCountry() + " is not configured");
                 return;
             }
             billToAddr.setCountry(country);
@@ -208,10 +206,11 @@ public class SubscriptionScheduler {
         }
         catch(Exception ex){
             //OrderErrors error = addOrderError(order,"Bill To and Sold To could not be persisted due to:"+ ex.getMessage());
-            OrderErrors error = addOrderError(order,"Bill To and Sold To could not be persisted ");
+/*            OrderErrors error = addOrderError(order,"Bill To and Sold To could not be persisted ");
             order.setStatus(FAIL_STATUS);
             orderErrorsRepository.save(error);
-            orderRepository.save(order);
+            orderRepository.save(order);*/
+            updateOrder(order,"Bill To and Sold To could not be persisted due to:"+ ex.getMessage());
             //return null;
         }
     }
@@ -245,10 +244,11 @@ public class SubscriptionScheduler {
             if (orderSource != null)
                 subscription.setOrderSourceCode(orderSource.getOrderSourceCode());
             else {
-                OrderErrors error = addOrderError(order, order.getOrderSourceCode() + " is not configured");
+                /*OrderErrors error = addOrderError(order, "Order Source: "+order.getOrderSourceCode() + " is not configured");
                 order.setStatus(FAIL_STATUS);
                 orderErrorsRepository.save(error);
-                orderRepository.save(order);
+                orderRepository.save(order);*/
+                updateOrder(order,"Order Source: "+order.getOrderSourceCode() + " is not configured");
             }
             subscription.setAutorenew(order.getAutoRenew());
             subscription.setIsActive(1);
@@ -258,11 +258,23 @@ public class SubscriptionScheduler {
             subscription.setSubscriptionStartDate(new Timestamp(System.currentTimeMillis()));
             // to be discussed --where to get this info from
             subscription.setStatus("ACTIVE");
-            // to be discussed
-            //subscription.setSubscriptionEndDate(order.getBillingCycle()+new Timestamp(System.currentTimeMillis()));
             Calendar cal = Calendar.getInstance();
             Date today = cal.getTime();
-            cal.add(Calendar.YEAR, 1); // to get previous year add -1
+            // to be discussed
+            //subscription.setSubscriptionEndDate(order.getBillingCycle()+new Timestamp(System.currentTimeMillis()));
+            int billCycle = order.getBillingCycle();
+            String billFrequency = order.getBillingFrequency();
+            switch(billFrequency){
+                case "WEEK":
+                    cal.add(Calendar.WEEK_OF_YEAR, billCycle);
+                    break;
+                case "MONTH":
+                    cal.add(Calendar.MONTH, billCycle);
+                    break;
+                case "YEAR":
+                    cal.add(Calendar.YEAR, billCycle);
+                    break;
+            }
             subscription.setSubscriptionEndDate(new Timestamp(cal.getTimeInMillis()));
             subscription.setActivationDate(new Timestamp(System.currentTimeMillis()));
             String subscriptionId = generateSubscriptionId(order);
@@ -273,10 +285,11 @@ public class SubscriptionScheduler {
         }
         catch(Exception ex){
             //OrderErrors error = addOrderError(order, "Subscription could not be created "+ex.getMessage());
-            OrderErrors error = addOrderError(order, "Subscription could not be created ");
+/*            OrderErrors error = addOrderError(order, "Subscription could not be created ");
             order.setStatus(FAIL_STATUS);
             orderErrorsRepository.save(error);
-            orderRepository.save(order);
+            orderRepository.save(order);*/
+            updateOrder(order,"Subscription could not be created "+ex.getMessage());
             return null;
         }
     }
@@ -287,10 +300,11 @@ public class SubscriptionScheduler {
         subRatePlan.setBillingCycle(order.getBillingCycle());
         PricingScheme pricingScheme = entityManager.find(PricingScheme.class, order.getPricingSchemeCode());
         if(pricingScheme== null){
-            OrderErrors error = addOrderError(order,"Pricing Scheme Code: "+order.getPricingSchemeCode()+ " is not configured");
+            /*OrderErrors error = addOrderError(order,"Pricing Scheme Code: "+order.getPricingSchemeCode()+ " is not configured");
             order.setStatus(FAIL_STATUS);
             orderErrorsRepository.save(error);
-            orderRepository.save(order);
+            orderRepository.save(order);*/
+            updateOrder(order, "Pricing Scheme Code: "+order.getPricingSchemeCode()+ " is not configured");
         }
         else{
             subRatePlan.setPrice(order.getTotalPrice());
@@ -305,10 +319,11 @@ public class SubscriptionScheduler {
             if(VOLUME.equals(pricingScheme.getPricingSchemeCode())){
                 int quantity = order.getQuantity();
                 if(quantity<0){
-                    OrderErrors error = addOrderError(order,order.getQuantity()+ " is less than zero");
+                    /*OrderErrors error = addOrderError(order,order.getQuantity()+ " is less than zero");
                     order.setStatus(FAIL_STATUS);
                     orderErrorsRepository.save(error);
-                    orderRepository.save(order);
+                    orderRepository.save(order);*/
+                    updateOrder(order, order.getQuantity()+ " is less than zero");
                     return subRatePlan;
                 }
                 Long ratePlanUid = ratePlan.getId();
@@ -332,16 +347,21 @@ public class SubscriptionScheduler {
     private boolean validateProduct(Order order){
         Optional<Product> product = productRepository.findById(order.getProductId());
         if(!product.isPresent()){
-            order.setStatus(FAIL_STATUS);
-            OrderErrors error = addOrderError(order, "Product:"+order.getProductId()+" is not configured");
-            orderErrorsRepository.save(error);
-            orderRepository.save(order);
-            return false;
+            return updateOrder(order, "Product:"+ order.getProductId()+ " is not configured");
+            //return updateOrder(order, "Product:", order.getProductId());
         }
         System.out.println("Product "+ product.get().getProductDispName()+" is present");
         // product is found
         return true;
 
+    }
+
+    private boolean updateOrder(Order order, String str) {
+        order.setStatus(FAIL_STATUS);
+        OrderErrors error = addOrderError(order, str);
+        orderErrorsRepository.save(error);
+        orderRepository.save(order);
+        return false;
     }
 
     /**
@@ -368,13 +388,12 @@ public class SubscriptionScheduler {
     private boolean validateRatePlan(Order order){
         RatePlan ratePlan = entityManager.find (RatePlan.class,order.getRatePlanId());
         if(ratePlan==null){
-            order.setStatus(FAIL_STATUS);
-            OrderErrors error = addOrderError(order,"Rate plan:"+ order.getRatePlanId()+" is not configured");
-            orderErrorsRepository.save(error);
-            orderRepository.save(order);
-            return false;
+            return updateOrder(order, "Rate plan:"+ order.getRatePlanId()+ " is not configured");
         }
-        System.out.println("Rateplan "+ ratePlan.getRatePlanId()+" is present");
+        else if(ratePlan.getIsActive()== 0){
+            return updateOrder(order, "Rate plan:"+ order.getRatePlanId()+ " is inactive");
+        }
+        //System.out.println("Rateplan "+ ratePlan.getRatePlanId()+" is present");
         return true;
     }
 
@@ -392,11 +411,11 @@ public class SubscriptionScheduler {
         }
 
         if(pricingScheme==null){
-            order.setStatus(FAIL_STATUS);
+/*            order.setStatus(FAIL_STATUS);
             OrderErrors error = addOrderError(order,"Pricing Scheme:"+ order.getPricingSchemeCode()+" is not configured");
             orderErrorsRepository.save(error);
-            orderRepository.save(order);
-            return false;
+            orderRepository.save(order);*/
+            return updateOrder(order,"Pricing Scheme:"+ order.getPricingSchemeCode()+" is not configured" );
         }
         return true;
     }
@@ -416,12 +435,13 @@ public class SubscriptionScheduler {
             return builder.toString();
         }
         catch(Exception ex){
-            order.setStatus(FAIL_STATUS);
+/*            order.setStatus(FAIL_STATUS);
             //OrderErrors error = addOrderError(order,"Exception occured while generating subscriptionID:"+ ex.getMessage());
             OrderErrors error = addOrderError(order,"Exception occured while generating subscriptionID:");
             orderErrorsRepository.save(error);
-            orderRepository.save(order);
-            return "";
+            orderRepository.save(order);*/
+            updateOrder(order,"Exception occured while generating subscriptionID:"+ ex.getMessage());
+            return null;
         }
     }
 
