@@ -7,6 +7,7 @@ import static com.hcl.bss.constants.ApplicationConstants.PRODUCT_DISPLAY_NAME_ID
 import static com.hcl.bss.constants.ApplicationConstants.PRODUCT_TYPE_CODE_IDX;
 import static com.hcl.bss.constants.ApplicationConstants.PROD_DESCRIPTION_IDX;
 import static com.hcl.bss.constants.ApplicationConstants.SKU_IDX;
+import static com.hcl.bss.constants.ApplicationConstants.START_DATE_IDX;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -59,7 +60,7 @@ public class CSVDataMigrationParser {
 							// Create a new product object and fill this data
 							// TODO - Use Builder Pattern. ProductDto.......build()
 							ProductDto product = new ProductDto(tokens[PRODUCT_TYPE_CODE_IDX],
-									tokens[PRODUCT_DISPLAY_NAME_IDX], tokens[SKU_IDX], tokens[EXP_DATE_IDX],
+									tokens[PRODUCT_DISPLAY_NAME_IDX], tokens[SKU_IDX],tokens[START_DATE_IDX], tokens[EXP_DATE_IDX],
 									tokens[PROD_DESCRIPTION_IDX]);
 
 							listProduct.add(product);

@@ -102,7 +102,7 @@ public class UploadServiceImpl implements UploadService {
 		FileOutputStream fout = null;
 
 		try {
-			fout = new FileOutputStream(tempConvertFile);//TODO check its use
+			fout = new FileOutputStream(tempConvertFile);
 			fout.write(file.getBytes());
 	
 			// TODO Catch ImportParseException

@@ -1,6 +1,7 @@
 package com.hcl.bss.controllers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -52,8 +53,8 @@ public class ProductController {
 
 	@ApiOperation(value = "Get All Product", response = ProductDto.class)
 	@RequestMapping(value = "/getProducts", produces = { "application/json" }, method = RequestMethod.GET)
-	public ResponseEntity<Iterable<Product>> getAllProduct() {
-		Iterable<Product> productList = new ArrayList<>();
+	public ResponseEntity<List<ProductDto>> getAllProduct() {
+		List<ProductDto> productList = new ArrayList<>();
 		productList = productService.getAllProducts();
 		return new ResponseEntity<>(productList, HttpStatus.OK);
 

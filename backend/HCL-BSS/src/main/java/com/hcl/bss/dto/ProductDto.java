@@ -8,12 +8,12 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hcl.bss.validator.CustomDateScheme;
-import com.hcl.bss.validator.FieldMatch;
+import com.hcl.bss.validator.ProductStartDateScheme;
 
 @CustomDateScheme.List({
-		@CustomDateScheme(field = "productExpDate", message = "Date format is Invalid! should be dd/MM/yyyy or dd-MM-yyyy") })
-@FieldMatch.List({
-		@FieldMatch(first = "prescribedFileHeader", second = "fileHeader", message = "There is some mismatch in CSV header") })
+		@CustomDateScheme(field = "productExpDate", message = "ProductExpDate format is Invalid! should be dd/MM/yyyy or dd-MM-yyyy") })
+@ProductStartDateScheme.List({
+	@ProductStartDateScheme(productStartDate = "productStartDate", message = "Product Start Date format is Invalid! should be dd/MM/yyyy or dd-MM-yyyy") })
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductDto implements java.io.Serializable {
 	@NotNull(message = "PRODUCT_TYPE_CODE cannot be null")
@@ -30,7 +30,7 @@ public class ProductDto implements java.io.Serializable {
 	@NotBlank(message = "PRODUCT_DISPLAY_NAME cannot be blank")
 	@Size(max = 100, message = "PRODUCT_DISPLAY_NAME  size should not exceed 100")
 	private String productDispName;
-
+	private String productStartDate;
 	private String productExpDate;
 
 	@NotNull(message = "PRODUCT_DESCRIPTION cannot be null")
@@ -45,45 +45,25 @@ public class ProductDto implements java.io.Serializable {
 	private String dateScheme;
 	private String prescribedFileHeader;
 	private String fileHeader;
-	private String productStartDate;
-
 	public ProductDto() {
 		super();
 	}
 
-	public ProductDto(String productTypeCode, long uidpk,
-			@NotNull(message = "SKU cannot be null") @NotBlank(message = "SKU cannot be blank") String sku,
-			@NotNull(message = "PRODUCT_DISPLAY_NAME cannot be null") @NotBlank(message = "PRODUCT_DISPLAY_NAME cannot be blank") @Size(max = 100) String productDispName,
-			String productExpDate,
-			@NotNull(message = "PRODUCT_DESCRIPTION cannot be null") @NotBlank(message = "PRODUCT_DESCRIPTION cannot be blank") @Size(max = 100) String productDescription,
-			String updatedBy, Date updatedDate, String createdBy, Date createdDate, String prescribedFileHeader,
-			String fileHeader) {
-		super();
-		this.productTypeCode = productTypeCode;
-		this.uidpk = uidpk;
-		this.sku = sku;
-		this.productDispName = productDispName;
-		this.productExpDate = productExpDate;
-		this.productDescription = productDescription;
-		this.updatedBy = updatedBy;
-		this.updatedDate = updatedDate;
-		this.createdBy = createdBy;
-		this.createdDate = createdDate;
-		this.prescribedFileHeader = prescribedFileHeader;
-		this.fileHeader = fileHeader;
-	}
+	
 
 	public ProductDto(
 			@NotNull(message = "SKU cannot be null") @NotBlank(message = "SKU cannot be blank") String productTypeCode,
 			@NotNull(message = "PRODUCT_DISPLAY_NAME cannot be null") @NotBlank(message = "PRODUCT_DISPLAY_NAME cannot be blank") @Size(max = 100) String productDispName,
 			@NotNull(message = "SKU cannot be null") @NotBlank(message = "SKU cannot be blank") String sku,
 			String productExpDate,
+			String productStartDate,
 			@NotNull(message = "PRODUCT_DESCRIPTION cannot be null") @NotBlank(message = "PRODUCT_DESCRIPTION cannot be blank") @Size(max = 100) String productDescription) {
 		super();
 		this.productTypeCode = productTypeCode;
 		this.sku = sku;
 		this.productDispName = productDispName;
 		this.productExpDate = productExpDate;
+		this.productStartDate = productStartDate;
 		this.productDescription = productDescription;
 
 	}

@@ -1,5 +1,7 @@
 package com.hcl.bss.services;
 
+import java.util.List;
+
 import com.hcl.bss.domain.Product;
 import com.hcl.bss.domain.ProductTypeMaster;
 import com.hcl.bss.dto.ProductDto;
@@ -12,7 +14,7 @@ public interface ProductService {
 
 	Product addProduct(ProductDto product);
 
-	Iterable<Product> getAllProducts();
+	List<ProductDto>  getAllProducts();
 
 	Iterable<ProductTypeMaster> getProductType();
 

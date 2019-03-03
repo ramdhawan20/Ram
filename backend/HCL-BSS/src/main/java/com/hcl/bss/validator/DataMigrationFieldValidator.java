@@ -21,6 +21,8 @@ import static com.hcl.bss.constants.ApplicationConstants.DUPLICATE_SKU;
 import static com.hcl.bss.constants.ApplicationConstants.ROW_NO;
 import static com.hcl.bss.constants.ApplicationConstants.ERROR;
 import static com.hcl.bss.constants.ApplicationConstants.DUPLICATE_SKU_DB;
+import static com.hcl.bss.constants.ApplicationConstants.DEFAULT_EXP_DATE;
+import static com.hcl.bss.constants.ApplicationConstants.BLANK;
 
 @Component
 public class DataMigrationFieldValidator {
@@ -30,7 +32,7 @@ public class DataMigrationFieldValidator {
 	public ProductUploadDetails validateFields(List<ProductDto> listProduct, Set<String> skuSetDB) {
 	
 		List<ProductErrorLogDetails> errorList = new ArrayList<>();
-		ProductErrorLogDetails errorDetails = null;
+		ProductErrorLogDetails errorDetails = new ProductErrorLogDetails();
 		ProductUploadDetails productUploadDetails = new ProductUploadDetails();
 		List<ProductDto> successProductList = new ArrayList<>();
 		Set<String> skuSet = new HashSet<>();
@@ -39,9 +41,11 @@ public class DataMigrationFieldValidator {
 			rowNumber++;
 			boolean duplicateSkuCsv = false;
 			boolean duplicateSkuDB = false;
+			if(element.getProductExpDate() == null || BLANK.equals(element.getProductExpDate())) {
+				element.setProductExpDate(DEFAULT_EXP_DATE);
+			}
 			// Check Duplicate In CSV
 			if(skuSet.contains(element.getSku())) {
-			errorDetails = new ProductErrorLogDetails();
 			errorDetails.setRowNo(rowNumber);
 			errorDetails.setErrorMsg(DUPLICATE_SKU +element.getSku());
 			errorList.add(errorDetails);

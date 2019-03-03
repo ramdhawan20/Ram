@@ -1,9 +1,12 @@
 package com.hcl.bss.services;
 
 import static com.hcl.bss.constants.ApplicationConstants.DD_MM_YYYY;
-
+import static com.hcl.bss.constants.ApplicationConstants.BLANK;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -66,11 +69,40 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public Iterable<Product> getAllProducts() {
+	public List<ProductDto> getAllProducts() {
+		Iterable<Product> productEntityList = new ArrayList<>();
+		List<ProductDto> productDtoList = new ArrayList<>();
 
-		return productRepository.findAll();
+		productEntityList =  productRepository.findAll();
+		productDtoList = convertProductEntityToDto(productEntityList);
+		return productDtoList;
 	}
-
+	private List<ProductDto> convertProductEntityToDto(Iterable<Product> productEntityList) {
+		List<ProductDto> ProductDtoList = new ArrayList<>();
+		for(Product product :productEntityList) {
+			ProductDto prod = new ProductDto();
+			String eDate = BLANK;
+			String sDate = BLANK;
+			Date startDate = product.getProductStartDate();
+			Date expDate = product.getProductExpDate();
+			DateFormat dateFormat = new SimpleDateFormat(DD_MM_YYYY);
+			if(expDate != null) {
+			eDate = dateFormat.format(expDate); 
+			}
+			if(startDate != null) {
+			sDate = dateFormat.format(startDate);
+			}
+			prod.setProductDispName(product.getProductDispName());
+			prod.setProductTypeCode(product.getProductTypeCode().getProductTypeCode());
+			prod.setProductDescription(product.getProductDescription());
+			prod.setSku(product.getSku());
+			prod.setProductStartDate(sDate);
+			prod.setProductExpDate(eDate);
+			ProductDtoList.add(prod);
+			
+		}
+		return ProductDtoList;
+	}
 	@Override
 	public Iterable<ProductTypeMaster> getProductType() {
 

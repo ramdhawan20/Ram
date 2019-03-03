@@ -13,9 +13,9 @@ public class ApplicationConstants {
     public static final int PRODUCT_TYPE_CODE_IDX = 0;
     public static final int PRODUCT_DISPLAY_NAME_IDX = 1;
     public static final int SKU_IDX = 2;
-    public static final int EXP_DATE_IDX = 3; 
-    public static final int PROD_DESCRIPTION_IDX = 4;
-    public static final int START_DATE_IDX = 5;
+    public static final int START_DATE_IDX = 3;
+    public static final int EXP_DATE_IDX = 4; 
+    public static final int PROD_DESCRIPTION_IDX = 5;
     public static final String BLANK = "";
     public static final String DATE_FORMAT_DDMMYYYY = "dd/MM/yyyy";
     public static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
@@ -41,6 +41,7 @@ public class ApplicationConstants {
     public static final String UTF_8 = "UTF-8";
     public static final String DUPLICATE_SKU = "Duplicate SKU in File: ";
     public static final String DUPLICATE_SKU_DB = " SKU in Database exists: ";
+    public static final String DEFAULT_EXP_DATE = "31/12/9999";
 
     //subscription batch
     public static final String PASS_STATUS = "Pass";
