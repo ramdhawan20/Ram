@@ -316,7 +316,7 @@ public class UploadServiceImpl implements UploadService {
 
 	@Override
 	public String downloadSampleCsv(String fileName) {
-		String sampleFileNameFullPath = UPLOADED_FOLDER + "UPLOAD" + CSV_EXTENTION;
+		String sampleFileNameFullPath = UPLOADED_FOLDER + fileName + CSV_EXTENTION;
 		String response = BLANK;
 		response = sampleCsvData(sampleFileNameFullPath);
 		return response;
