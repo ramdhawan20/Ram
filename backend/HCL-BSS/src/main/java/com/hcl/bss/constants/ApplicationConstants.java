@@ -39,6 +39,8 @@ public class ApplicationConstants {
     public static final String ERROR = "Error : ";
     public static final String LINE_SEPERATOR = "line.separator";
     public static final String UTF_8 = "UTF-8";
+    public static final String DUPLICATE_SKU = "Duplicate SKU in File: ";
+    public static final String DUPLICATE_SKU_DB = " SKU in Database exists: ";
 
     //subscription batch
     public static final String PASS_STATUS = "Pass";

@@ -37,7 +37,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -80,6 +82,7 @@ public class UploadServiceImpl implements UploadService {
 	
 	@Override
 	public FileUploadResponse csvFileUpload(MultipartFile file) throws IOException, ParseException{
+		Set<String> skuSetDB = new HashSet<>();
 		List<Product> productEntityList  = null;
 		List<ProductErrorLogDetails> errorLogDetailsList = new ArrayList<>();
 		List<ProductDto> productList = new ArrayList<>();
@@ -104,9 +107,9 @@ public class UploadServiceImpl implements UploadService {
 	
 			// TODO Catch ImportParseException
 			productList = cSVDataMigrationParser.parseCsvData(path);
-	
+			skuSetDB = productRepository.getSkus();
 			//Retrieve error details and success product records 
-			productUploadDetails = dataMigrationFieldValidator.validateFields(productList);
+			productUploadDetails = dataMigrationFieldValidator.validateFields(productList,skuSetDB);
 			
 			// convert product dto to entity
 			productEntityList = convertProductDTOListToEntityList(productUploadDetails.getValidProductList());
@@ -313,7 +316,7 @@ public class UploadServiceImpl implements UploadService {
 
 	@Override
 	public String downloadSampleCsv(String fileName) {
-		String sampleFileNameFullPath = UPLOADED_FOLDER + fileName + CSV_EXTENTION;
+		String sampleFileNameFullPath = UPLOADED_FOLDER + "UPLOAD" + CSV_EXTENTION;
 		String response = BLANK;
 		response = sampleCsvData(sampleFileNameFullPath);
 		return response;
