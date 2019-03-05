@@ -43,7 +43,7 @@ export class ImportPlanComponent implements OnInit {
     document.getElementById("productGrid").style.display = "none";
   }
   showFlash() {
-    this.flashMessage.show('Choose a file', { cssClass: 'alert-danger', timeout: 2000 });
+    this.flashMessage.show('Choose a file', { cssClass: 'alert-danger', timeout: 10000 });
   }
 
   constructor( private spinnerService: Ng4LoadingSpinnerService,private router: Router,private modalService: NgbModal, private globalServiceService: GlobalServiceService, private http: HttpClient, private flashMessage: FlashMessagesService) {
@@ -112,13 +112,13 @@ export class ImportPlanComponent implements OnInit {
 
       let index = filenamearr.length;
       if (filenamearr[index - 1] == "csv") {
-        this.flashMessage.show('Proceed with the upload button!!', { cssClass: 'alert-success', timeout: 2000 });
+        this.flashMessage.show('Proceed with the upload button!!', { cssClass: 'alert-success', timeout: 10000 });
         this.flag = true;
         (document.getElementById("uploadbtn") as HTMLInputElement).disabled = false;
         // console.log("correct file");
       }
       else {
-        this.flashMessage.show('Please select a .csv file !!', { cssClass: 'alert-danger', timeout: 2000 });
+        this.flashMessage.show('Please select a .csv file !!', { cssClass: 'alert-danger', timeout: 10000 });
         this.flag = false;
         (document.getElementById("uploadbtn") as HTMLInputElement).disabled = true;
         //   console.log("wrong file");
@@ -135,6 +135,7 @@ export class ImportPlanComponent implements OnInit {
 
     if (this.inputvalue == true) {
       if (this.flag == true) {
+       
         let formData: FormData = new FormData();
         formData.append('uploadFile', this.file, this.filename);
         let headers = new Headers();
@@ -185,15 +186,20 @@ export class ImportPlanComponent implements OnInit {
     let formData = new FormData();
     formData.append('file', this.fileToUpload1, this.fileToUpload1.name);
     this.spinnerService.show();
-    this.http.post(this.globalServiceService.url + '/uploadProductData', formData).subscribe((val) => {
+    
+    this.http.post(this.globalServiceService.url + '/uploadProductData', formData).subscribe((val) => { 
+      this.rowData=[];    
       this.spinnerService.hide();
-      this.valarr.push(val);
+      this.valarr=[];
+      this.valarr.push(val);      
       this.rowData = this.valarr;
       document.getElementById("productGrid").style.display = "block";
-      this.flashMessage.show('File uploaded successfully!', { cssClass: 'alert-success', timeout: 2000 });
+      this.flashMessage.show('File uploaded successfully!', { cssClass: 'alert-success', timeout: 10000 });
       this.fileToUpload1 = "";
       this.selectedfile = "";
       this.inputvalue=false;
+      
+      
     },
     error=>{
       this.spinnerService.hide();
@@ -201,24 +207,26 @@ export class ImportPlanComponent implements OnInit {
       this.inputvalue=false;
       if(error.error.errorCode==412){       
         let msg=error.error.message;
-        this.flashMessage.show(msg, { cssClass: 'alert-danger', timeout: 3000 });
+        this.flashMessage.show(msg, { cssClass: 'alert-danger', timeout: 10000 });
       } 
       else if(error.error.status==500){
         let msg=error.error.error;
-        this.flashMessage.show(msg, { cssClass: 'alert-danger', timeout: 3000 });
+        this.flashMessage.show(msg, { cssClass: 'alert-danger', timeout: 10000 });
       } else  if(error.error.errorCode==1062){       
         let msg=error.error.message;
-        this.flashMessage.show(msg, { cssClass: 'alert-danger', timeout: 3000 });
+        this.flashMessage.show(msg, { cssClass: 'alert-danger', timeout: 10000 });
       }     
     });
   }
 }
 else{
   this.fileToUpload1 = "";  
-  this.flashMessage.show('Choose csv file', { cssClass: 'alert-danger', timeout: 2000 });
+  this.flashMessage.show('Choose csv file', { cssClass: 'alert-danger', timeout: 10000 });
+  
 }
   
     return false;
+    
   }
 
   open(content) {

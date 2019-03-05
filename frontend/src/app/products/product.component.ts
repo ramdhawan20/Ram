@@ -6,10 +6,13 @@ import { ModalsService } from '../modal.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+import { NgbDatepickerConfig, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateFRParserFormatter } from "../ngb-date-fr-parser-formatter";
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
-  styleUrls: ['./product.component.css']
+  styleUrls: ['./product.component.css'],
+  providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
 })
 export class ProductComponent implements OnInit {
 
@@ -34,12 +37,14 @@ export class ProductComponent implements OnInit {
   startDate;
   endDate;
   DrodownArray;
+  code;
+  P_code_Type;
 
 
   constructor(private spinnerService: Ng4LoadingSpinnerService,private router : Router,private modalService: NgbModal,private flashMessage: FlashMessagesService,private childMessageRenderer: ChildMessageRenderer,private globalServiceService: GlobalServiceService) {
     this.columnDefs = [
       { headerName: 'Name', field: 'productDispName',editable:true },
-      { headerName: 'Code', field: 'productTypeCode.productTypeCode',editable:true  },
+      { headerName: 'Code', field: 'productTypeCode',editable:true  },
       { headerName: 'Description', field: 'productDescription',editable:true  },
       { headerName: 'SKU', field: 'sku' ,editable:true },
       { headerName: 'Start Date', field: 'productStartDate',editable:true  },
@@ -70,8 +75,16 @@ export class ProductComponent implements OnInit {
         this.DrodownArray=data;
         console.log(this.DrodownArray);
       });
+    
   }
-
+  dropDown(producttype){
+    console.log(producttype);
+    for(let i=0;i<this.DrodownArray.length;i++){
+      if(this.DrodownArray[i].productType==producttype){
+        this.P_code_Type=this.DrodownArray[i].productTypeCode;
+      }
+    }
+  }
 
   open(content) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
@@ -139,12 +152,12 @@ export class ProductComponent implements OnInit {
   }
 
   
-  addProductData(name,description,sku,startDate,endDate,pCode){
+  addProductData(name,description,sku,startDate,endDate){
 
     let sDate=startDate.day+'/'+startDate.month+'/'+startDate.year;
     let eDate=endDate.day+'/'+endDate.month+'/'+endDate.year;
     this.spinnerService.show();
-    this.globalServiceService.addProduct(name,description,sku,sDate,eDate,pCode).subscribe(
+    this.globalServiceService.addProduct(name,description,sku,sDate,eDate,this.P_code_Type).subscribe(
       data => {
       console.log(data);
       this.rowData=[];
@@ -162,19 +175,18 @@ export class ProductComponent implements OnInit {
           
         });
 
-      this.flashMessage.show('New Product added successfully!!', { cssClass: 'alert-success', timeout: 2000 });
+      this.flashMessage.show('New Product added successfully!!', { cssClass: 'alert-success', timeout: 10000 });
       },
     error=>{
       this.spinnerService.hide();
       if(error.error.errorCode==1062){       
         let msg=error.error.message;
-        this.flashMessage.show(msg, { cssClass: 'alert-danger', timeout: 3000 });
+        this.flashMessage.show(msg, { cssClass: 'alert-danger', timeout: 10000 });
       }else{
-        this.flashMessage.show('Product not added !!', { cssClass: 'alert-danger', timeout: 2000 });
+        this.flashMessage.show('Product not added !!', { cssClass: 'alert-danger', timeout: 10000 });
       }    
       
     });
    }
-  
-   
+
 }

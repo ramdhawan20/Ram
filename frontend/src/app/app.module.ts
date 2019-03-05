@@ -30,6 +30,7 @@ import { ImportPlanComponent } from './import-plan/import-plan.component';
 import { ProductComponent } from './products/product.component';
 import { SubscriptionreportComponent } from './subscriptionreport/subscriptionreport.component';
 import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
+import { NgbDateFRParserFormatter } from "./ngb-date-fr-parser-formatter"; 
 @NgModule({
   declarations: [
     AppComponent,
@@ -58,7 +59,7 @@ import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
     [ Ng4LoadingSpinnerModule.forRoot() ] 
   ],
  
-  providers: [GlobalServiceService, ModalsService, PageService, SortService, FilterService, GroupService,ChildMessageRenderer, AuthGuard],
+  providers: [ NgbDateFRParserFormatter, GlobalServiceService, ModalsService, PageService, SortService, FilterService, GroupService,ChildMessageRenderer, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -6,10 +6,13 @@ import { HttpClient } from "@angular/common/http";
 import { ChildMessageRenderer } from "../child-message-renderer.component";
 import { Router } from '@angular/router';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+import { NgbDatepickerConfig, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateFRParserFormatter } from "../ngb-date-fr-parser-formatter";
 @Component({
   selector: 'app-contact-list',
   templateUrl: './contact-list.component.html',
-  styleUrls: ['./contact-list.component.css']
+  styleUrls: ['./contact-list.component.css'],
+  providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
 })
 export class ContactListComponent implements OnInit {
   private gridApi;
@@ -74,7 +77,7 @@ export class ContactListComponent implements OnInit {
 
   searchSubcription(subscriptionNo,customerName,email,planName,status,price,createdDate,activatedDate,lastBillDate,nextBillDate){
     // if(subscriptionNo==undefined&&customerName==undefined&&email==undefined&&planName==undefined&&status==undefined&&price==undefined&&createdDate==undefined&&activatedDate==undefined&&lastBillDate==undefined&&nextBillDate==undefined){
-    //   this.flashMessage.show('Please enter filter criteria', { cssClass: 'alert-danger', timeout: 2000 });
+    //   this.flashMessage.show('Please enter filter criteria', { cssClass: 'alert-danger', timeout: 10000 });
     // }
     // else{
       this.spinnerService.show();
@@ -85,12 +88,12 @@ export class ContactListComponent implements OnInit {
         console.log(data);
         this.rowData = data;
         this.rowData=this.rowData.subscriptionList;
-      //  this.flashMessage.show('Search successfully!!', { cssClass: 'alert-success', timeout: 2000 });
+      //  this.flashMessage.show('Search successfully!!', { cssClass: 'alert-success', timeout: 10000 });
         
         },
       error=>{
         this.spinnerService.hide();
-        this.flashMessage.show('No data found!!', { cssClass: 'alert-danger', timeout: 2000 });
+        this.flashMessage.show('No data found!!', { cssClass: 'alert-danger', timeout: 10000 });
       });
     // }
    

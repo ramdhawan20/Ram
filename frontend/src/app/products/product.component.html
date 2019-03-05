@@ -62,7 +62,7 @@
                   <div class="form-group">
                     <label for="dateOfBirth">Start Date:</label>
                     <div class="input-group">
-                      <input id="startDateId" class="form-control"   placeholder="YYYY-MM-DD" name="startDate"
+                      <input id="startDateId" class="form-control"   placeholder="DD-MM-YYYY" name="startDate"
                         [(ngModel)]="startDateMain" ngbDatepicker #startdate="ngbDatepicker">
                       <div class="input-group-append">
                         <button class="btn btn-outline-secondary calendar" (click)="startdate.toggle()" type="button">
@@ -76,7 +76,7 @@
                     <div class="form-group">
                         <label for="dateOfBirth"> End Date:</label>
                         <div class="input-group">
-                          <input id="endDateId" class="form-control" placeholder="YYYY-MM-DD"  name="endDate"  [(ngModel)]="endDateMain" ngbDatepicker #enddate="ngbDatepicker">
+                          <input id="endDateId" class="form-control" placeholder="DD-MM-YYYY"  name="endDate"  [(ngModel)]="endDateMain" ngbDatepicker #enddate="ngbDatepicker">
                           <div class="input-group-append">
                             <button class="btn btn-outline-secondary calendar" (click)="enddate.toggle()" type="button">
                             <i class="fa fa-calendar fa-2" aria-hidden="true"></i>
@@ -172,7 +172,7 @@
                     <div class="form-group">
                         <label for="dateOfBirth">Start Date:</label>
                         <div class="input-group">
-                          <input id="startDateId" class="form-control" placeholder="YYYY-MM-DD"   name="startDate" [(ngModel)]="startDate" ngbDatepicker #startdate="ngbDatepicker">
+                          <input id="startDateId" class="form-control" placeholder="DD-MM-YYYY"   name="startDate" [(ngModel)]="startDate" ngbDatepicker #startdate="ngbDatepicker">
                           <div class="input-group-append">
                             <button class="btn btn-outline-secondary calendar" (click)="startdate.toggle()" type="button">
                             <i class="fa fa-calendar fa-2" aria-hidden="true"></i>
@@ -185,7 +185,7 @@
                     <div class="form-group">
                         <label for="dateOfBirth"> End Date:</label>
                         <div class="input-group">
-                          <input id="endDateId" class="form-control" placeholder="YYYY-MM-DD"  name="endDate"  [(ngModel)]="endDate" ngbDatepicker #enddate="ngbDatepicker">
+                          <input id="endDateId" class="form-control" placeholder="DD-MM-YYYY"  name="endDate"  [(ngModel)]="endDate" ngbDatepicker #enddate="ngbDatepicker">
                           <div class="input-group-append">
                             <button class="btn btn-outline-secondary calendar" (click)="enddate.toggle()" type="button">
                             <i class="fa fa-calendar fa-2" aria-hidden="true"></i>
@@ -197,9 +197,9 @@
                  <div class="col-lg-4">
                     <div class="form-group" >
                         <label for="dateOfBirth"> Product Type:</label>
-                        <select class="form-control" id="sel1" name="producttype"  [(ngModel)]="producttype" >
+                        <select class="form-control" id="sel1" name="producttype"  [(ngModel)]="producttype" (change)="dropDown(producttype)">
                           <option  [ngValue]="Select" hidden>Select</option> 
-                          <option *ngFor="let values of DrodownArray">{{values.productType}}</option>
+                          <option *ngFor="let values of DrodownArray" >{{values.productType}}</option>
                         
                         </select>
                   </div>
@@ -209,7 +209,7 @@
           </div>
           <div class="modal-footer">
              
-            <button type="button" class="btn btn-info" (click)="addProductData(name,description,sku,startDate,endDate,producttype)">Save</button>
+            <button type="button" class="btn btn-info" (click)="addProductData(name,description,sku,startDate,endDate)">Save</button>
             <button type="button" class="btn btn-info" (click)="modal.close('Save click')">Close</button>
           </div>
         </ng-template>

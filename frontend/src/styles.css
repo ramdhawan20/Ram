@@ -1210,3 +1210,7 @@ h4.modal-title{color:#117a8b !important; text-transform: uppercase; font-size: 2
     top: 50px;
   z-index:9999}
   .btn{ font-size: 12px !important;}
+
+  .form-control-sm{
+    font-size:12px!important;
+  }
