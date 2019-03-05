@@ -23,16 +23,17 @@ import static com.hcl.bss.constants.ApplicationConstants.ERROR;
 import static com.hcl.bss.constants.ApplicationConstants.DUPLICATE_SKU_DB;
 import static com.hcl.bss.constants.ApplicationConstants.DEFAULT_EXP_DATE;
 import static com.hcl.bss.constants.ApplicationConstants.BLANK;
+import static com.hcl.bss.constants.ApplicationConstants.PRODUCT_TYPE_CODE_NOT_DEFIENED_IN_MASTER;
 
 @Component
 public class DataMigrationFieldValidator {
 	@Autowired
 	ProductRepository productRepository;
 
-	public ProductUploadDetails validateFields(List<ProductDto> listProduct, Set<String> skuSetDB) {
-	
+	public ProductUploadDetails validateFields(List<ProductDto> listProduct, Set<String> skuSetDB, Set<String> productTypeCodeDB) {
+		
 		List<ProductErrorLogDetails> errorList = new ArrayList<>();
-		ProductErrorLogDetails errorDetails = new ProductErrorLogDetails();
+		ProductErrorLogDetails errorDetails = null;
 		ProductUploadDetails productUploadDetails = new ProductUploadDetails();
 		List<ProductDto> successProductList = new ArrayList<>();
 		Set<String> skuSet = new HashSet<>();
@@ -41,11 +42,20 @@ public class DataMigrationFieldValidator {
 			rowNumber++;
 			boolean duplicateSkuCsv = false;
 			boolean duplicateSkuDB = false;
+			boolean productTypeCodeFKConstraintViolation = false;
+			if(!productTypeCodeDB.contains(element.getProductTypeCode())) {
+				errorDetails = new ProductErrorLogDetails();
+				errorDetails.setRowNo(rowNumber);
+				errorDetails.setErrorMsg(PRODUCT_TYPE_CODE_NOT_DEFIENED_IN_MASTER +element.getProductTypeCode());
+				errorList.add(errorDetails);
+				productTypeCodeFKConstraintViolation = true;
+			}
 			if(element.getProductExpDate() == null || BLANK.equals(element.getProductExpDate())) {
 				element.setProductExpDate(DEFAULT_EXP_DATE);
 			}
 			// Check Duplicate In CSV
 			if(skuSet.contains(element.getSku())) {
+				errorDetails = new ProductErrorLogDetails();
 			errorDetails.setRowNo(rowNumber);
 			errorDetails.setErrorMsg(DUPLICATE_SKU +element.getSku());
 			errorList.add(errorDetails);
@@ -64,7 +74,7 @@ public class DataMigrationFieldValidator {
 			ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 			Validator validator = factory.getValidator();
 			Set<ConstraintViolation<ProductDto>> violations = validator.validate(element);
-			if(!duplicateSkuCsv && !duplicateSkuDB) {
+			if((!duplicateSkuCsv && !duplicateSkuDB) && !productTypeCodeFKConstraintViolation) {
 			if (violations.size() == 0) {
 				successProductList.add(element);
 				continue;
@@ -74,6 +84,7 @@ public class DataMigrationFieldValidator {
 				
 				// Below Error Details to be preserved for file export
 				System.out.println(ROW_NO + rowNumber + ERROR + violation.getMessage());
+				errorDetails = new ProductErrorLogDetails();
 				errorDetails.setRowNo(rowNumber);
 				errorDetails.setErrorMsg(violation.getMessage());
 				errorList.add(errorDetails);

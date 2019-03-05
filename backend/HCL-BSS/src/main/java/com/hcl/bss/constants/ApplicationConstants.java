@@ -23,6 +23,7 @@ public class ApplicationConstants {
     public static final String STATUS_SUCCESS = "Success";
     public static final String STATUS_FAIL = "Fail";
     public static final String EXTERNAL_FILE_PATH = "/PROJECTS/SUBSCRIPTION/files/";//"C://Users//Public//temp//";
+   // public static final String EXTERNAL_FILE_PATH = "C://Users//Public//temp//";
     public static final String FILE_NOT_EXIST_MSG = "Sorry. The file you are looking for does not exist";
     public static final String ERROR_FILE_NAME_SUFFIX = "yyyy-MM-dd-HH_mm_ss";
     public static final String UPLOADED_FOLDER = "/PROJECTS/SUBSCRIPTION/files/";//C://Users//Public//temp//";
@@ -42,6 +43,7 @@ public class ApplicationConstants {
     public static final String DUPLICATE_SKU = "Duplicate SKU in File: ";
     public static final String DUPLICATE_SKU_DB = " SKU in Database exists: ";
     public static final String DEFAULT_EXP_DATE = "31/12/9999";
+    public static final String PRODUCT_TYPE_CODE_NOT_DEFIENED_IN_MASTER = "ProductTypeCode Value is not defiened in ProductTypeMaster DB Constraint Violation: ";
 
     //subscription batch
     public static final String PASS_STATUS = "Pass";

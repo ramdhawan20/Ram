@@ -18,7 +18,11 @@ import com.hcl.bss.domain.Product;
 import com.hcl.bss.domain.ProductTypeMaster;
 import com.hcl.bss.dto.ProductDto;
 import com.hcl.bss.repository.ProductRepository;
+import com.hcl.bss.domain.ProductSpecification;
 import com.hcl.bss.repository.ProductTypeMasterRepository;
+
+import org.springframework.data.domain.Example;
+import org.springframework.data.jpa.domain.Specification;
 
 @Service
 @Transactional
@@ -53,16 +57,31 @@ public class ProductServiceImpl implements ProductService {
 		productEntity.setSku(product.getSku());
 		String startDate = product.getProductStartDate();
 		String expDate = product.getProductExpDate();
-		try {
-			sDate = new SimpleDateFormat(DD_MM_YYYY).parse(expDate);
-		} catch (Exception e) {
-		}
-		productEntity.setProductStartDate(sDate);
+		if(null != expDate) {
 		try {
 			eDate = new SimpleDateFormat(DD_MM_YYYY).parse(expDate);
 		} catch (Exception e) {
 		}
+		
 		productEntity.setProductExpDate(eDate);
+		try {
+			eDate = new SimpleDateFormat(DD_MM_YYYY).parse(expDate);
+		} catch (Exception e) {
+		}
+		}
+		if(null != startDate) {
+			try {
+				sDate = new SimpleDateFormat(DD_MM_YYYY).parse(startDate);
+			} catch (Exception e) {
+			}
+			productEntity.setProductStartDate(sDate);
+			try {
+				eDate = new SimpleDateFormat(DD_MM_YYYY).parse(startDate);
+			} catch (Exception e) {
+			}
+			productEntity.setProductStartDate(sDate);
+			}
+		
 
 		return productEntity;
 
@@ -107,6 +126,59 @@ public class ProductServiceImpl implements ProductService {
 	public Iterable<ProductTypeMaster> getProductType() {
 
 		return productTypeMasterRepository.findAll();
+	}
+
+	@Override
+	public List<Product> searchProducts(ProductDto product) {
+		
+		/*Date startDate = null;
+		Date endDate = null;
+		Integer activeInactive = null;
+		String productDispName = product.getProductDispName();
+		String code = product.getProductTypeCode();
+		String sku = product.getSku();
+		String status = product.getStatus();
+		if("Active".equalsIgnoreCase(status)) {
+		activeInactive = 1;
+		}
+		else {
+			activeInactive = 0;
+		}
+		String sDate = product.getProductStartDate();
+		String eDate = product.getProductExpDate();
+		if(null != sDate) {
+		try {
+			startDate = new SimpleDateFormat("yyyy-MM-dd").parse(sDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} 
+		}
+		if(null != eDate) {
+		try {
+			endDate = new SimpleDateFormat("yyyy-MM-dd").parse(eDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}  
+		}
+		
+
+		 Product prod = new Product();
+		 prod.setProductDispName(productDispName);
+		 prod.setIsActive(activeInactive);
+		 prod.setSku(sku);
+		 prod.setProductExpDate(endDate);
+		 prod.setProductStartDate(startDate);
+
+		 
+
+		 List<Product> result = productRepository.findAll(Example.of(product));
+		
+		
+		
+		
+		return result;*/
+		return null;
+		
 	}
 
 }

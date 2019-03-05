@@ -32,9 +32,7 @@ public class CustomDateSchemeValidator implements ConstraintValidator<CustomDate
 
 		dto = (ProductDto) value;
 
-		System.out.println("VAL:" + dto.getProductExpDate());
-
-		System.out.println("VAL3:" + value);
+		
 
 		if (dto.getProductExpDate().trim().equals("")) {
 			return false;

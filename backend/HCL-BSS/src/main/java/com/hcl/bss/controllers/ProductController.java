@@ -3,12 +3,16 @@ package com.hcl.bss.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,8 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hcl.bss.domain.Product;
 import com.hcl.bss.domain.ProductTypeMaster;
+import com.hcl.bss.domain.Subscription1;
 import com.hcl.bss.dto.ErrorResponseDTO;
 import com.hcl.bss.dto.ProductDto;
+import com.hcl.bss.dto.SubscriptionInOut;
 import com.hcl.bss.services.ProductService;
 
 import io.swagger.annotations.ApiOperation;
@@ -67,4 +73,23 @@ public class ProductController {
 		productList = productService.getProductType();
 		return new ResponseEntity<>(productList, HttpStatus.OK);
 	}
+	@ApiOperation(value = "Get list of Product Based on Search Criteria", response = Product.class)
+	@PostMapping(value = "/searchProducts")
+	public ResponseEntity<List<Product>> searchProducts(@RequestBody ProductDto product) {
+		List<Product> productSearchList = new ArrayList<>();
+		try {
+			productSearchList = productService.searchProducts(product);
+
+			if(productSearchList != null && productSearchList.size() > 0) {
+				return new ResponseEntity<List<Product>>(productSearchList, HttpStatus.OK);
+			}else {
+				
+				return new ResponseEntity<List<Product>>(productSearchList, HttpStatus.NOT_FOUND);
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<List<Product>>(productSearchList, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}		
 }

@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.hcl.bss.validator.CustomDateCompareScheme;
 import com.hcl.bss.validator.CustomDateScheme;
 import com.hcl.bss.validator.ProductStartDateScheme;
 
@@ -14,6 +15,8 @@ import com.hcl.bss.validator.ProductStartDateScheme;
 		@CustomDateScheme(field = "productExpDate", message = "ProductExpDate format is Invalid! should be dd/MM/yyyy or dd-MM-yyyy") })
 @ProductStartDateScheme.List({
 	@ProductStartDateScheme(productStartDate = "productStartDate", message = "Product Start Date format is Invalid! should be dd/MM/yyyy or dd-MM-yyyy") })
+@CustomDateCompareScheme.List({
+	@CustomDateCompareScheme(expDate = "productExpDate", startDate = "productStartDate", message = "Product Start Date should be before Product EndDate") })
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductDto implements java.io.Serializable {
 	@NotNull(message = "PRODUCT_TYPE_CODE cannot be null")
@@ -45,6 +48,7 @@ public class ProductDto implements java.io.Serializable {
 	private String dateScheme;
 	private String prescribedFileHeader;
 	private String fileHeader;
+	private String status;
 	public ProductDto() {
 		super();
 	}
@@ -55,15 +59,15 @@ public class ProductDto implements java.io.Serializable {
 			@NotNull(message = "SKU cannot be null") @NotBlank(message = "SKU cannot be blank") String productTypeCode,
 			@NotNull(message = "PRODUCT_DISPLAY_NAME cannot be null") @NotBlank(message = "PRODUCT_DISPLAY_NAME cannot be blank") @Size(max = 100) String productDispName,
 			@NotNull(message = "SKU cannot be null") @NotBlank(message = "SKU cannot be blank") String sku,
-			String productExpDate,
 			String productStartDate,
+			String productExpDate,
 			@NotNull(message = "PRODUCT_DESCRIPTION cannot be null") @NotBlank(message = "PRODUCT_DESCRIPTION cannot be blank") @Size(max = 100) String productDescription) {
 		super();
 		this.productTypeCode = productTypeCode;
 		this.sku = sku;
 		this.productDispName = productDispName;
-		this.productExpDate = productExpDate;
 		this.productStartDate = productStartDate;
+		this.productExpDate = productExpDate;
 		this.productDescription = productDescription;
 
 	}
@@ -187,6 +191,18 @@ public class ProductDto implements java.io.Serializable {
 	public void setProductStartDate(String productStartDate) {
 		this.productStartDate = productStartDate;
 	}
+
+	public String getStatus() {
+		return status;
+	}
+
+
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+
 
 	@Override
 	public String toString() {

@@ -2,6 +2,8 @@ package com.hcl.bss.services;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.hcl.bss.domain.Product;
 import com.hcl.bss.domain.ProductTypeMaster;
 import com.hcl.bss.dto.ProductDto;
@@ -17,5 +19,7 @@ public interface ProductService {
 	List<ProductDto>  getAllProducts();
 
 	Iterable<ProductTypeMaster> getProductType();
+
+	List<Product> searchProducts(ProductDto product);
 
 }

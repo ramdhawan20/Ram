@@ -31,8 +31,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,6 +61,7 @@ import com.hcl.bss.dto.ProductDto;
 import com.hcl.bss.dto.ProductErrorLogDetails;
 import com.hcl.bss.dto.ProductUploadDetails;
 import com.hcl.bss.repository.ProductRepository;
+import com.hcl.bss.repository.ProductTypeMasterRepository;
 import com.hcl.bss.validator.DataMigrationFieldValidator;
 @Service
 @Transactional
@@ -74,6 +73,8 @@ public class UploadServiceImpl implements UploadService {
 	DataMigrationFieldValidator dataMigrationFieldValidator;
 	@Autowired
 	ProductRepository productRepository;
+	@Autowired
+	ProductTypeMasterRepository productTypeMasterRepository;
 	@Value("${sample.file.header}")
 	 String sampleFileHeader;
 	@Value("${sample.file.validations}")
@@ -83,6 +84,7 @@ public class UploadServiceImpl implements UploadService {
 	@Override
 	public FileUploadResponse csvFileUpload(MultipartFile file) throws IOException, ParseException{
 		Set<String> skuSetDB = new HashSet<>();
+		Set<String> productTypeCodeDB = new HashSet<>();
 		List<Product> productEntityList  = null;
 		List<ProductErrorLogDetails> errorLogDetailsList = new ArrayList<>();
 		List<ProductDto> productList = new ArrayList<>();
@@ -108,8 +110,9 @@ public class UploadServiceImpl implements UploadService {
 			// TODO Catch ImportParseException
 			productList = cSVDataMigrationParser.parseCsvData(path);
 			skuSetDB = productRepository.getSkus();
+			productTypeCodeDB = productTypeMasterRepository.getProductTypeCode();
 			//Retrieve error details and success product records 
-			productUploadDetails = dataMigrationFieldValidator.validateFields(productList,skuSetDB);
+			productUploadDetails = dataMigrationFieldValidator.validateFields(productList,skuSetDB,productTypeCodeDB);
 			
 			// convert product dto to entity
 			productEntityList = convertProductDTOListToEntityList(productUploadDetails.getValidProductList());
@@ -157,6 +160,7 @@ public class UploadServiceImpl implements UploadService {
 			product.setProductDispName(prod.getProductDispName());
 			product.setCreatedDate(new Date());
 			String expDate = prod.getProductExpDate();
+			String startDate = prod.getProductStartDate();
 			try {
 			date1=new SimpleDateFormat(DD_MM_YYYY).parse(expDate); 
 			product.setProductExpDate(date1);
@@ -170,6 +174,19 @@ public class UploadServiceImpl implements UploadService {
 					LOGGER.error("ERROR :", ex);
 				}
 			}
+			try {
+				date2=new SimpleDateFormat(DD_MM_YYYY).parse(startDate); 
+				product.setProductStartDate(date2);;
+				}
+				catch(Exception e) {
+					try {
+						date2=new SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY).parse(startDate); 
+						product.setProductStartDate(date2);
+					}
+					catch(Exception ex) {
+						LOGGER.error("ERROR :", ex);
+					}
+				}
 			productEntityList.add(product);
 		}
 		
