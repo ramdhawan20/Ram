@@ -1,124 +1,181 @@
-<!-- <ul>
-  <li routerLink='/login' routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><a>Dashboard</a></li>
-  <li routerLink='/product' ><a>Products</a></li>
- 
-</ul> -->
-<header> 
-          <app-header></app-header>
-      </header>
-    <div id="sidebar">   
-        <div class="page-wrapper chiller-theme toggled">
-            <nav id="sidebar" class="sidebar-wrapper">
-              <div class="sidebar-content">
-                <!-- sidebar-search  -->
-                <div class="sidebar-menu">
-                  <ul>             
-                    <li class="sidebar-dropdown" routerLink='/dashboard'>
-                      <a  href="javascript:void(0)">
-                          <i class="fa fa-tachometer" aria-hidden="true"></i>  
-                          <span>Dashboard</span>
-                      </a>
-                    </li>
-                    <li class="sidebar-dropdown" routerLink='/product'>
-                      <a  href="javascript:void(0)">
-                          <i class="fa fa-bitbucket" aria-hidden="true"></i>
-                        <span>Products</span>
-                      </a>
-                    </li>
-                    <li class="sidebar-dropdown" routerLink='/customers'>
-                      <a  href="javascript:void(0)">
-                          <i class="fa fa-user-o" aria-hidden="true"></i>
-                        <span>Customers</span>
-                      </a>
-                    </li>
-                    <li class="sidebar-dropdown active" routerLink='/subscriptions'>
-                      <a  href="javascript:void(0)">
-                          <i class="fa fa-circle-o-notch" aria-hidden="true"></i>
-                        <span>Subscriptions</span>
-                      </a>
-                    </li>
-                    <li class="sidebar-dropdown" routerLink='/invoices'>
-                      <a  href="javascript:void(0)">
-                          <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                          <!-- <i class="fa fa-file-text" aria-hidden="true"></i> -->
-                        <span>Invoices</span>
-                      </a>
-                    </li>
-                    <li class="sidebar-dropdown" routerLink='/transactions'>
-                      <a  href="javascript:void(0)">
-                       
-                        <i class="fa fa-usd" aria-hidden="true"></i>
-                        <span>Transactions</span>
-                      </a>
-                    </li>
-                    <li class="sidebar-dropdown" routerLink='/events'>
-                      <a  href="javascript:void(0)">
-                          <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
-                        <span>Events</span>
-                      </a>
-                    </li>
-                    <li class="sidebar-dropdown" routerLink='/reports'>
-                      <a  href="javascript:void(0)">
-                          <i class="fa fa-bar-chart-o" aria-hidden="true"></i>
-                        <span>Reports</span>
-                      </a>
-                    </li>
+<div id="rightSideWrapper">
+  <div class="ContentBox" style="display: block;">
+    <main>
+        <router-outlet></router-outlet>
+      <!-- Main Content  -->
+      <!-- <div class="test-header">
+              Page Size:
+              <select (change)="onPageSizeChanged()" id="page-size">
+                <option value="10" selected="">10</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+              </select>
+            </div> -->
+      <div class="container-fluid custom_search" *ngIf="isValid()" style="padding: 0px;">
+        <div class="col-lg-12" style="padding: 0px;color: #117a8b; text-transform: uppercase; line-height: 40px;">
+          <h5>Subscription</h5>
+
+          <flash-messages></flash-messages>
+          <div class="col-lg-12 search_box" style="border:2px solid #bababa; border-radius: 5px; padding:0px 10px; text-transform: none; margin-top:0px;">
+            <form action="#">
+              <div class="row">
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label for="sel1">Subscription No:</label>
+                    <input type="text" class="form-control form-control-sm" id=" " name="subscriptionNo" [(ngModel)]="subscriptionNo" >
                    
-                  </ul>
-                </div>          
-              </div>
-            </nav>
-          </div>
-      </div>
-      <div id="rightSideWrapper">
-       
-        
-        <div class="ContentBox">
-          <main> 
-            Main Content 
-            <ejs-grid [dataSource]='data' [allowPaging]='true' [allowSorting]='true' [allowFiltering]='true' [filterSettings]='filterSettings'>
-                    <e-columns>
-                        <e-column field='OrderID' headerText='Order ID' textAlign='Right' width='120'></e-column>
-                        <e-column field='CustomerID' headerText='Customer ID' width='120'></e-column>
-                        <e-column field='Freight' textAlign='Right' format='c2' width='120'></e-column>
-                        <e-column field='ShipCountry' headerText='Ship Country' width='140'></e-column>
-                    </e-columns>
-                </ejs-grid> 
-
-
-            Main content-2
-            <ejs-grid [dataSource]='data' [allowPaging]='true' [allowSorting]='true' [allowFiltering]='true' [filterSettings]='filterSettings' [allowGrouping]='true'>
-                    <e-columns>
-                        <e-column field='Num' headerText='S No' textAlign='Right' width='120'></e-column>
-                        <e-column field='OrderID' headerText='Order ID' textAlign='Right' width='120'></e-column>
-                        <e-column field='CustomerID' headerText='Customer ID' width='120'></e-column>
-                        <e-column field='Freight' textAlign='Right' format='c2' width='120'></e-column>
-                        <e-column field='ShipCountry' headerText='Ship Country' width='140'></e-column>
-                    </e-columns>
-                </ejs-grid>  
-
-                <div class="control-section">
-                        <ejs-grid #grid [dataSource]='data' allowPaging="true" [pageSettings]='pageSettings' [toolbar]='toolbar'>
-                            <e-columns>
-                                <e-column field='Num' headerText='Category Name' width='150'></e-column>
-                                <e-column field='OrderID' headerText='Product Name' width='150'></e-column>
-                                <e-column field='CustomerID' headerText='Quantity per unit' width='180' textAlign='Right'></e-column>
-                                <e-column field='Freight' headerText='Units In Stock' width='150' textAlign='Right'></e-column>
-                            </e-columns>
-                        </ejs-grid>  
+                  </div>
                 </div>
-                <ejs-grid [dataSource]='data' [allowPaging]='true' [allowSorting]='true' [allowFiltering]='true' [filterSettings]='filterSettings' [allowGrouping]='true'>
-                        <e-columns>
-                            <e-column field='OrderID' headerText='Order ID' textAlign='Right' width='120'></e-column>
-                            <e-column field='CustomerID' headerText='Customer ID' width='120'></e-column>
-                            <e-column field='Freight' textAlign='Right' format='c2' width='120'></e-column>
-                            <e-column field='ShipCountry' headerText='Ship Country' width='140'></e-column>
-                        </e-columns>
-                    </ejs-grid>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label for=" ">Customber Email:</label>
+                    <input type="text" class="form-control form-control-sm" id=" " name="email" [(ngModel)]="email" >
+                  </div>
+                </div>
+                <!-- <div class="col-lg-2">
+                  <div class="form-group">
+                    <label for=" ">First Name:</label>
+                    <input type="text" class="form-control form-control-sm" id=" " name="first_name" [(ngModel)]="first_name">
+                  </div>
+                </div> -->
 
-          </main>
-          <footer> 
-            Footer 
-          </footer>
-        </div> 
+
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label for=" ">Status:</label>
+                    <select class="form-control form-control-sm" placeholder="select" id=" " name="sellist1" name="status" [(ngModel)]="status">
+                        <option>Active</option>
+                        <option>Active</option>
+                      </select>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="form-group">
+                      <label for=" ">Customber Name:</label>
+                      <input type="text" class="form-control form-control-sm" id=" " name="customerName" [(ngModel)]="customerName">
+                    </div>
+                  </div>
+  
+                  <div class="col-lg-2">
+                    <div class="form-group">
+                      <label for=" ">Plan Name:</label>
+                      <input type="text" class="form-control form-control-sm" id="" name="planName" [(ngModel)]="planName">
+                    </div>
+                  </div>
+                  <div class="col-lg-2">
+                    <div class="form-group">
+                      <label for="">Amount:</label>
+                      <input type="text" class="form-control form-control-sm" id="" name="price" [(ngModel)]="price">
+                    </div>
+                  </div>
+
+
+
+                
+              </div>
+              <div class="row">
+                  <div class="col-lg-2">
+                      <div class="form-group">
+                        <label for=" ">Created On:</label>
+                        <div class="input-group">
+                            <input  class="form-control form-control-sm" placeholder="DD-MM-YYYY"  name="createdDate"  [(ngModel)]="createdDate" ngbDatepicker #activedatethis="ngbDatepicker">
+                            <div class="input-group-append">
+                              <button class="btn btn-outline-secondary calendar" (click)="activedatethis.toggle()" type="button">
+                              <i class="fa fa-calendar fa-2" aria-hidden="true"></i>
+                              </button>
+                            </div>
+                          </div>
+                        <!-- <div class="input-group">
+                            <input id="" class="form-control" placeholder="YYYY-MM-DD"  name="createdDate"  [(ngModel)]="createdDate" ngbDatepicker #enddate="createdDate1">
+                            <div class="input-group-append">
+                              <button class="btn btn-outline-secondary calendar" (click)="enddate.toggle()" type="button">
+                              <i class="fa fa-calendar fa-2" aria-hidden="true"></i>
+                              </button>
+                            </div>
+                          </div> -->
+                        <!-- <input type="text" class="form-control form-control-sm" id=" " name="Created_on" [(ngModel)]="Created_on"> -->
+                      </div>
+                    </div>
+                    <div class="col-lg-2">
+                      <div class="form-group">
+                        <label for="sel1">Activated On:</label>
+                        <!-- <input type="text" class="form-control form-control-sm" id=" " name="Activated_on" [(ngModel)]="Activated_on"> -->
+                        <div class="input-group">
+                            <input  class="form-control form-control-sm" placeholder="DD-MM-YYYY"  name="activatedDate"  [(ngModel)]="activatedDate" ngbDatepicker #activedate="ngbDatepicker">
+                            <div class="input-group-append">
+                              <button class="btn btn-outline-secondary calendar" (click)="activedate.toggle()" type="button">
+                              <i class="fa fa-calendar fa-2" aria-hidden="true"></i>
+                              </button>
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label for="">Last Billed On:</label>
+                    <!-- <input type="text" class="form-control form-control-sm" id="" name="last_bill" [(ngModel)]="last_bill"> -->
+                    <div class="input-group">
+                        <input  class="form-control form-control-sm" placeholder="DD-MM-YYYY"  name="lastBillDate"  [(ngModel)]="lastBillDate" ngbDatepicker #lastbilldate="ngbDatepicker">
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-secondary calendar" (click)="lastbilldate.toggle()" type="button">
+                          <i class="fa fa-calendar fa-2" aria-hidden="true"></i>
+                          </button>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label for=" ">Next Billed On:</label>
+                    <!-- <input type="text" class="form-control form-control-sm" id="" name="nextBillDate" [(ngModel)]="nextBillDate"> -->
+                    <div class="input-group">
+                        <input  class="form-control form-control-sm" placeholder="DD-MM-YYYY"  name="nextBillDate"  [(ngModel)]="nextBillDate" ngbDatepicker #nextbilldate="ngbDatepicker">
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-secondary calendar" (click)="nextbilldate.toggle()" type="button">
+                          <i class="fa fa-calendar fa-2" aria-hidden="true"></i>
+                          </button>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+                <div class="col-lg-4">
+                    <label style="width:100%;"></label>
+                    <button type="button" id="searchBtn" class="btn btn-info float-right" style=" margin-left: 5px; line-height:17px;">
+                        Export to Csv <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                    </button>
+                  
+                  
+                  <button type="button" id="searchBtn" class="btn btn-info float-right" style=" margin-left: 5px; line-height:17px;" (click)="searchSubcription(subscriptionNo,customerName,email,planName,status,price,createdDate,activatedDate,lastBillDate,nextBillDate)">
+                    Search
+                    <i class="fa fa-search" aria-hidden="true" style="color:#ffffff;margin-top: -4px;margin-left: 5px; "></i>
+                  </button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+        <div id="productGrid" style="position: relative;">
+          <div style="height: 100%; padding-top: 15px; box-sizing: border-box; width: auto;">
+            <ag-grid-angular #agGrid style="width: 100%; height: 100%;" id="myGrid" class="ag-theme-balham"
+              [rowSelection]="rowSelection" [rowGroupPanelShow]="rowGroupPanelShow" [pivotPanelShow]="pivotPanelShow"
+              [enableRangeSelection]="true" [pagination]="false" [defaultColDef]="defaultColDef"
+              [suppressRowClickSelection]="true" [rowSelection]="rowSelection" [paginationPageSize]="paginationPageSize"
+              [enableSorting]="true" [enableFilter]="true" [rowData]="rowData" [columnDefs]="columnDefs"
+              (gridReady)="onGridReady($event)" [frameworkComponents]="frameworkComponents"></ag-grid-angular>
+          </div>
+          <!-- <div style="position: absolute; top: 10px; left: auto; width: 100%;">
+            <input type="text" class="form-control" (input)="onQuickFilterChanged()" style="width: 30%; display: inline-block;"
+              id="quickFilter" placeholder="quick filter..." />
+            <label style="margin-left: 20px;"> <button (click)="onBtExport()" class="btn btn-info" style="margin-top: -7px;">Export
+                to CSV <i class="fa fa-cloud-download" aria-hidden="true"></i></button> </label>
+          </div> -->
+        </div>
+
       </div>
+    </main>
+    <!-- <footer>
+    </footer> -->
+  </div>
+</div>

@@ -3,8 +3,10 @@ package com.hcl.bss.dto;
 public class UserDetails {
 	private String userLastName;
 	private String userFirstName;
+	private String userMiddleName;
 	private String userId;
 	private boolean isLoggedIn;
+	private String message;
 	
 	public String getUserId() {
 		return userId;
@@ -18,6 +20,12 @@ public class UserDetails {
 	public void setUserFirstName(String userFirstName) {
 		this.userFirstName = userFirstName;
 	}
+	public String getUserMiddleName() {
+		return userMiddleName;
+	}
+	public void setUserMiddleName(String userMiddleName) {
+		this.userMiddleName = userMiddleName;
+	}
 	public String getUserLastName() {
 		return userLastName;
 	}
@@ -30,6 +38,12 @@ public class UserDetails {
 	}
 	public void setLoggedIn(boolean isLoggedIn) {
 		this.isLoggedIn = isLoggedIn;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	
 	

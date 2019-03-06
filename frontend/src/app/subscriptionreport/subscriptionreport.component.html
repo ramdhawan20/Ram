@@ -1,0 +1,21 @@
+<h5 class="border_btm">Subscription Report </h5>
+<div id="productGrid" style="position: relative;">
+    <div style="height: 100%; padding-top: 63px; box-sizing: border-box; width: auto;">
+      <!-- <button class="btn btn-info" (click)="openModal('addUser')">Add User</button> -->
+      <ag-grid-angular #agGrid style="width: 100%; height: 100%;" id="myGrid" class="ag-theme-balham"
+        [rowSelection]="rowSelection" [rowGroupPanelShow]="rowGroupPanelShow" [pivotPanelShow]="pivotPanelShow"
+        [enableRangeSelection]="true" [pagination]="true" [defaultColDef]="defaultColDef"
+        [suppressRowClickSelection]="true" [rowSelection]="rowSelection" [paginationPageSize]="paginationPageSize"
+        [enableSorting]="true" [enableFilter]="true" [pagination]="true" [rowData]="rowData"
+        [columnDefs]="columnDefs" (gridReady)="onGridReady($event)" [frameworkComponents]="frameworkComponents">
+      </ag-grid-angular>
+
+    </div>
+    <div style="position: absolute; top: 10px; left: auto; width: 100%;">
+      <input type="text" class="form-control" (input)="onQuickFilterChanged()"
+        style="width: 30%; display: inline-block;" id="quickFilter" placeholder="quick filter..." />
+      <!-- <label> File Name: <input type="text" id="fileName" /> </label> -->
+      <label style="margin-left: 20px;"> <button (click)="onBtExport()" class="btn btn-info"
+          style="margin-top: -7px;">Export to CSV <i aria-hidden="true" class="fa fa-cloud-download"></i></button> </label>
+    </div>
+  </div>

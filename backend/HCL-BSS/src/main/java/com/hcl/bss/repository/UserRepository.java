@@ -1,42 +1,34 @@
 package com.hcl.bss.repository;
 
-import java.util.ArrayList;
+import com.hcl.bss.domain.RatePlanVolume;
+import com.hcl.bss.domain.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 import java.util.List;
-import java.util.Map;
 
-import com.hcl.bss.domain.Users;
-import com.hcl.bss.dao.UserDAO;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
+/**
+ *
+ * @author- Aditya gupta
+ */
+public interface UserRepository extends JpaRepository<User, Long> {
 
-import com.hcl.bss.dto.UserDetails;
+    @Query(value= "SELECT * from tb_user_details where user_id=?1 and password=?2",nativeQuery = true)
+    public User isUserExists(@Param("userId") String userId, @Param("userId") String password);
+    public User findById(int id) ;
+    public List<User> findByUserFirstName(String firstName);
 
-import javax.persistence.TypedQuery;
-
-
-@Repository
-public class UserRepository implements UserDAO {
-
-    private SessionFactory sessionFactory;
+/*    private SessionFactory sessionFactory;
     @Autowired
     public UserRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
-    }
-    @Override
-    public Users findById(int id) {
-        Session session = this.sessionFactory.getCurrentSession();
-        TypedQuery<Users> query = session.getNamedQuery("findUserById");
-        query.setParameter("id", id);
-        Users user = query.getSingleResult();
-        return user;
-    }
+    }*/
 
 
 
-    @Autowired
+
+/*    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     private static final String SQL = "select * from user";
@@ -57,5 +49,5 @@ public class UserRepository implements UserDAO {
         }
 
         return users;
-    }
+    }*/
 }

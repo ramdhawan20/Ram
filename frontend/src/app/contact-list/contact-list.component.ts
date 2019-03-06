@@ -1,109 +1,139 @@
 import { Component, OnInit } from '@angular/core';
-
+import { ModalsService } from '../modal.service';
+import { GlobalServiceService } from '../global-service.service';
+import { FlashMessagesService } from 'angular2-flash-messages';
+import { HttpClient } from "@angular/common/http";
+import { ChildMessageRenderer } from "../child-message-renderer.component";
+import { Router } from '@angular/router';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+import { NgbDatepickerConfig, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateFRParserFormatter } from "../ngb-date-fr-parser-formatter";
 @Component({
   selector: 'app-contact-list',
   templateUrl: './contact-list.component.html',
-  styleUrls: ['./contact-list.component.css']
+  styleUrls: ['./contact-list.component.css'],
+  providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
 })
 export class ContactListComponent implements OnInit {
+  private gridApi;
+  private gridColumnApi;
+  private columnDefs;
+  private rowSelection;
+  private rowGroupPanelShow;
+  private pivotPanelShow;
+  private paginationPageSize;
+  private paginationNumberFormatter;
+  private rowData;
+  private context;
+  private frameworkComponents;
+  private fileName;
 
+  constructor(private spinnerService: Ng4LoadingSpinnerService, private router : Router,private flashMessage: FlashMessagesService,private http: HttpClient, private modalService: ModalsService, private globalServiceService: GlobalServiceService,private childMessageRenderer: ChildMessageRenderer) {
 
-  public data: Object[];
-  ngOnInit() {
-
-      this.data = [
-          { Num: 200, OrderID: 10248, CustomerID: 'VINET', Freight: 32.38, ShipCountry: 'France' },
-          { Num: 99, OrderID: 10249, CustomerID: 'TOMSP', Freight: 11.61, ShipCountry: ' Germany' },
-          { Num: 1, OrderID: 10250, CustomerID: 'HANAR', Freight: 65.83, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10251, CustomerID: 'VICTE', Freight: 41.34, ShipCountry: 'France' },
-          { Num: 1, OrderID: 10252, CustomerID: 'SUPRD', Freight: 51.3, ShipCountry: 'Belgium' },
-          { Num: 1, OrderID: 10253, CustomerID: 'HANAR', Freight: 58.17, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10254, CustomerID: 'CHOPS', Freight: 22.98, ShipCountry: 'Switzerland' },
-          { Num: 1, OrderID: 10255, CustomerID: 'RICSU', Freight: 148.33, ShipCountry: 'Switzerland' },
-          { Num: 1, OrderID: 10256, CustomerID: 'SUPRD', Freight: 13.97, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10257, CustomerID: 'WELLI', Freight: 14.23, ShipCountry: 'Venezuela' },
-          { Num: 1, OrderID: 10258, CustomerID: 'VICTE', Freight: 18.33, ShipCountry: 'France' },
-          { Num: 1, OrderID: 10259, CustomerID: 'WELLI', Freight: 28.13, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10260, CustomerID: 'CHOPS', Freight: 48.34, ShipCountry: 'Switzerland' },
-          { Num: 1, OrderID: 10261, CustomerID: 'SUPRD', Freight: 32.73, ShipCountry: ' Germany' },
-          { Num: 1, OrderID: 10262, CustomerID: 'TOMSP', Freight: 12.31, ShipCountry: 'Switzerland' },
-          { Num: 1, OrderID: 10263, CustomerID: 'VICTE', Freight: 23.77, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10264, CustomerID: 'SUPRD', Freight: 43.47, ShipCountry: 'Venezuela' },
-          { Num: 1, OrderID: 10265, CustomerID: 'CHOPS', Freight: 53.37, ShipCountry: 'Belgium' },
-
-          { Num: 1, OrderID: 102481, CustomerID: 'VINET', Freight: 32.38, ShipCountry: 'France' },
-          { Num: 1, OrderID: 102493, CustomerID: 'TOMSP', Freight: 11.61, ShipCountry: ' Germany' },
-          { Num: 1, OrderID: 102504, CustomerID: 'HANAR', Freight: 65.83, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10251, CustomerID: 'VICTE', Freight: 41.34, ShipCountry: 'France' },
-          { Num: 1, OrderID: 10248, CustomerID: 'VINET', Freight: 32.38, ShipCountry: 'France' },
-          { Num: 1, OrderID: 10249, CustomerID: 'TOMSP', Freight: 11.61, ShipCountry: ' Germany' },
-          { Num: 1, OrderID: 10250, CustomerID: 'HANAR', Freight: 65.83, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10251, CustomerID: 'VICTE', Freight: 41.34, ShipCountry: 'France' },
-          { Num: 1, OrderID: 10252, CustomerID: 'SUPRD', Freight: 51.3, ShipCountry: 'Belgium' },
-          { Num: 1, OrderID: 10253, CustomerID: 'HANAR', Freight: 58.17, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10254, CustomerID: 'CHOPS', Freight: 22.98, ShipCountry: 'Switzerland' },
-          { Num: 1, OrderID: 10255, CustomerID: 'RICSU', Freight: 148.33, ShipCountry: 'Switzerland' },
-          { Num: 1, OrderID: 10256, CustomerID: 'SUPRD', Freight: 13.97, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10257, CustomerID: 'WELLI', Freight: 14.23, ShipCountry: 'Venezuela' },
-          { Num: 1, OrderID: 10258, CustomerID: 'VICTE', Freight: 18.33, ShipCountry: 'France' },
-          { Num: 1, OrderID: 10259, CustomerID: 'WELLI', Freight: 28.13, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10260, CustomerID: 'CHOPS', Freight: 48.34, ShipCountry: 'Switzerland' },
-          { Num: 1, OrderID: 10261, CustomerID: 'SUPRD', Freight: 32.73, ShipCountry: ' Germany' },
-          { Num: 1, OrderID: 10262, CustomerID: 'TOMSP', Freight: 12.31, ShipCountry: 'Switzerland' },
-          { Num: 1, OrderID: 10263, CustomerID: 'VICTE', Freight: 23.77, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10264, CustomerID: 'SUPRD', Freight: 43.47, ShipCountry: 'Venezuela' },
-          { Num: 1, OrderID: 10265, CustomerID: 'CHOPS', Freight: 53.37, ShipCountry: 'Belgium' },
-
-          { Num: 1, OrderID: 10248, CustomerID: 'VINET', Freight: 32.38, ShipCountry: 'France' },
-          { Num: 1, OrderID: 10249, CustomerID: 'TOMSP', Freight: 11.61, ShipCountry: ' Germany' },
-          { Num: 1, OrderID: 10250, CustomerID: 'HANAR', Freight: 65.83, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10251, CustomerID: 'VICTE', Freight: 41.34, ShipCountry: 'France' },
-          { Num: 1, OrderID: 10252, CustomerID: 'SUPRD', Freight: 51.3, ShipCountry: 'Belgium' },
-          { Num: 1, OrderID: 10253, CustomerID: 'HANAR', Freight: 58.17, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10254, CustomerID: 'CHOPS', Freight: 22.98, ShipCountry: 'Switzerland' },
-          { Num: 1, OrderID: 10255, CustomerID: 'RICSU', Freight: 148.33, ShipCountry: 'Switzerland' },
-          { Num: 1, OrderID: 10256, CustomerID: 'SUPRD', Freight: 13.97, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10257, CustomerID: 'WELLI', Freight: 14.23, ShipCountry: 'Venezuela' },
-          { Num: 1, OrderID: 10258, CustomerID: 'VICTE', Freight: 18.33, ShipCountry: 'France' },
-          { Num: 1, OrderID: 10259, CustomerID: 'WELLI', Freight: 28.13, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10260, CustomerID: 'CHOPS', Freight: 48.34, ShipCountry: 'Switzerland' },
-          { Num: 1, OrderID: 10261, CustomerID: 'SUPRD', Freight: 32.73, ShipCountry: ' Germany' },
-          { Num: 1, OrderID: 10262, CustomerID: 'TOMSP', Freight: 12.31, ShipCountry: 'Switzerland' },
-          { Num: 1, OrderID: 10263, CustomerID: 'VICTE', Freight: 23.77, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10264, CustomerID: 'SUPRD', Freight: 43.47, ShipCountry: 'Venezuela' },
-          { Num: 1, OrderID: 10265, CustomerID: 'CHOPS', Freight: 53.37, ShipCountry: 'Belgium' },
-
-
-          { Num: 1, OrderID: 10248, CustomerID: 'VINET', Freight: 32.38, ShipCountry: 'France' },
-          { Num: 1, OrderID: 10249, CustomerID: 'TOMSP', Freight: 11.61, ShipCountry: ' Germany' },
-          { Num: 1, OrderID: 10250, CustomerID: 'HANAR', Freight: 65.83, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10251, CustomerID: 'VICTE', Freight: 41.34, ShipCountry: 'France' },
-          { Num: 1, OrderID: 10252, CustomerID: 'SUPRD', Freight: 51.3, ShipCountry: 'Belgium' },
-          { Num: 1, OrderID: 10253, CustomerID: 'HANAR', Freight: 58.17, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10254, CustomerID: 'CHOPS', Freight: 22.98, ShipCountry: 'Switzerland' },
-          { Num: 1, OrderID: 10255, CustomerID: 'RICSU', Freight: 148.33, ShipCountry: 'Switzerland' },
-          { Num: 1, OrderID: 10256, CustomerID: 'SUPRD', Freight: 13.97, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10257, CustomerID: 'WELLI', Freight: 14.23, ShipCountry: 'Venezuela' },
-          { Num: 1, OrderID: 10258, CustomerID: 'VICTE', Freight: 18.33, ShipCountry: 'France' },
-          { Num: 1, OrderID: 10259, CustomerID: 'WELLI', Freight: 28.13, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10260, CustomerID: 'CHOPS', Freight: 48.34, ShipCountry: 'Switzerland' },
-          { Num: 1, OrderID: 10261, CustomerID: 'SUPRD', Freight: 32.73, ShipCountry: ' Germany' },
-          { Num: 1, OrderID: 10262, CustomerID: 'TOMSP', Freight: 12.31, ShipCountry: 'Switzerland' },
-          { Num: 1, OrderID: 10263, CustomerID: 'VICTE', Freight: 23.77, ShipCountry: 'Brazil' },
-          { Num: 1, OrderID: 10264, CustomerID: 'SUPRD', Freight: 43.47, ShipCountry: 'Venezuela' },
-          { Num: 100, OrderID: 10265, CustomerID: 'CHOPS', Freight: 53.37, ShipCountry: 'Belgium' },
-
-          
-      ];
-      
+    this.columnDefs = [
+      { headerName: 'SUBSCRIPTION NO', field: 'subscriptionId' },
+      { headerName: 'CUSTOMBER NAME', field: 'customerName' },
+      { headerName: 'EMAIL', field: 'email' },
+      { headerName: 'PLAN NAME', field: 'planName' },
+      { headerName: 'STATUS', field: 'status' },
+      { headerName: 'PRICE', field: 'price' },
+      { headerName: 'CREATED ON', field: 'createdDate' },
+      { headerName: 'ACTIVATED ON', field: 'activatedDate' },
+      { headerName: 'LAST BILLED ON', field: 'lastBillDate' },
+      { headerName: 'NEXT BILL DATE', field: 'nextBillDate', width:200},
+    ];
+   // this.rowData = this.createRowData();
+    this.context = { componentParent: this };
+    this.frameworkComponents = {
+      childMessageRenderer: ChildMessageRenderer
+    };
+    this.rowSelection = "multiple";
+    this.rowGroupPanelShow = "always";
+    this.pivotPanelShow = "always";
+    this.paginationPageSize = 10;
+    this.paginationNumberFormatter = function (params) {
+      return "[" + params.value.toLocaleString() + "]";
+    };
   }
+  //open popup code start
+  openModal(id: string) {
+    this.modalService.open(id);
+  }
+  //open popup code end
+ 
+  //close popup code start
+  closeModal(id: string) {
+    this.modalService.close(id);
+  }
+  //close popup code end
+
+  ngOnInit() { }
+  onPageSizeChanged(newPageSize) {
+    var inputElement = <HTMLInputElement>document.getElementById("page-size");
+    var value = inputElement.value;
+    this.gridApi.paginationSetPageSize(Number(value));
+  }
+
+
+  searchSubcription(subscriptionNo,customerName,email,planName,status,price,createdDate,activatedDate,lastBillDate,nextBillDate){
+    // if(subscriptionNo==undefined&&customerName==undefined&&email==undefined&&planName==undefined&&status==undefined&&price==undefined&&createdDate==undefined&&activatedDate==undefined&&lastBillDate==undefined&&nextBillDate==undefined){
+    //   this.flashMessage.show('Please enter filter criteria', { cssClass: 'alert-danger', timeout: 10000 });
+    // }
+    // else{
+      this.spinnerService.show();
+      this.globalServiceService.searchSubcription(subscriptionNo,customerName,email,planName,status,price,createdDate,activatedDate,lastBillDate,nextBillDate).subscribe(
+        data => {
+        this.spinnerService.hide();
+        this.rowData=[];
+        console.log(data);
+        this.rowData = data;
+        this.rowData=this.rowData.subscriptionList;
+      //  this.flashMessage.show('Search successfully!!', { cssClass: 'alert-success', timeout: 10000 });
+        
+        },
+      error=>{
+        this.spinnerService.hide();
+        this.flashMessage.show('No data found!!', { cssClass: 'alert-danger', timeout: 10000 });
+      });
+    // }
+   
+  }
+
+  isValid(): boolean {
+    if (this.router.url != '/subscriptions/report') {
+              return true;
+      }
+    return false;
+  }
+
+  onGridReady(params) {
+    this.rowData = [];
+    this.gridApi = params.api;
+    this.gridColumnApi = params.columnApi;
+    this.globalServiceService.SubscriptionCalling().subscribe(
+      data => {
+        this.rowData = data;
+        this.rowData=this.rowData.subscriptionList;
+        params.api.paginationGoToPage(1);
+      });
+  }
+  onQuickFilterChanged() {
+    var inputElement= <HTMLInputElement>document.getElementById("quickFilter");
+    this.gridApi.setQuickFilter(inputElement.value);
+  }
+
+  exportImport(){
+    document.getElementById("exportImportBox").style.display="block";
+  }
+  // export to Csv code start
+  onBtExport() {
+    // var inputElements= <HTMLInputElement>document.getElementById("#fileName");
+    var params = {
+     fileName : "subscriptions",
+      // fileName: inputElements.value
+    };
+    this.gridApi.exportDataAsCsv(params);
+  }
+// export to Csv code end
 } 
 
-
-  
-//   constructor() { }
-
-//   ngOnInit() {
-//   }
-
-// }
