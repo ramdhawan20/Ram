@@ -3,6 +3,8 @@ import{Router} from '@angular/router'
 import { GlobalServiceService } from '../global-service.service'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginserviceService } from '../loginservice.service';
+import { FlashMessagesService } from 'angular2-flash-messages';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -15,9 +17,10 @@ export class LoginComponent implements OnInit {
     isDisabled: boolean = true;
     validEmail:boolean = false;
     msg;
-  constructor(private globalServiceService: GlobalServiceService,private loginserviceService: LoginserviceService, private formBuilder: FormBuilder,  private routes: Router) { }
+  constructor(private globalServiceService: GlobalServiceService, private flashMessage: FlashMessagesService, private loginserviceService: LoginserviceService, private formBuilder: FormBuilder,  private router: Router) { }
   
   ngOnInit() {
+   
      this.registerForm = this.formBuilder.group({
             // firstName: ['', Validators.required],
             // lastName: ['', Validators.required],
@@ -27,17 +30,17 @@ export class LoginComponent implements OnInit {
         
 
   }
-  check(uname: string, p: string)
-  {
-    var output = this.loginserviceService.checkusernameandpassword(uname,p);
-    if(output == true)
-    {
-      this.routes.navigate(['/dashboard']);
-    }
-    else{
-      this.msg = 'Invalid username or password';
-    }
-  }
+  // check(uname: string, p: string)
+  // {
+  //   var output = this.loginserviceService.checkusernameandpassword(uname,p);
+  //   if(output == true)
+  //   {
+  //     this.routes.navigate(['/dashboard']);
+  //   }
+  //   else{
+  //     this.msg = 'Invalid username or password';
+  //   }
+  // }
   get f() { return this.registerForm.controls; }
   onSubmit() {
     this.submitted = true;
@@ -61,9 +64,12 @@ export class LoginComponent implements OnInit {
   this.globalServiceService.loginservice(emailvalue, pwdvalue)
   .subscribe(result => {
     console.log(result);
+    this.router.navigate(['/dashboard']);
   }, err => {
     console.log(err);
-  }
+    let msg=err.error.error;
+      this.flashMessage.show(msg, { cssClass: 'alert-danger', timeout: 10000 });
+    }
   );
 }
 }
