@@ -1,8 +1,10 @@
 package com.hcl.bss.services;
 
-import static com.hcl.bss.constants.ApplicationConstants.DD_MM_YYYY;
 import static com.hcl.bss.constants.ApplicationConstants.BLANK;
+import static com.hcl.bss.constants.ApplicationConstants.DD_MM_YYYY;
+
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,17 +14,17 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.hcl.bss.domain.Product;
 import com.hcl.bss.domain.ProductTypeMaster;
 import com.hcl.bss.dto.ProductDto;
 import com.hcl.bss.repository.ProductRepository;
-import com.hcl.bss.domain.ProductSpecification;
 import com.hcl.bss.repository.ProductTypeMasterRepository;
-
-import org.springframework.data.domain.Example;
-import org.springframework.data.jpa.domain.Specification;
+import com.hcl.bss.repository.specification.ProductSpecification;
 
 @Service
 @Transactional
@@ -88,11 +90,11 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductDto> getAllProducts() {
+	public List<ProductDto> getAllProducts(Pageable reqCount) {
 		Iterable<Product> productEntityList = new ArrayList<>();
 		List<ProductDto> productDtoList = new ArrayList<>();
 
-		productEntityList =  productRepository.findAll();
+		productEntityList =  productRepository.findAll(reqCount);
 		productDtoList = convertProductEntityToDto(productEntityList);
 		return productDtoList;
 	}
@@ -129,9 +131,9 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<Product> searchProducts(ProductDto product) {
-		
-		/*Date startDate = null;
+	public List<ProductDto> searchProducts(ProductDto product, Pageable reqCount) {
+		List<ProductDto> productDtoList = new ArrayList<>();
+		Date startDate = null;
 		Date endDate = null;
 		Integer activeInactive = null;
 		String productDispName = product.getProductDispName();
@@ -148,36 +150,35 @@ public class ProductServiceImpl implements ProductService {
 		String eDate = product.getProductExpDate();
 		if(null != sDate) {
 		try {
-			startDate = new SimpleDateFormat("yyyy-MM-dd").parse(sDate);
+			startDate = new SimpleDateFormat("dd/MM/yyyy").parse(sDate);
+			
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} 
 		}
 		if(null != eDate) {
 		try {
-			endDate = new SimpleDateFormat("yyyy-MM-dd").parse(eDate);
+			endDate = new SimpleDateFormat("dd/MM/yyyy").parse(eDate);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}  
 		}
-		
 
-		 Product prod = new Product();
-		 prod.setProductDispName(productDispName);
-		 prod.setIsActive(activeInactive);
-		 prod.setSku(sku);
-		 prod.setProductExpDate(endDate);
-		 prod.setProductStartDate(startDate);
+		 Product filter = new Product();
+		 filter.setProductDispName(productDispName);
+		 filter.setIsActive(activeInactive);
+		 filter.setSku(sku);
+		 filter.setProductExpDate(endDate);
+		 filter.setProductStartDate(startDate);
+		 ProductTypeMaster ptm = new ProductTypeMaster();
+		 ptm.setProductTypeCode(code);
+		 filter.setProductTypeCode(ptm);
 
-		 
+		 Page<Product> result = productRepository.findAll(Specification.where(ProductSpecification.hasProductName(productDispName)).and(ProductSpecification.hasSku(sku)).and(ProductSpecification.isActive(activeInactive)).and(ProductSpecification.hasStartDate(startDate,endDate)).and(ProductSpecification.hasCode(code)),reqCount);
+		 List<Product> filteredData = result.getContent();
+		 productDtoList = convertProductEntityToDto(filteredData);
 
-		 List<Product> result = productRepository.findAll(Example.of(product));
-		
-		
-		
-		
-		return result;*/
-		return null;
+		return productDtoList;
 		
 	}
 

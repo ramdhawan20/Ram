@@ -15,10 +15,10 @@ public interface UploadService {
 
 	FileUploadResponse csvFileUpload(MultipartFile file) throws IOException, ParseException;
 
-	ErrorCsvFile getFile(Long fileId);
+	
 
 	String downloadCsv(HttpServletResponse response, String fileName) throws IOException;
 
-	String downloadSampleCsv(String fileName);
+	String createSampleCsv();
 
 }

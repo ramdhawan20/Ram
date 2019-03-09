@@ -52,4 +52,7 @@ public class ApplicationConstants {
     public static final String SOLD_TO = "soldTo";
     public static final String COMPANY_ID = "companyId";
     public static final String VOLUME = "VOLUME";
+    public static final String RECORD_NO = "Record No : ";
+    public static final String UPLOAD = "UPLOAD";
+    public static final String HYPHEN = "-";
 }

@@ -6,11 +6,16 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,9 +35,12 @@ import io.swagger.annotations.ApiOperation;
 
 @CrossOrigin(origins = "*")
 @RestController
+@PropertySource("classpath:application.properties")
 public class ProductController {
 	@Autowired
 	ProductService productService;
+	@Value("${default.recordPerPage:10}")
+	 Integer recordPerPage;
 
 	@ApiOperation(value = "Add product", response = ProductDto.class)
 	@RequestMapping(value = "/product", produces = { "application/json" }, method = RequestMethod.POST)
@@ -58,10 +66,14 @@ public class ProductController {
 	}
 
 	@ApiOperation(value = "Get All Product", response = ProductDto.class)
-	@RequestMapping(value = "/getProducts", produces = { "application/json" }, method = RequestMethod.GET)
-	public ResponseEntity<List<ProductDto>> getAllProduct() {
+	@RequestMapping(value = "/getProducts/{pageNo}", produces = { "application/json" }, method = RequestMethod.GET)
+	public ResponseEntity<List<ProductDto>> getAllProduct(@PathVariable("pageNo") String pageNo) {
+		Integer pageNumber = Integer.valueOf(pageNo);
+		//Integer recordSize = Integer.valueOf(recordPerPage);
+		@SuppressWarnings("deprecation")
+		Pageable reqCount = new PageRequest(pageNumber, recordPerPage);
 		List<ProductDto> productList = new ArrayList<>();
-		productList = productService.getAllProducts();
+		productList = productService.getAllProducts(reqCount);
 		return new ResponseEntity<>(productList, HttpStatus.OK);
 
 	}
@@ -75,21 +87,24 @@ public class ProductController {
 	}
 	@ApiOperation(value = "Get list of Product Based on Search Criteria", response = Product.class)
 	@PostMapping(value = "/searchProducts")
-	public ResponseEntity<List<Product>> searchProducts(@RequestBody ProductDto product) {
-		List<Product> productSearchList = new ArrayList<>();
+	public ResponseEntity<List<ProductDto>> searchProducts(@RequestBody ProductDto product) {
+		List<ProductDto> productSearchList = new ArrayList<>();
+		//Integer recordSize = Integer.valueOf(recordPerPage);
+		@SuppressWarnings("deprecation")
+		Pageable reqCount = new PageRequest(0, 2);
 		try {
-			productSearchList = productService.searchProducts(product);
+			productSearchList = productService.searchProducts(product,reqCount);
 
 			if(productSearchList != null && productSearchList.size() > 0) {
-				return new ResponseEntity<List<Product>>(productSearchList, HttpStatus.OK);
+				return new ResponseEntity<List<ProductDto>>(productSearchList, HttpStatus.OK);
 			}else {
 				
-				return new ResponseEntity<List<Product>>(productSearchList, HttpStatus.NOT_FOUND);
+				return new ResponseEntity<List<ProductDto>>(productSearchList, HttpStatus.NOT_FOUND);
 				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<List<Product>>(productSearchList, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<List<ProductDto>>(productSearchList, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}		
 }

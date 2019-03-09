@@ -3,6 +3,8 @@ package com.hcl.bss.validator;
 import static com.hcl.bss.constants.ApplicationConstants.DATE_FORMAT_DDMMYYYY;
 import static com.hcl.bss.constants.ApplicationConstants.DATE_FORMAT_DD_MM_YYYY;
 import static com.hcl.bss.constants.ApplicationConstants.DEFAULT_EXP_DATE;
+import static com.hcl.bss.constants.ApplicationConstants.BLANK;
+import static com.hcl.bss.constants.ApplicationConstants.HYPHEN;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -32,25 +34,43 @@ public class CustomDateCompareSchemeValidator implements ConstraintValidator<Cus
 
 	@Override
 	public boolean isValid(Object value, ConstraintValidatorContext context) {
+		String strDate = BLANK;
 		dto = (ProductDto) value;
 		boolean isStartDateBeforeExpDate = false;
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		if(dto.getProductStartDate() == null) {
+System.out.println(dto.getProductStartDate());
+		if(BLANK.equalsIgnoreCase(dto.getProductStartDate())) {
 			Date startDate = new Date();
-			 DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");  
-             String strDate = dateFormat.format(startDate);  
+			 DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_DDMMYYYY);  
+            strDate = dateFormat.format(startDate);  
 			dto.setProductStartDate(strDate);
 		}
-		if(dto.getProductExpDate() == null) { 
-			dto.setProductStartDate(DEFAULT_EXP_DATE);
+		 if(BLANK.equalsIgnoreCase(dto.getProductExpDate())) {
+			 dto.setProductExpDate(DEFAULT_EXP_DATE);
+		 }
+		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_DDMMYYYY);
+		SimpleDateFormat sdf1 = new SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY);
+		if(dto.getProductStartDate() == null) {
+		
 		}
+		
 		try {
 			isStartDateBeforeExpDate = sdf.parse(dto.getProductStartDate()).before(sdf.parse(dto.getProductExpDate()));
 		} catch (ParseException e) {
-			e.printStackTrace();
+			try {
+			isStartDateBeforeExpDate = sdf1.parse(dto.getProductStartDate()).before(sdf1.parse(dto.getProductExpDate()));
+			}catch(ParseException pe) {
+				try {
+					isStartDateBeforeExpDate = sdf.parse(dto.getProductStartDate()).before(sdf1.parse(dto.getProductExpDate()));
+				}catch(ParseException pex){
+					try {
+					isStartDateBeforeExpDate = sdf1.parse(dto.getProductStartDate()).before(sdf.parse(dto.getProductExpDate()));
+					}catch(ParseException ex) {
+						
+					}
+				}
+			}
 		}
 		
 		return isStartDateBeforeExpDate;
-
 }
 }

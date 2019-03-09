@@ -2,6 +2,8 @@ package com.hcl.bss.validator;
 
 import static com.hcl.bss.constants.ApplicationConstants.DATE_FORMAT_DDMMYYYY;
 import static com.hcl.bss.constants.ApplicationConstants.DATE_FORMAT_DD_MM_YYYY;
+import static com.hcl.bss.constants.ApplicationConstants.HYPHEN;
+import static com.hcl.bss.constants.ApplicationConstants.BLANK;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,7 +38,7 @@ public class ProductStartDateSchemeValidator implements ConstraintValidator<Prod
 
 		System.out.println("VAL3:" + value);
 
-		if (dto.getProductExpDate().trim().equals("")) {
+		if (dto.getProductStartDate().equalsIgnoreCase(BLANK)) {
 			return true;
 		} else {
 			boolean firstCheck = formatDDMMYYYY();
@@ -62,8 +64,7 @@ public class ProductStartDateSchemeValidator implements ConstraintValidator<Prod
 
 			Date strDate = formatter.parse(dto.getProductStartDate().trim());
 		} catch (ParseException de) {
-			LOGGER.error("Error", de);
-			// de.printStackTrace();
+			
 			return false;
 		}
 		return true;
@@ -76,7 +77,6 @@ public class ProductStartDateSchemeValidator implements ConstraintValidator<Prod
 
 			Date strDate = formatter.parse(dto.getProductStartDate().trim());
 		} catch (ParseException de) {
-			de.printStackTrace();
 			return false;
 		}
 		return true;

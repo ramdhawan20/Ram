@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Pageable;
+
 import com.hcl.bss.domain.Product;
 import com.hcl.bss.domain.ProductTypeMaster;
 import com.hcl.bss.dto.ProductDto;
@@ -16,10 +18,10 @@ public interface ProductService {
 
 	Product addProduct(ProductDto product);
 
-	List<ProductDto>  getAllProducts();
+	List<ProductDto>  getAllProducts(Pageable reqCount);
 
 	Iterable<ProductTypeMaster> getProductType();
 
-	List<Product> searchProducts(ProductDto product);
+	List<ProductDto> searchProducts(ProductDto product, Pageable reqCount);
 
 }
