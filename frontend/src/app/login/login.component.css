@@ -136,3 +136,14 @@ h4{color: #117a8b;}
       outline: none;
   } 
   body{ overflow-x: hidden;}
+
+
+
+flash-messages {
+ 
+  width: 100%;
+  top: -37px;
+  z-index: 9999;
+  margin-left: -165px; 
+  position: initial;
+}
