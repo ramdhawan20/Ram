@@ -61,6 +61,9 @@ public class Subscription implements Serializable {
     @Column(name="STATUS")
     private String status;
 
+    @Column(name="STATUS")
+    private Integer quantity;
+
     @GeneratorType(type = LoggedUserGenerator.class)
     @Column(name = "CRE_BY")
     private String createdBy;
@@ -169,6 +172,14 @@ public class Subscription implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
     public Timestamp getCreatedDate() {

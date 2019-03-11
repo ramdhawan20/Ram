@@ -107,8 +107,8 @@ public class Order implements Serializable {
     @Column(name="STATUS")
     private String status;
 
-    @Column(name="TOTAL_PRICE")
-    private Double totalPrice;
+/*    @Column(name="TOTAL_PRICE")
+    private Double totalPrice;*/
     @Column(name="QUANTITY")
     private Integer quantity;
 
@@ -425,13 +425,13 @@ public class Order implements Serializable {
         return updatedBy;
     }
 
-    public Double getTotalPrice() {
+/*    public Double getTotalPrice() {
         return totalPrice;
     }
 
     public void setTotalPrice(Double totalPrice) {
         this.totalPrice = totalPrice;
-    }
+    }*/
 
     public Integer getQuantity() {
         return quantity;
