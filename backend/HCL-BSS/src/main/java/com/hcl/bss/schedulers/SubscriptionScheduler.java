@@ -11,6 +11,8 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static com.hcl.bss.constants.ApplicationConstants.*;
 
@@ -99,6 +101,14 @@ public class SubscriptionScheduler {
         }
     }
 
+/*    private void readData(){
+        long numOfOrders = orderRepository.count();
+        *//**
+         * if numOfOrders <1000 ->threads to create 10
+         *//*
+        ExecutorService service = Executors.newFixedThreadPool(10);
+    }*/
+
     @Transactional(rollbackOn = {Exception.class})
     private void createCustomerAccount(Order order, Subscription subscription){
         try{
@@ -135,7 +145,7 @@ public class SubscriptionScheduler {
             order.setStatus(FAIL_STATUS);
             orderErrorsRepository.save(error);
             orderRepository.save(order);*/
-            updateOrder(order, "Customer could not be created : "+ex.getMessage());
+            updateErrLog(order, "Customer could not be created : "+ex.getMessage());
         }
     }
 
@@ -260,8 +270,6 @@ public class SubscriptionScheduler {
             subscription.setStatus("ACTIVE");
             Calendar cal = Calendar.getInstance();
             Date today = cal.getTime();
-            // to be discussed
-            //subscription.setSubscriptionEndDate(order.getBillingCycle()+new Timestamp(System.currentTimeMillis()));
             int billCycle = order.getBillingCycle();
             String billFrequency = order.getBillingFrequency();
             switch(billFrequency){
@@ -275,7 +283,18 @@ public class SubscriptionScheduler {
                     cal.add(Calendar.YEAR, billCycle);
                     break;
             }
-            subscription.setSubscriptionEndDate(new Timestamp(cal.getTimeInMillis()));
+            // check for evergreen subscription
+            if(order.getBillingCycle()!= null && order.getBillingFrequency()!=null){
+                Date evergreenEndDate = new Date(9999,12,31);
+                subscription.setSubscriptionEndDate(new Timestamp(evergreenEndDate.getTime()));
+            }
+            else{
+                subscription.setSubscriptionEndDate(new Timestamp(cal.getTimeInMillis()));
+            }
+
+
+            subscription.setQuantity(order.getQuantity());
+
             subscription.setActivationDate(new Timestamp(System.currentTimeMillis()));
             String subscriptionId = generateSubscriptionId(order);
             subscription.setSubscriptionId(subscriptionId);
@@ -307,7 +326,7 @@ public class SubscriptionScheduler {
             updateOrder(order, "Pricing Scheme Code: "+order.getPricingSchemeCode()+ " is not configured");
         }
         else{
-            subRatePlan.setPrice(order.getTotalPrice());
+            //subRatePlan.setPrice(order.getTotalPrice());
             subRatePlan.setBillingCycle(order.getBillingCycle());
             subRatePlan.setBillingFrequency(order.getBillingFrequency());
             RatePlan ratePlan = entityManager.find(RatePlan.class, order.getRatePlanId());
@@ -316,8 +335,9 @@ public class SubscriptionScheduler {
             subRatePlan.setPricingScheme(pricingScheme);
             subRatePlan.setCreatedDate(new Timestamp(System.currentTimeMillis()));
             subRatePlan.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
+            int quantity = order.getQuantity();
+            Long ratePlanUid = ratePlan.getId();
             if(VOLUME.equals(pricingScheme.getPricingSchemeCode())){
-                int quantity = order.getQuantity();
                 if(quantity<0){
                     /*OrderErrors error = addOrderError(order,order.getQuantity()+ " is less than zero");
                     order.setStatus(FAIL_STATUS);
@@ -326,16 +346,31 @@ public class SubscriptionScheduler {
                     updateOrder(order, order.getQuantity()+ " is less than zero");
                     return subRatePlan;
                 }
-                Long ratePlanUid = ratePlan.getId();
+
                 List<RatePlanVolume> ratePlanVolumes = ratePlanVolumeRepository.findByRatePlan(ratePlanUid);
+                RatePlanVolume ratePlanVolume = null;
                 for(RatePlanVolume rpv: ratePlanVolumes){
+                    ratePlanVolume = rpv;
                     if(rpv.getStartQty()< quantity && rpv.getEndQty()> quantity){
                         double price = rpv.getPrice()* quantity;
                         subRatePlan.setPrice(price);
                         subRatePlan.setRatePlanVolume(rpv);
-                        break;
+                        //break;
+                        return subRatePlan;
                     }
                 }
+                //if qty is greater than the highest tier than default to highest tier price
+                subRatePlan.setPrice(quantity * ratePlanVolume.getPrice());
+                subRatePlan.setRatePlanVolume(ratePlanVolume);
+            }
+            else if(UNIT.equals(pricingScheme.getPricingSchemeCode())){
+                if(quantity<0){
+                    updateOrder(order, order.getQuantity()+ " is less than zero");
+                    return subRatePlan;
+                }
+                double price = ratePlan.getPrice()* quantity;
+                subRatePlan.setPrice(price);
+                //return subRatePlan;
             }
         }
         return subRatePlan;
@@ -445,6 +480,9 @@ public class SubscriptionScheduler {
         }
     }
 
+    private void updateErrLog(Order order, String str){
+
+    }
     /**
      * This method will reset the ids for next record processing
      */
