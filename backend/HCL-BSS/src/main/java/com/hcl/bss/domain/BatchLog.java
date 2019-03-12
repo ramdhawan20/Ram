@@ -2,26 +2,18 @@ package com.hcl.bss.domain;
 
 import com.hcl.bss.repository.generator.LoggedUserGenerator;
 import org.hibernate.annotations.GeneratorType;
-import org.hibernate.annotations.Proxy;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
-/**
- *
- * @author- Aditya gupta
- */
 
 @Entity
-@Table(name="TB_ORDER_ERRORS")
-@Proxy(lazy = false)
-public class OrderErrors implements Serializable {
-    @Id
+@Table(name="TB_BATCH_RUN_LOG")
+public class BatchLog implements Serializable{
     @Column(name="UIDPK")
+    @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "uidpk_sequence")
     @TableGenerator(
             name = "uidpk_sequence",
@@ -31,12 +23,17 @@ public class OrderErrors implements Serializable {
             initialValue = 1000000000,
             allocationSize = 1)
     private Long id;
-
     @ManyToOne
     @JoinColumn(name="ORDER_NUMBER")
     private Order order;
-    @Column(name="ERROR_DESC")
+
+    @Column(name="RUN_DWN_DATE")
+    private Timestamp runDownDate;
+    @Column(name="ERR_DESC")
     private String errorDesc;
+    @OneToOne
+    @JoinColumn(name="SUBSCRIPTION_ID")
+    private Subscription subscription;
 
     @GeneratorType(type = LoggedUserGenerator.class)
     @Column(name = "CRE_BY")
@@ -55,10 +52,24 @@ public class OrderErrors implements Serializable {
         return id;
     }
 
-
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public Timestamp getRunDownDate() {
+        return runDownDate;
+    }
+
+    public void setRunDownDate(Timestamp runDownDate) {
+        this.runDownDate = runDownDate;
     }
 
     public String getErrorDesc() {
@@ -69,12 +80,12 @@ public class OrderErrors implements Serializable {
         this.errorDesc = errorDesc;
     }
 
-    public Timestamp getCreatedDate() {
-        return createdDate;
+    public Subscription getSubscription() {
+        return subscription;
     }
 
-    public void setCreatedDate(Timestamp createdDate) {
-        this.createdDate = createdDate;
+    public void setSubscription(Subscription subscription) {
+        this.subscription = subscription;
     }
 
     public String getCreatedBy() {
@@ -85,12 +96,12 @@ public class OrderErrors implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public Timestamp getUpdatedDate() {
-        return updatedDate;
+    public Timestamp getCreatedDate() {
+        return createdDate;
     }
 
-    public void setUpdatedDate(Timestamp updatedDate) {
-        this.updatedDate = updatedDate;
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
     }
 
     public String getUpdatedBy() {
@@ -101,11 +112,11 @@ public class OrderErrors implements Serializable {
         this.updatedBy = updatedBy;
     }
 
-    public Order getOrder() {
-        return order;
+    public Timestamp getUpdatedDate() {
+        return updatedDate;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setUpdatedDate(Timestamp updatedDate) {
+        this.updatedDate = updatedDate;
     }
 }
