@@ -293,7 +293,7 @@ public class SubscriptionScheduler {
             }
 
 
-            subscription.setQuantity(order.getQuantity());
+
 
             subscription.setActivationDate(new Timestamp(System.currentTimeMillis()));
             String subscriptionId = generateSubscriptionId(order);
