@@ -6,7 +6,7 @@ public class ApplicationConstants {
 
 	// Error CSV file header
 	public static final String FILE_HEADER = "ROW_NO,ERROR";
-	//Delimiter used in CSV file
+	//Delimiter used in CSV file 
     public static final String COMMA_DELIMITER = ",";
      
     //Product attributes index
@@ -46,11 +46,16 @@ public class ApplicationConstants {
     public static final String PRODUCT_TYPE_CODE_NOT_DEFIENED_IN_MASTER = "ProductTypeCode Value is not defiened in ProductTypeMaster DB Constraint Violation: ";
 
     //subscription batch
-    //public static final String PASS_STATUS = "Pass";
-    public static final String FAIL_STATUS = "Failure";
+    public static final String PASS_STATUS = "Pass";
+    public static final String FAIL_STATUS = "Fail";
     public static final String BILL_TO = "billTo";
     public static final String SOLD_TO = "soldTo";
     public static final String COMPANY_ID = "companyId";
     public static final String VOLUME = "VOLUME";
+    public static final String RECORD_NO = "Record No : ";
+    public static final String UPLOAD = "UPLOAD";
+    public static final String HYPHEN = "-";
     public static final String UNIT = "UNIT";
+
 }
+

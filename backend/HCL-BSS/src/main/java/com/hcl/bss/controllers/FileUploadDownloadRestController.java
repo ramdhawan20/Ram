@@ -93,10 +93,10 @@ public class FileUploadDownloadRestController {
 		return new ResponseEntity<String>(responseMessage, HttpStatus.OK);
 	}
 
-	@GetMapping(path = "/createSampleFile/{fileName}", produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE })
-	public ResponseEntity<String> downloadSampleFile(@PathVariable("fileName") String fileName) throws IOException {
+	/*@GetMapping(path = "/createSampleFile", produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE })
+	public ResponseEntity<String> createSampleFile() throws IOException {
 		String responseMessage = BLANK;
-		responseMessage = uploadService.downloadSampleCsv(fileName);
+		responseMessage = uploadService.createSampleCsv();
 		return new ResponseEntity<String>(responseMessage, HttpStatus.OK);
-	}
+	}*/
 }

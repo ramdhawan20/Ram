@@ -1,6 +1,8 @@
 package com.hcl.bss.validator;
 
 import static com.hcl.bss.constants.ApplicationConstants.DATE_FORMAT_DDMMYYYY;
+import static com.hcl.bss.constants.ApplicationConstants.HYPHEN;
+import static com.hcl.bss.constants.ApplicationConstants.BLANK;
 import static com.hcl.bss.constants.ApplicationConstants.DATE_FORMAT_DD_MM_YYYY;
 
 import java.text.ParseException;
@@ -34,8 +36,8 @@ public class CustomDateSchemeValidator implements ConstraintValidator<CustomDate
 
 		
 
-		if (dto.getProductExpDate().trim().equals("")) {
-			return false;
+		if (dto.getProductExpDate().equalsIgnoreCase(BLANK)) {
+			return true;
 		} else {
 			boolean firstCheck = formatDDMMYYYY();
 			if (!firstCheck) {
@@ -74,7 +76,6 @@ public class CustomDateSchemeValidator implements ConstraintValidator<CustomDate
 
 			Date strDate = formatter.parse(dto.getProductExpDate().trim());
 		} catch (ParseException de) {
-			de.printStackTrace();
 			return false;
 		}
 		return true;
