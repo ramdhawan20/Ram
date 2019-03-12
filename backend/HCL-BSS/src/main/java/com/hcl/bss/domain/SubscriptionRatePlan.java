@@ -36,6 +36,10 @@ public class SubscriptionRatePlan implements Serializable {
 
     @Column(name="PRODUCT_ID")
     private Long product;
+
+    @Column(name="QUANTITY")
+    private Integer quantity;
+
     @Column(name="PRICE")
     private double price;
     @Column(name="BILLING_CYCLE")
@@ -87,6 +91,14 @@ public class SubscriptionRatePlan implements Serializable {
 
     public void setProduct(Long product) {
         this.product = product;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
     public double getPrice() {
