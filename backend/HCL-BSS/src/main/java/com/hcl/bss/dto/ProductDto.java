@@ -49,6 +49,7 @@ public class ProductDto implements java.io.Serializable {
 	private String prescribedFileHeader;
 	private String fileHeader;
 	private String status;
+	private String pageNo;
 	public ProductDto() {
 		super();
 	}
@@ -200,6 +201,18 @@ public class ProductDto implements java.io.Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+
+
+	public String getPageNo() {
+		return pageNo;
+	}
+
+
+
+	public void setPageNo(String pageNo) {
+		this.pageNo = pageNo;
 	}
 
 

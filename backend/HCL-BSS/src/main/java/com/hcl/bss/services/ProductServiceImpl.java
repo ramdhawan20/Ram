@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import com.hcl.bss.domain.Product;
 import com.hcl.bss.domain.ProductTypeMaster;
+import com.hcl.bss.dto.ProductDataDto;
 import com.hcl.bss.dto.ProductDto;
 import com.hcl.bss.repository.ProductRepository;
 import com.hcl.bss.repository.ProductTypeMasterRepository;
@@ -90,13 +91,25 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductDto> getAllProducts(Pageable reqCount) {
+	public ProductDataDto getAllProducts(Pageable reqCount) {
+		ProductDataDto productData = new ProductDataDto();
 		Iterable<Product> productEntityList = new ArrayList<>();
 		List<ProductDto> productDtoList = new ArrayList<>();
-
+		Long noOfTotalRecords = 0L;
+		noOfTotalRecords = productRepository.count();
 		productEntityList =  productRepository.findAll(reqCount);
+		Integer pageNumber = reqCount.getPageNumber()+1;
+		Integer lastRecord = pageNumber * reqCount.getPageSize();
+		
+		if(noOfTotalRecords - lastRecord <= 0) {
+			if(noOfTotalRecords/lastRecord ==0) {
+				productData.setLastPage(true);
+			System.out.println("Last page to show");
+		}
+		}
 		productDtoList = convertProductEntityToDto(productEntityList);
-		return productDtoList;
+		productData.setProductList(productDtoList);
+		return productData;
 	}
 	private List<ProductDto> convertProductEntityToDto(Iterable<Product> productEntityList) {
 		List<ProductDto> ProductDtoList = new ArrayList<>();
@@ -131,8 +144,10 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductDto> searchProducts(ProductDto product, Pageable reqCount) {
+	public ProductDataDto searchProducts(ProductDto product, Pageable reqCount) {
 		List<ProductDto> productDtoList = new ArrayList<>();
+		ProductDataDto productDataDto = new ProductDataDto();
+		List<Product> filteredData = new ArrayList<>();
 		Date startDate = null;
 		Date endDate = null;
 		Integer activeInactive = null;
@@ -175,10 +190,19 @@ public class ProductServiceImpl implements ProductService {
 		 filter.setProductTypeCode(ptm);
 
 		 Page<Product> result = productRepository.findAll(Specification.where(ProductSpecification.hasProductName(productDispName)).and(ProductSpecification.hasSku(sku)).and(ProductSpecification.isActive(activeInactive)).and(ProductSpecification.hasStartDate(startDate,endDate)).and(ProductSpecification.hasCode(code)),reqCount);
-		 List<Product> filteredData = result.getContent();
+		 filteredData = result.getContent();
 		 productDtoList = convertProductEntityToDto(filteredData);
-
-		return productDtoList;
+		 productDataDto.setProductList(productDtoList);
+		 Integer pageNumber = reqCount.getPageNumber()+1;
+			Integer lastRecord = pageNumber * reqCount.getPageSize();
+			
+			if(filteredData.size() - lastRecord <= 0) {
+				if(filteredData.size()/lastRecord ==0) {
+					productDataDto.setLastPage(true);
+				System.out.println("Last page to show");
+			}
+			}
+		return productDataDto;
 		
 	}
 
