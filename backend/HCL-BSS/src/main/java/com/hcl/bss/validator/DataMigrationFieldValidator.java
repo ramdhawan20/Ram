@@ -18,7 +18,7 @@ import com.hcl.bss.dto.ProductErrorLogDetails;
 import com.hcl.bss.dto.ProductUploadDetails;
 import com.hcl.bss.repository.ProductRepository;
 import static com.hcl.bss.constants.ApplicationConstants.DUPLICATE_SKU;
-import static com.hcl.bss.constants.ApplicationConstants.ROW_NO;
+import static com.hcl.bss.constants.ApplicationConstants.RECORD_NO;
 import static com.hcl.bss.constants.ApplicationConstants.ERROR;
 import static com.hcl.bss.constants.ApplicationConstants.DUPLICATE_SKU_DB;
 import static com.hcl.bss.constants.ApplicationConstants.DEFAULT_EXP_DATE;
@@ -37,7 +37,7 @@ public class DataMigrationFieldValidator {
 		ProductUploadDetails productUploadDetails = new ProductUploadDetails();
 		List<ProductDto> successProductList = new ArrayList<>();
 		Set<String> skuSet = new HashSet<>();
-		int rowNumber = 1;
+		int rowNumber = 0;
 		for (ProductDto element : listProduct) {
 			rowNumber++;
 			boolean duplicateSkuCsv = false;
@@ -83,7 +83,7 @@ public class DataMigrationFieldValidator {
 			for (ConstraintViolation<ProductDto> violation : violations) {
 				
 				// Below Error Details to be preserved for file export
-				System.out.println(ROW_NO + rowNumber + ERROR + violation.getMessage());
+				System.out.println(RECORD_NO + rowNumber + ERROR + violation.getMessage());
 				errorDetails = new ProductErrorLogDetails();
 				errorDetails.setRowNo(rowNumber);
 				errorDetails.setErrorMsg(violation.getMessage());

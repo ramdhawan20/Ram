@@ -38,7 +38,7 @@ public class ProductDto implements java.io.Serializable {
 
 	@NotNull(message = "PRODUCT_DESCRIPTION cannot be null")
 	@NotBlank(message = "PRODUCT_DESCRIPTION cannot be blank")
-	@Size(max = 100, message = "PRODUCT_DISPLAY_NAME  size should not exceed 100")
+	@Size(max = 100, message = "PRODUCT_DESCRIPTION  size should not exceed 100")
 	private String productDescription;
 	private String productType;
 	private String updatedBy;
@@ -49,6 +49,7 @@ public class ProductDto implements java.io.Serializable {
 	private String prescribedFileHeader;
 	private String fileHeader;
 	private String status;
+	private String pageNo;
 	public ProductDto() {
 		super();
 	}
@@ -204,12 +205,30 @@ public class ProductDto implements java.io.Serializable {
 
 
 
+	public String getPageNo() {
+		return pageNo;
+	}
+
+
+
+	public void setPageNo(String pageNo) {
+		this.pageNo = pageNo;
+	}
+
+
+
 	@Override
 	public String toString() {
 		return "ProductDto [productTypeCode=" + productTypeCode + ", uidpk=" + uidpk + ", sku=" + sku
-				+ ", productDispName=" + productDispName + ", productExpDate=" + productExpDate
-				+ ", productDescription=" + productDescription + ", updatedBy=" + updatedBy + ", updatedDate="
-				+ updatedDate + ", createdBy=" + createdBy + ", createdDate=" + createdDate + "]";
+				+ ", productDispName=" + productDispName + ", productStartDate=" + productStartDate
+				+ ", productExpDate=" + productExpDate + ", productDescription=" + productDescription + ", productType="
+				+ productType + ", updatedBy=" + updatedBy + ", updatedDate=" + updatedDate + ", createdBy=" + createdBy
+				+ ", createdDate=" + createdDate + ", dateScheme=" + dateScheme + ", prescribedFileHeader="
+				+ prescribedFileHeader + ", fileHeader=" + fileHeader + ", status=" + status + "]";
 	}
+
+
+
+	
 
 }

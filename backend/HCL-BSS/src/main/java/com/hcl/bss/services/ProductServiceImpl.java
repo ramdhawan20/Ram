@@ -1,8 +1,10 @@
 package com.hcl.bss.services;
 
-import static com.hcl.bss.constants.ApplicationConstants.DD_MM_YYYY;
 import static com.hcl.bss.constants.ApplicationConstants.BLANK;
+import static com.hcl.bss.constants.ApplicationConstants.DD_MM_YYYY;
+
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,17 +14,18 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.hcl.bss.domain.Product;
 import com.hcl.bss.domain.ProductTypeMaster;
+import com.hcl.bss.dto.ProductDataDto;
 import com.hcl.bss.dto.ProductDto;
 import com.hcl.bss.repository.ProductRepository;
-import com.hcl.bss.domain.ProductSpecification;
 import com.hcl.bss.repository.ProductTypeMasterRepository;
-
-import org.springframework.data.domain.Example;
-import org.springframework.data.jpa.domain.Specification;
+import com.hcl.bss.repository.specification.ProductSpecification;
 
 @Service
 @Transactional
@@ -88,13 +91,25 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductDto> getAllProducts() {
+	public ProductDataDto getAllProducts(Pageable reqCount) {
+		ProductDataDto productData = new ProductDataDto();
 		Iterable<Product> productEntityList = new ArrayList<>();
 		List<ProductDto> productDtoList = new ArrayList<>();
-
-		productEntityList =  productRepository.findAll();
+		Long noOfTotalRecords = 0L;
+		noOfTotalRecords = productRepository.count();
+		productEntityList =  productRepository.findAll(reqCount);
+		Integer pageNumber = reqCount.getPageNumber()+1;
+		Integer lastRecord = pageNumber * reqCount.getPageSize();
+		
+		if(noOfTotalRecords - lastRecord <= 0) {
+			if(noOfTotalRecords/lastRecord ==0) {
+				productData.setLastPage(true);
+			System.out.println("Last page to show");
+		}
+		}
 		productDtoList = convertProductEntityToDto(productEntityList);
-		return productDtoList;
+		productData.setProductList(productDtoList);
+		return productData;
 	}
 	private List<ProductDto> convertProductEntityToDto(Iterable<Product> productEntityList) {
 		List<ProductDto> ProductDtoList = new ArrayList<>();
@@ -129,9 +144,11 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<Product> searchProducts(ProductDto product) {
-		
-		/*Date startDate = null;
+	public ProductDataDto searchProducts(ProductDto product, Pageable reqCount) {
+		List<ProductDto> productDtoList = new ArrayList<>();
+		ProductDataDto productDataDto = new ProductDataDto();
+		List<Product> filteredData = new ArrayList<>();
+		Date startDate = null;
 		Date endDate = null;
 		Integer activeInactive = null;
 		String productDispName = product.getProductDispName();
@@ -148,36 +165,44 @@ public class ProductServiceImpl implements ProductService {
 		String eDate = product.getProductExpDate();
 		if(null != sDate) {
 		try {
-			startDate = new SimpleDateFormat("yyyy-MM-dd").parse(sDate);
+			startDate = new SimpleDateFormat("dd/MM/yyyy").parse(sDate);
+			
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} 
 		}
 		if(null != eDate) {
 		try {
-			endDate = new SimpleDateFormat("yyyy-MM-dd").parse(eDate);
+			endDate = new SimpleDateFormat("dd/MM/yyyy").parse(eDate);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}  
 		}
-		
 
-		 Product prod = new Product();
-		 prod.setProductDispName(productDispName);
-		 prod.setIsActive(activeInactive);
-		 prod.setSku(sku);
-		 prod.setProductExpDate(endDate);
-		 prod.setProductStartDate(startDate);
+		 Product filter = new Product();
+		 filter.setProductDispName(productDispName);
+		 filter.setIsActive(activeInactive);
+		 filter.setSku(sku);
+		 filter.setProductExpDate(endDate);
+		 filter.setProductStartDate(startDate);
+		 ProductTypeMaster ptm = new ProductTypeMaster();
+		 ptm.setProductTypeCode(code);
+		 filter.setProductTypeCode(ptm);
 
-		 
-
-		 List<Product> result = productRepository.findAll(Example.of(product));
-		
-		
-		
-		
-		return result;*/
-		return null;
+		 Page<Product> result = productRepository.findAll(Specification.where(ProductSpecification.hasProductName(productDispName)).and(ProductSpecification.hasSku(sku)).and(ProductSpecification.isActive(activeInactive)).and(ProductSpecification.hasStartDate(startDate,endDate)).and(ProductSpecification.hasCode(code)),reqCount);
+		 filteredData = result.getContent();
+		 productDtoList = convertProductEntityToDto(filteredData);
+		 productDataDto.setProductList(productDtoList);
+		 Integer pageNumber = reqCount.getPageNumber()+1;
+			Integer lastRecord = pageNumber * reqCount.getPageSize();
+			
+			if(filteredData.size() - lastRecord <= 0) {
+				if(filteredData.size()/lastRecord ==0) {
+					productDataDto.setLastPage(true);
+				System.out.println("Last page to show");
+			}
+			}
+		return productDataDto;
 		
 	}
 

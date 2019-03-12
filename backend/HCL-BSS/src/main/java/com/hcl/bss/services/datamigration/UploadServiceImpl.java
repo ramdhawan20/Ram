@@ -9,10 +9,9 @@ import static com.hcl.bss.constants.ApplicationConstants.ERROR;
 import static com.hcl.bss.constants.ApplicationConstants.ERROR_FILE;
 import static com.hcl.bss.constants.ApplicationConstants.ERROR_FILE_NAME_SUFFIX;
 import static com.hcl.bss.constants.ApplicationConstants.EXTERNAL_FILE_PATH;
-import static com.hcl.bss.constants.ApplicationConstants.FILE_NOT_EXIST_MSG;
+import static com.hcl.bss.constants.ApplicationConstants.UPLOAD;
 import static com.hcl.bss.constants.ApplicationConstants.LINE_SEPERATOR;
 import static com.hcl.bss.constants.ApplicationConstants.NEW_LINE_SEPARATOR;
-import static com.hcl.bss.constants.ApplicationConstants.ROW_NO;
 import static com.hcl.bss.constants.ApplicationConstants.STATUS_FAIL;
 import static com.hcl.bss.constants.ApplicationConstants.STATUS_PARTIAL_SUCCESS;
 import static com.hcl.bss.constants.ApplicationConstants.STATUS_SUCCESS;
@@ -20,6 +19,7 @@ import static com.hcl.bss.constants.ApplicationConstants.TAB_SPACE;
 import static com.hcl.bss.constants.ApplicationConstants.TEXT_EXTENTION;
 import static com.hcl.bss.constants.ApplicationConstants.UPLOADED_FOLDER;
 import static com.hcl.bss.constants.ApplicationConstants.UTF_8;
+import static com.hcl.bss.constants.ApplicationConstants.RECORD_NO;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -111,6 +111,7 @@ public class UploadServiceImpl implements UploadService {
 			productList = cSVDataMigrationParser.parseCsvData(path);
 			skuSetDB = productRepository.getSkus();
 			productTypeCodeDB = productTypeMasterRepository.getProductTypeCode();
+			productTypeCodeDB.add(BLANK);
 			//Retrieve error details and success product records 
 			productUploadDetails = dataMigrationFieldValidator.validateFields(productList,skuSetDB,productTypeCodeDB);
 			
@@ -255,7 +256,7 @@ public class UploadServiceImpl implements UploadService {
 					//	
 
 						for (ProductErrorLogDetails err : errors) {
-							fileWriter.append(ROW_NO);
+							fileWriter.append(RECORD_NO);
 							fileWriter.append(String.valueOf(err.getRowNo()));
 							fileWriter.append(TAB_SPACE);
 							fileWriter.append(ERROR);
@@ -282,11 +283,6 @@ public class UploadServiceImpl implements UploadService {
 
 	}
 
-	@Override
-	public ErrorCsvFile getFile(Long fileId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public String downloadCsv(HttpServletResponse response,String fileName) throws IOException {
@@ -299,15 +295,20 @@ public class UploadServiceImpl implements UploadService {
 		//TODO Move this logic in Service
 
 		if (!file.exists()) {
-			String errorMessage = FILE_NOT_EXIST_MSG;
+			createSampleCsv();
+			downloadCsv(response,fileName);
+
+		/*	String errorMessage = FILE_NOT_EXIST_MSG;
 			LOGGER.info(FILE_NOT_EXIST_MSG);
 			OutputStream outputStream = response.getOutputStream();
 			outputStream.write(errorMessage.getBytes(Charset.forName(UTF_8)));
 			outputStream.close();
-			return errorMessage;
+			return errorMessage;*/
 			
 		}
+		
 		else {
+			
 		String mimeType = URLConnection.guessContentTypeFromName(file.getName());
 		if (mimeType == null) {
 			mimeType = "text/csv";
@@ -332,8 +333,8 @@ public class UploadServiceImpl implements UploadService {
 }
 
 	@Override
-	public String downloadSampleCsv(String fileName) {
-		String sampleFileNameFullPath = UPLOADED_FOLDER + fileName + CSV_EXTENTION;
+	public String createSampleCsv() {
+		String sampleFileNameFullPath = UPLOADED_FOLDER + UPLOAD + CSV_EXTENTION;
 		String response = BLANK;
 		response = sampleCsvData(sampleFileNameFullPath);
 		return response;
