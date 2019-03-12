@@ -1,5 +1,6 @@
 package com.hcl.bss.datamigration.parsers;
 
+
 import static com.hcl.bss.constants.ApplicationConstants.BLANK;
 import static com.hcl.bss.constants.ApplicationConstants.COMMA_DELIMITER;
 import static com.hcl.bss.constants.ApplicationConstants.EXP_DATE_IDX;
@@ -10,6 +11,16 @@ import static com.hcl.bss.constants.ApplicationConstants.SKU_IDX;
 import static com.hcl.bss.constants.ApplicationConstants.START_DATE_IDX;
 import static com.hcl.bss.constants.ApplicationConstants.HYPHEN;
 
+import com.hcl.bss.dto.ProductDto;
+import com.hcl.bss.exceptions.ImportParseException;
+import com.hcl.bss.validator.DataMigrationFieldValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -17,15 +28,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import com.hcl.bss.dto.ProductDto;
-import com.hcl.bss.exceptions.ImportParseException;
-import com.hcl.bss.validator.DataMigrationFieldValidator;
+import static com.hcl.bss.constants.ApplicationConstants.*;
 
 @Component
 public class CSVDataMigrationParser {
