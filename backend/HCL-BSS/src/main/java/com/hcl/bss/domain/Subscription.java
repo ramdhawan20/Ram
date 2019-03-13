@@ -36,9 +36,11 @@ public class Subscription implements Serializable {
 
     @Column(name="SUBSCRIPTION_ID")
     private String subscriptionId;
-    //@ManyToOne
-    //@Column(name="CUST_ID")
-    //private Long customerId;
+    
+ /*   @ManyToOne
+    @Column(name="CUST_ID")
+    private Long customerId;
+ */   
     @Column(name="ACTIVATION_DT")
     private Timestamp activationDate;
     //@ManyToOne
@@ -47,8 +49,8 @@ public class Subscription implements Serializable {
     //@ManyToOne
     @Column(name="ORDER_SOURCE_CODE")
     private String orderSourceCode;
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "SUBSCRIPTION_UID", referencedColumnName = "UIDPK", nullable = false)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="subscription")
+    //@JoinColumn(name = "SUBSCRIPTION_UID", referencedColumnName = "UIDPK", nullable = false)
     private Set<SubscriptionRatePlan> subscriptionRatePlan = new HashSet<>();
     @Column(name="SUBSCRIPTION_START_DT")
     private Timestamp subscriptionStartDate;
@@ -73,8 +75,14 @@ public class Subscription implements Serializable {
     @LastModifiedDate
     @Column(name = "UPD_DT")
     private Timestamp updatedDate;
-
-    public Long getId() {
+    
+    @ManyToOne(cascade = CascadeType.ALL)
+    //@JoinColumn(name="CUST_ID")
+    @JoinColumn(name="CUST_ID", referencedColumnName = "UIDPK", nullable=false)
+   //@JoinColumn(name="UIDPK")
+    private Customer customer;
+    
+     public Long getId() {
         return id;
     }
 
@@ -203,4 +211,26 @@ public class Subscription implements Serializable {
     public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
     }
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
+	public void setSubscriptionRatePlan(Set<SubscriptionRatePlan> subscriptionRatePlan) {
+		this.subscriptionRatePlan = subscriptionRatePlan;
+	}
+
+/*	public Long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
+*/    
+	
 }

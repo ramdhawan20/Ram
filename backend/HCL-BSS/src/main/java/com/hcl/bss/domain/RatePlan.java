@@ -31,8 +31,8 @@ public class RatePlan implements Serializable {
     @OneToOne
     @JoinColumn(name = "UNIT_OF_MEASUREID", referencedColumnName = "UNIT_OF_MEASURE")
     private UOM uom;
-    @OneToMany
-    @JoinColumn(name="RATE_PLAN_UID")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="ratePlan")
+    //@JoinColumn(name="RATE_PLAN_UID")
     private Set<SubscriptionRatePlan> subscriptionRatePlans;
     @Column(name="IS_ACTIVE")
     private Integer isActive;
