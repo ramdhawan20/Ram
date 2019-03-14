@@ -25,8 +25,8 @@ public class Order implements Serializable {
     @Column(name="ORDER_NUMBER")
     private String orderNumber;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
-    private Set<OrderErrors> orderErors;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order", fetch = FetchType.EAGER)
+    private Set<BatchLog> batchLogs;
 
     @Column(name="BILLTO_FIRSTNAME")
     private String billToFirstName;
@@ -107,8 +107,8 @@ public class Order implements Serializable {
     @Column(name="STATUS")
     private String status;
 
-/*    @Column(name="TOTAL_PRICE")
-    private Double totalPrice;*/
+    /*    @Column(name="TOTAL_PRICE")
+        private Double totalPrice;*/
     @Column(name="QUANTITY")
     private Integer quantity;
 
@@ -445,12 +445,11 @@ public class Order implements Serializable {
         this.updatedBy = updatedBy;
     }
 
-    public Set<OrderErrors> getOrderErors() {
-        return orderErors;
+    public Set<BatchLog> getBatchLogs() {
+        return batchLogs;
     }
 
-    public void setOrderErors(Set<OrderErrors> orderErors) {
-        this.orderErors = orderErors;
+    public void setBatchLogs(Set<BatchLog> batchLogs) {
+        this.batchLogs = batchLogs;
     }
-
 }
