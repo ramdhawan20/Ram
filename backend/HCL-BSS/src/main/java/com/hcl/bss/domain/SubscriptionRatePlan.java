@@ -73,18 +73,18 @@ public class SubscriptionRatePlan implements Serializable {
     @GeneratorType(type = LoggedUserGenerator.class)
     private String updatedBy;
     
-    @ManyToOne
+/*    @ManyToOne
     //@JoinColumn(name="SUBSCRIPTION_UID", nullable = false)
     @JoinColumn(name="SUBSCRIPTION_UID", referencedColumnName = "UIDPK", nullable = false)
-    private Subscription subscription;
+    private Subscription subscription;*/
     
-    public Subscription getSubscription() {
+/*    public Subscription getSubscription() {
 		return subscription;
 	}
 
 	public void setSubscription(Subscription subscription) {
 		this.subscription = subscription;
-	}
+	}*/
 
 	public Long getId() {
         return id;

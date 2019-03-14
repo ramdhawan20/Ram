@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -21,11 +22,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.hcl.bss.domain.Customer;
 import com.hcl.bss.domain.Subscription;
 import com.hcl.bss.domain.SubscriptionRatePlan;
 import com.hcl.bss.dto.MultipleRatePlanDto;
 import com.hcl.bss.dto.SubscriptionDto;
 import com.hcl.bss.dto.SubscriptionInOut;
+import com.hcl.bss.repository.CustomerRepository;
 import com.hcl.bss.repository.SubscriptionRepository;
 import com.hcl.bss.repository.specification.SubscriptionSpecification;
 
@@ -40,6 +43,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SubscriptionServiceImpl.class);
     @Autowired
     private SubscriptionRepository subscriptionRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
+    
 	DateFormat dateFormat = new SimpleDateFormat(DD_MM_YYYY);
 	//DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY);
 
@@ -88,7 +94,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 					pageable);
 			
 			subscriptionList = subscriptionPages.getContent();
-			
+
 			if (subscriptionList != null && subscriptionList.size() > 0) {
 				subscriptionIn.setTotalPages(subscriptionPages.getTotalPages());
 				return convertSubscriptionsToDto(subscriptionList);
@@ -116,8 +122,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		for(Subscription subscription : subsList) {
 			subscriptionDto = new SubscriptionDto();
 			subscriptionDto.setSubscriptionId(subscription.getSubscriptionId());
-			subscriptionDto.setCustomerName(subscription.getCustomer().getFirstName());
-			subscriptionDto.setEmail(subscription.getCustomer().getEmail());
+			
+			Optional<Customer> customerOpt = customerRepository.findById(subscription.getCustomerId());
+			Customer customer = customerOpt.get();
+			
+			subscriptionDto.setCustomerName(customer.getFirstName());
+			subscriptionDto.setEmail(customer.getEmail());
 			
 			for(SubscriptionRatePlan susRatePlan : subscription.getSubscriptionRatePlan()) {
 				multipleRatePlanDto = new MultipleRatePlanDto();
