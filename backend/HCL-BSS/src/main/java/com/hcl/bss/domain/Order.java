@@ -1,3 +1,4 @@
+
 package com.hcl.bss.domain;
 
 import com.hcl.bss.repository.generator.LoggedUserGenerator;

@@ -301,7 +301,8 @@ public class SubscriptionScheduler {
             subRatePlan.setBillingCycle(order.getBillingCycle());
             subRatePlan.setBillingFrequency(order.getBillingFrequency());
             RatePlan ratePlan = entityManager.find(RatePlan.class, order.getRatePlanId());
-            subRatePlan.setRatePlan(ratePlan.getId());
+            //subRatePlan.setRatePlan(ratePlan.getId()); ////Commented By: Vinay
+            subRatePlan.setRatePlan(ratePlan); //Added By: Vinay
             subRatePlan.setProduct(order.getProductId());
             subRatePlan.setPricingScheme(pricingScheme);
             subRatePlan.setCreatedDate(new Timestamp(System.currentTimeMillis()));
