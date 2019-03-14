@@ -1,3 +1,4 @@
+
 package com.hcl.bss.domain;
 
 import com.hcl.bss.repository.generator.LoggedUserGenerator;
@@ -107,8 +108,8 @@ public class Order implements Serializable {
     @Column(name="STATUS")
     private String status;
 
-/*    @Column(name="TOTAL_PRICE")
-    private Double totalPrice;*/
+    /*    @Column(name="TOTAL_PRICE")
+        private Double totalPrice;*/
     @Column(name="QUANTITY")
     private Integer quantity;
 
