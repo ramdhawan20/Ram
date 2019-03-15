@@ -2,6 +2,7 @@ package com.hcl.bss.domain;
 
 import com.hcl.bss.repository.generator.LoggedUserGenerator;
 import org.hibernate.annotations.GeneratorType;
+import org.hibernate.annotations.Proxy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -11,6 +12,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name="TB_BATCH_RUN_LOG")
+@Proxy(lazy = false)
 public class BatchLog implements Serializable{
     @Column(name="UIDPK")
     @Id
@@ -23,17 +25,21 @@ public class BatchLog implements Serializable{
             initialValue = 1000000000,
             allocationSize = 1)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name="ORDER_NUMBER")
-    private Order order;
+    @Column(name="ORDER_NUMBER")
+    private String orderNumber;
 
     @Column(name="RUN_DWN_DATE")
     private Timestamp runDownDate;
     @Column(name="ERR_DESC")
     private String errorDesc;
-    @OneToOne
-    @JoinColumn(name="SUBSCRIPTION_ID")
-    private Subscription subscription;
+
+    @Column(name="STATUS")
+    private String status;
+ /*   @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="SUBSCRIPTION_ID", referencedColumnName = "SUBSCRIPTION_ID")*/
+
+    @Column(name="SUBSCRIPTION_ID")
+    private String subscriptionId;
 
     @GeneratorType(type = LoggedUserGenerator.class)
     @Column(name = "CRE_BY")
@@ -56,12 +62,12 @@ public class BatchLog implements Serializable{
         this.id = id;
     }
 
-    public Order getOrder() {
-        return order;
+    public String getOrderNumber() {
+        return orderNumber;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
     public Timestamp getRunDownDate() {
@@ -80,12 +86,20 @@ public class BatchLog implements Serializable{
         this.errorDesc = errorDesc;
     }
 
-    public Subscription getSubscription() {
-        return subscription;
+    public String getStatus() {
+        return status;
     }
 
-    public void setSubscription(Subscription subscription) {
-        this.subscription = subscription;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getSubscriptionId() {
+        return subscriptionId;
+    }
+
+    public void setSubscriptionId(String subscriptionId) {
+        this.subscriptionId = subscriptionId;
     }
 
     public String getCreatedBy() {

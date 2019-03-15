@@ -82,19 +82,9 @@ public class SubscriptionScheduler {
         readData();
     }
 
-
-    //private static Map<String,Long> dataMap = new HashMap<>();
-
-
-
     private void readData(){
         runDownBatch = new Timestamp(System.currentTimeMillis());
         List<Order> orders = orderRepository.findAll();
-/*        orders.forEach(order -> {
-                //createCustomerAccount(order);
-                createSubscription(order);
-            });*/
-
         for(Order order: orders){
             if(STATUS_SUCCESS.equals(order.getStatus()) || FAIL_STATUS.equals(order.getStatus())){
                 continue;
@@ -102,60 +92,69 @@ public class SubscriptionScheduler {
             else {
                 validateOrderData(order);
                 Subscription subscription = createSubscription(order);
-                createCustomerAccount(order, subscription);
+                boolean isAddOnProduct = order.getParentId()!=null?true:false;
+                if(!isAddOnProduct)
+                    createCustomerAccount(order, subscription);
+                else
+                    subscriptionRepository.save(subscription);
                 reset();
             }
         }
     }
 
-/*    private void readData(){
-        long numOfOrders = orderRepository.count();
-        *//**
-     * if numOfOrders <1000 ->threads to create 10
-     *//*
-        ExecutorService service = Executors.newFixedThreadPool(10);
-    }*/
-
     @Transactional(rollbackOn = {Exception.class})
     private void createCustomerAccount(Order order, Subscription subscription){
         try{
+            Customer customer= null;
+            /* if the order has parentId then customer exists so just return the existing customer
+             *
+             */
+
+
             //check if subscription is for the same order
             //i.e. multiple subscription for same order
-            List<Order> orders = orderRepository.findAll();
-            //if(orders.contains(order) && orders.)
-/*            long sameOrderCount = orders.stream().filter(ord -> ord.getOrderNumber()==order.getOrderNumber()).count();
-            if(sameOrderCount >1){
-                //dont create new customer and assign the subscrpition to the existing customer
-                //get the subscription from order and get the customer Id from there
+            List<BatchLog> batchLogs = batchLogRepository.findByOrderNumber(order.getOrderNumber());
 
-            }*/
+            //dont create new customer and assign the subscription to the existing customer
+            //get the subscription from order and get the customer Id from there
 
-            Customer customer = new Customer();
-            if(order.getIsCorporate()==1){
-                createCompany(order);
-                //customer.setCompanyId(dataMap.get(COMPANY_ID));
-                customer.setCompanyId(companyId);
+            if(batchLogs!=null && batchLogs.size()>0){
+                for(BatchLog log : batchLogs) {
+                    if (log.getSubscriptionId() == null)
+                        continue;
+                    Subscription sub = subscriptionRepository.findBySubscriptionId(log.getSubscriptionId());
+                    if (sub != null && subscription!=null) {
+                        customer = customerRepository.findBySubscriptions(sub);
+                        customer.setSubscriptions(subscription);
+                        break;
+                    }
+                }
             }
             else{
-                //individual customer
-                persistAddress(order);
+                customer = new Customer();
+                if(order.getIsCorporate()==1){
+                    createCompany(order);
+                    customer.setCompanyId(companyId);
+                }
+                else{
+                    //individual customer
+                    persistAddress(order);
+                }
+                customer.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+                customer.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
+                customer.setFirstName(order.getBillToFirstName());
+                customer.setLastName(order.getBillToLastName());
+                customer.setEmail(order.getBillToEmail());
+                customer.setPhone(order.getBillToPhone());
+                customer.setBillTo(billToId);
+                customer.setSoldTo(soldToId);
+                customer.setSubscriptions(subscription);
             }
-            customer.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-            customer.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
-            customer.setFirstName(order.getBillToFirstName());
-            customer.setLastName(order.getBillToLastName());
-            customer.setEmail(order.getBillToEmail());
-            customer.setPhone(order.getBillToPhone());
-            customer.setBillTo(billToId);
-            customer.setSoldTo(soldToId);
-
-
-            customer.setSubscriptions(subscription);
             if(!FAIL_STATUS.equals(order.getStatus())){
-                Customer cust = customerRepository.save(customer);
+                customerRepository.save(customer);
                 order.setStatus(STATUS_SUCCESS);
                 orderRepository.save(order);
-                updateBatchLog(order,"-", subscription);
+                updateBatchLog(order,"-", subscription.getSubscriptionId());
             }
         }
         catch(Exception ex){
@@ -235,52 +234,37 @@ public class SubscriptionScheduler {
     @Transactional(rollbackOn = {Exception.class})
     private Subscription createSubscription(Order order){
         try {
-            Subscription subscription = new Subscription();
-            OrderSource orderSource = entityManager.find(OrderSource.class, order.getOrderSourceCode());
-            if (orderSource != null)
-                subscription.setOrderSourceCode(orderSource.getOrderSourceCode());
-            else {
-                updateOrder(order,"Order Source: "+order.getOrderSourceCode() + " is not configured");
-            }
-            subscription.setAutorenew(order.getAutoRenew());
-            subscription.setIsActive(1);
-            // to be discussed --where to get this info from
-            String transactionCode = "NEW";
-            subscription.setTransactionReasonCode(transactionCode);
-            subscription.setSubscriptionStartDate(new Timestamp(System.currentTimeMillis()));
-            // to be discussed --where to get this info from
-            subscription.setStatus("ACTIVE");
-            Calendar cal = Calendar.getInstance();
-            //Date today = cal.getTime();
-            Integer billCycle = order.getBillingCycle();
-            String billFrequency = order.getBillingFrequency();
+            /**
+             * if the product is a base product
+             */
+            if(order.getParentId()==null && order.getBundleId()==null){
 
-            // check for evergreen subscription
-            if(billCycle==null || billFrequency == null || "".equals(billFrequency)){
-                cal.set(9999,11,31);
-                subscription.setSubscriptionEndDate(new Timestamp(cal.getTimeInMillis()));
+                return populateSubscription(order);
             }
-            else{
-                switch(billFrequency){
-                    case "WEEK":
-                        cal.add(Calendar.WEEK_OF_YEAR, billCycle);
-                        break;
-                    case "MONTH":
-                        cal.add(Calendar.MONTH, billCycle);
-                        break;
-                    case "YEAR":
-                        cal.add(Calendar.YEAR, billCycle);
-                        break;
+            /**
+             * check if the product is an addon product
+             */
+            else if(order.getParentId()!=null){
+                List<BatchLog> batchLogs = batchLogRepository.findByOrderNumber(order.getOrderNumber());
+                if(batchLogs!=null && batchLogs.size()>0){
+                    for(BatchLog log : batchLogs) {
+                        if (log.getSubscriptionId() == null)
+                            continue;
+                        Subscription sub = subscriptionRepository.findBySubscriptionId(log.getSubscriptionId());
+                        SubscriptionRatePlan subscriptionRatePlan = createSubscriptionRatePlan(order);
+                        sub.setSubscriptionRatePlan(subscriptionRatePlan);
+                        return sub;
+                    }
                 }
-                subscription.setSubscriptionEndDate(new Timestamp(cal.getTimeInMillis()));
             }
-
-            subscription.setActivationDate(new Timestamp(System.currentTimeMillis()));
-            String subscriptionId = generateSubscriptionId(order);
-            subscription.setSubscriptionId(subscriptionId);
-            SubscriptionRatePlan subscriptionRatePlan = createSubscriptionRatePlan(order);
-            subscription.setSubscriptionRatePlan(subscriptionRatePlan);
-            return subscription;
+            /**
+             * check if the product is bundle product
+             */
+            else if(order.getBundleId()!=null){
+                //if()
+                return populateSubscription(order);
+            }
+            return null;
         }
         catch(Exception ex){
             updateOrder(order,"Subscription could not be created "+ex.getMessage());
@@ -288,7 +272,60 @@ public class SubscriptionScheduler {
         }
     }
 
+    private Subscription populateSubscription(Order order) {
+        Subscription subscription = new Subscription();
+        OrderSource orderSource = entityManager.find(OrderSource.class, order.getOrderSourceCode());
+        if (orderSource != null)
+            subscription.setOrderSourceCode(orderSource.getOrderSourceCode());
+        else {
+            updateOrder(order,"Order Source: "+order.getOrderSourceCode() + " is not configured");
+        }
+        subscription.setAutorenew(order.getAutoRenew());
+        subscription.setIsActive(1);
+        // to be discussed --where to get this info from
+        String transactionCode = "NEW";
+        subscription.setTransactionReasonCode(transactionCode);
+        subscription.setSubscriptionStartDate(new Timestamp(System.currentTimeMillis()));
+        // to be discussed --where to get this info from
+        subscription.setStatus("ACTIVE");
+        Calendar cal = Calendar.getInstance();
+        //Date today = cal.getTime();
+        Integer billCycle = order.getBillingCycle();
+        String billFrequency = order.getBillingFrequency();
 
+        // check for evergreen subscription
+        if(billCycle==null || billFrequency == null || "".equals(billFrequency)){
+            cal.set(9999,11,31);
+            subscription.setSubscriptionEndDate(new Timestamp(cal.getTimeInMillis()));
+        }
+        else{
+            switch(billFrequency){
+                case "WEEK":
+                    cal.add(Calendar.WEEK_OF_YEAR, billCycle);
+                    break;
+                case "MONTH":
+                    cal.add(Calendar.MONTH, billCycle);
+                    break;
+                case "YEAR":
+                    cal.add(Calendar.YEAR, billCycle);
+                    break;
+            }
+            subscription.setSubscriptionEndDate(new Timestamp(cal.getTimeInMillis()));
+        }
+
+        subscription.setActivationDate(new Timestamp(System.currentTimeMillis()));
+        String subscriptionId = generateSubscriptionId(order);
+        subscription.setSubscriptionId(subscriptionId);
+        SubscriptionRatePlan subscriptionRatePlan = createSubscriptionRatePlan(order);
+        subscription.setSubscriptionRatePlan(subscriptionRatePlan);
+        return subscription;
+    }
+
+    /**
+     * Creates the susbcription rate plan transaction for the subscription
+     * @param order
+     * @return subscription rate plan transaction
+     */
     private SubscriptionRatePlan createSubscriptionRatePlan(Order order){
         SubscriptionRatePlan subRatePlan = new SubscriptionRatePlan();
         subRatePlan.setBillingCycle(order.getBillingCycle());
@@ -316,6 +353,10 @@ public class SubscriptionScheduler {
                 }
 
                 List<RatePlanVolume> ratePlanVolumes = ratePlanVolumeRepository.findByRatePlan(ratePlanUid);
+                if(ratePlanVolumes == null || ratePlanVolumes.size()==0){
+                    updateOrder(order, "Rate Plan Volume is not configured for the Rate Plan:"+ratePlan.getRatePlanId());
+                    return subRatePlan;
+                }
                 RatePlanVolume ratePlanVolume = null;
                 for(RatePlanVolume rpv: ratePlanVolumes){
                     ratePlanVolume = rpv;
@@ -343,6 +384,7 @@ public class SubscriptionScheduler {
         }
         return subRatePlan;
     }
+
     /**
      * This method checks if the product present in Order is configured in the product table
      * @param order
@@ -373,17 +415,18 @@ public class SubscriptionScheduler {
      * @param msg
      * @return BatchLog
      */
-    private BatchLog updateBatchLog(Order order, String msg, Subscription subscription){
+    private void updateBatchLog(Order order, String msg, String subscriptionId){
 
         BatchLog batchLog = new BatchLog();
         batchLog.setErrorDesc(msg);
-        batchLog.setOrder(order);
+        batchLog.setOrderNumber(order.getOrderNumber());
+        batchLog.setStatus(STATUS_SUCCESS);
         batchLog.setRunDownDate(runDownBatch);
-        batchLog.setSubscription(subscription);
-        //batchLog.set
+        batchLog.setSubscriptionId(subscriptionId);
         batchLog.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         batchLog.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
-        return batchLog;
+        batchLogRepository.save(batchLog);
+        //return batchLog;
     }
 
     /**
@@ -396,7 +439,8 @@ public class SubscriptionScheduler {
 
         BatchLog batchLog = new BatchLog();
         batchLog.setErrorDesc(msg);
-        batchLog.setOrder(order);
+        batchLog.setOrderNumber(order.getOrderNumber());
+        batchLog.setStatus(FAIL_STATUS);
         batchLog.setRunDownDate(runDownBatch);
         batchLog.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         batchLog.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
@@ -453,7 +497,7 @@ public class SubscriptionScheduler {
             return builder.toString();
         }
         catch(Exception ex){
-            updateErrLog("Exception occured while generating subscriptionID:"+ ex.getMessage());
+            updateErrLog("Exception occurred while generating subscriptionID:"+ ex.getMessage());
             return null;
         }
     }

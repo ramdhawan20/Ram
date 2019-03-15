@@ -31,9 +31,9 @@ public class SubscriptionRatePlan implements Serializable {
             initialValue = 1000000000,
             allocationSize = 1)
     private Long id;
-/*    @Column(name="RATE_PLAN_UID")
-    private Long ratePlan;
-*/    
+    /*    @Column(name="RATE_PLAN_UID")
+        private Long ratePlan;
+    */
     @ManyToOne
     @JoinColumn(name="RATE_PLAN_UID")
     private RatePlan ratePlan;
@@ -72,12 +72,12 @@ public class SubscriptionRatePlan implements Serializable {
     @Column(name="UPD_BY")
     @GeneratorType(type = LoggedUserGenerator.class)
     private String updatedBy;
-    
+
 /*    @ManyToOne
     //@JoinColumn(name="SUBSCRIPTION_UID", nullable = false)
     @JoinColumn(name="SUBSCRIPTION_UID", referencedColumnName = "UIDPK", nullable = false)
     private Subscription subscription;*/
-    
+
 /*    public Subscription getSubscription() {
 		return subscription;
 	}
@@ -86,7 +86,7 @@ public class SubscriptionRatePlan implements Serializable {
 		this.subscription = subscription;
 	}*/
 
-	public Long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -104,18 +104,18 @@ public class SubscriptionRatePlan implements Serializable {
 */
 
     public RatePlan getRatePlan() {
-		return ratePlan;
-	}
+        return ratePlan;
+    }
 
-	public void setRatePlan(RatePlan ratePlan) {
-		this.ratePlan = ratePlan;
-	}
-    
+    public void setRatePlan(RatePlan ratePlan) {
+        this.ratePlan = ratePlan;
+    }
+
     public Long getProduct() {
         return product;
     }
 
-	public void setProduct(Long product) {
+    public void setProduct(Long product) {
         this.product = product;
     }
 
@@ -199,3 +199,4 @@ public class SubscriptionRatePlan implements Serializable {
         this.ratePlanVolume = ratePlanVolume;
     }
 }
+
