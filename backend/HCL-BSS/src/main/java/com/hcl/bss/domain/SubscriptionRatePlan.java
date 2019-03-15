@@ -199,3 +199,4 @@ public class SubscriptionRatePlan implements Serializable {
         this.ratePlanVolume = ratePlanVolume;
     }
 }
+

@@ -7,29 +7,70 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 
 import com.hcl.bss.domain.Subscription1;
-
+/**
+ *
+ * @author- Vinay Panwar
+ */
 public class SubscriptionInOut {
 	/*For Filter*/
 	private String subscriptionId;
 	//@NotEmpty @Email
 	private String customerName;
-	private String email;
+	//private String email;
 	private String planName;
 	private String status;
-	private BigDecimal price;
+/*	private double price;
 	private Date createdDate;
 	private Date activatedDate;
 	private Date lastBillDate;
 	private Date nextBillDate;
+*/  private String fromDateStr;
+	private String toDateStr;
+	/*For Pagination*/
+	private int pageNo;
+	private int totalPages;
 	/*For Response*/
 	private Boolean success;
 	private String message;
-	private List<Subscription1> subscriptionList;
-	private HttpStatus responseCode;
+	private List<SubscriptionDto> subscriptionList;
+	private int responseCode;
 	
 	public String getSubscriptionId() {
 		return subscriptionId;
 	}
+
+	public int getPageNo() {
+		return pageNo;
+	}
+
+	public void setPageNo(int pageNo) {
+		this.pageNo = pageNo;
+	}
+
+	public int getTotalPages() {
+		return totalPages;
+	}
+
+	public void setTotalPages(int totalPages) {
+		this.totalPages = totalPages;
+	}
+
+	public String getFromDateStr() {
+		return fromDateStr;
+	}
+
+	public void setFromDateStr(String fromDateStr) {
+		this.fromDateStr = fromDateStr;
+	}
+
+	public String getToDateStr() {
+		return toDateStr;
+	}
+
+	public void setToDateStr(String toDateStr) {
+		this.toDateStr = toDateStr;
+	}
+
 	public void setSubscriptionId(String subscriptionId) {
 		this.subscriptionId = subscriptionId;
 	}
@@ -38,12 +79,6 @@ public class SubscriptionInOut {
 	}
 	public void setCustomerName(String customerName) {
 		this.customerName = customerName;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
 	}
 	public String getPlanName() {
 		return planName;
@@ -57,36 +92,6 @@ public class SubscriptionInOut {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public BigDecimal getPrice() {
-		return price;
-	}
-	public void setPrice(BigDecimal price) {
-		this.price = price;
-	}
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	public Date getActivatedDate() {
-		return activatedDate;
-	}
-	public void setActivatedDate(Date activatedDate) {
-		this.activatedDate = activatedDate;
-	}
-	public Date getLastBillDate() {
-		return lastBillDate;
-	}
-	public void setLastBillDate(Date lastBillDate) {
-		this.lastBillDate = lastBillDate;
-	}
-	public Date getNextBillDate() {
-		return nextBillDate;
-	}
-	public void setNextBillDate(Date nextBillDate) {
-		this.nextBillDate = nextBillDate;
-	}
 	public Boolean getSuccess() {
 		return success;
 	}
@@ -99,18 +104,17 @@ public class SubscriptionInOut {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	public List<Subscription1> getSubscriptionList() {
+	public List<SubscriptionDto> getSubscriptionList() {
 		return subscriptionList;
 	}
-	public void setSubscriptionList(List<Subscription1> subscriptionList) {
+	public void setSubscriptionList(List<SubscriptionDto> subscriptionList) {
 		this.subscriptionList = subscriptionList;
 	}
-	public HttpStatus getResponseCode() {
+	public int getResponseCode() {
 		return responseCode;
 	}
-	public void setResponseCode(HttpStatus responseCode) {
+	public void setResponseCode(int responseCode) {
 		this.responseCode = responseCode;
 	}
-	
 	
 }

@@ -30,6 +30,7 @@ public class Order implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order", fetch = FetchType.EAGER)
     private Set<BatchLog> batchLogs = new HashSet<>();*/
 
+
     @Column(name="BILLTO_FIRSTNAME")
     private String billToFirstName;
 
@@ -469,7 +470,6 @@ public class Order implements Serializable {
     public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
     }
-
 /*    public Set<BatchLog> getBatchLogs() {
         return batchLogs;
     }
@@ -477,4 +477,5 @@ public class Order implements Serializable {
     public void setBatchLogs(BatchLog batchLog) {
         this.batchLogs.add(batchLog);
     }*/
+
 }

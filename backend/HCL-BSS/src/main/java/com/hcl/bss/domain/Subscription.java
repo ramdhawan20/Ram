@@ -36,9 +36,10 @@ public class Subscription implements Serializable {
 
     @Column(name="SUBSCRIPTION_ID")
     private String subscriptionId;
-    //@ManyToOne
-    //@Column(name="CUST_ID")
-    //private Long customerId;
+    
+    @Column(name="CUST_ID",insertable= false, updatable= false)
+    private Long customerId;
+    
     @Column(name="ACTIVATION_DT")
     private Timestamp activationDate;
     //@ManyToOne
@@ -73,8 +74,22 @@ public class Subscription implements Serializable {
     @LastModifiedDate
     @Column(name = "UPD_DT")
     private Timestamp updatedDate;
-
-    public Long getId() {
+    
+   
+    //@ManyToOne(cascade = CascadeType.ALL)
+/*    @JoinColumn(name="CUST_ID")
+   //@JoinColumn(name="UIDPK")
+    private Customer customer;
+    */
+   
+/*    public Customer getCustomer() {
+		return customer;
+	}
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}*/
+    
+     public Long getId() {
         return id;
     }
 
@@ -89,15 +104,6 @@ public class Subscription implements Serializable {
     public void setSubscriptionId(String subscriptionId) {
         this.subscriptionId = subscriptionId;
     }
-
-
- /*   public Long getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
-    }*/
 
     public Timestamp getActivationDate() {
         return activationDate;
@@ -203,4 +209,18 @@ public class Subscription implements Serializable {
     public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
     }
+
+	public void setSubscriptionRatePlan(Set<SubscriptionRatePlan> subscriptionRatePlan) {
+		this.subscriptionRatePlan = subscriptionRatePlan;
+	}
+
+	public Long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
+    
+	
 }
