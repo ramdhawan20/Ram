@@ -1,3 +1,4 @@
+
 package com.hcl.bss.domain;
 
 import com.hcl.bss.repository.generator.LoggedUserGenerator;
@@ -10,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Set;
 /**
  *
@@ -24,9 +26,9 @@ public class Order implements Serializable {
     private Long id;
     @Column(name="ORDER_NUMBER")
     private String orderNumber;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
-    private Set<OrderErrors> orderErors;
+/*
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order", fetch = FetchType.EAGER)
+    private Set<BatchLog> batchLogs = new HashSet<>();*/
 
     @Column(name="BILLTO_FIRSTNAME")
     private String billToFirstName;
@@ -107,10 +109,16 @@ public class Order implements Serializable {
     @Column(name="STATUS")
     private String status;
 
-/*    @Column(name="TOTAL_PRICE")
-    private Double totalPrice;*/
+    /*    @Column(name="TOTAL_PRICE")
+        private Double totalPrice;*/
     @Column(name="QUANTITY")
     private Integer quantity;
+
+    @Column(name="PARENT_ID")
+    private Long parentId;
+    @Column(name="BUNDLE_ID")
+    private Long bundleId;
+
 
     @GeneratorType(type = LoggedUserGenerator.class)
     @Column(name = "CRE_BY")
@@ -397,6 +405,23 @@ public class Order implements Serializable {
         this.status = status;
     }
 
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public Long getBundleId() {
+        return bundleId;
+    }
+
+    public void setBundleId(Long bundleId) {
+        this.bundleId = bundleId;
+    }
+
     public Timestamp getCreatedDate() {
         return createdDate;
     }
@@ -445,12 +470,11 @@ public class Order implements Serializable {
         this.updatedBy = updatedBy;
     }
 
-    public Set<OrderErrors> getOrderErors() {
-        return orderErors;
+/*    public Set<BatchLog> getBatchLogs() {
+        return batchLogs;
     }
 
-    public void setOrderErors(Set<OrderErrors> orderErors) {
-        this.orderErors = orderErors;
-    }
-
+    public void setBatchLogs(BatchLog batchLog) {
+        this.batchLogs.add(batchLog);
+    }*/
 }

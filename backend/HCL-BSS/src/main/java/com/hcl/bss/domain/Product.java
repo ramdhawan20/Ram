@@ -1,18 +1,10 @@
 package com.hcl.bss.domain;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "TB_PRODUCT")
@@ -37,6 +29,20 @@ public class Product implements java.io.Serializable {
 	@ManyToOne /* (cascade = {CascadeType.MERGE}) */
 	@JoinColumn(name = "PRODUCT_TYPE_CODE", referencedColumnName = "PRODUCT_TYPE_CODE")
 	private ProductTypeMaster productTypeCode;
+
+	// to handle parent for a product
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "PARENT_ID")
+	private Product parent;
+
+	//to handle bundle products
+	@ManyToMany
+	private Set<Product> bundles = new HashSet<>();
+
+	//to handle multiple children for a parent
+	@OneToMany(mappedBy = "parent")
+	private Set<Product> children = new HashSet<>();
+
 	@Column(name = "IS_ACTIVE", nullable = false)
 	private int isActive;
 	@Temporal(TemporalType.TIMESTAMP)
@@ -54,8 +60,8 @@ public class Product implements java.io.Serializable {
 	}
 
 	public Product(String productDispName, String sku, Date productExpDate, Date productStartDate,
-			ProductTypeMaster productTypeCode, int isActive, Date createdDate, String createdBy, Date updatedDate,
-			String updatedBy) {
+				   ProductTypeMaster productTypeCode, int isActive, Date createdDate, String createdBy, Date updatedDate,
+				   String updatedBy) {
 		super();
 		this.productDispName = productDispName;
 		this.sku = sku;
@@ -70,8 +76,8 @@ public class Product implements java.io.Serializable {
 	}
 
 	public Product(long uidpk, String productDispName, String sku, String productDescription, Date productExpDate,
-			Date productStartDate, ProductTypeMaster productTypeCode, int isActive, Date createdDate, String createdBy,
-			Date updatedDate, String updatedBy) {
+				   Date productStartDate, ProductTypeMaster productTypeCode, int isActive, Date createdDate, String createdBy,
+				   Date updatedDate, String updatedBy) {
 		super();
 		this.uidpk = uidpk;
 		this.productDispName = productDispName;
@@ -180,8 +186,8 @@ public class Product implements java.io.Serializable {
 	}
 
 	public Product(String productDispName, String sku, String productDescription, Date productExpDate,
-			Date productStartDate, ProductTypeMaster productTypeCode, int isActive, Date createdDate, String createdBy,
-			Date updatedDate, String updatedBy) {
+				   Date productStartDate, ProductTypeMaster productTypeCode, int isActive, Date createdDate, String createdBy,
+				   Date updatedDate, String updatedBy) {
 		super();
 		this.productDispName = productDispName;
 		this.sku = sku;
