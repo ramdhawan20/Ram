@@ -197,9 +197,10 @@ public class ProductServiceImpl implements ProductService {
 		if("Active".equalsIgnoreCase(status)) {
 		activeInactive = 1;
 		}
-		else {
+		else if("Inactive".equalsIgnoreCase(status)) {
 			activeInactive = 0;
 		}
+		
 		String sDate = product.getProductStartDate();
 		String eDate = product.getProductExpDate();
 		if(null != sDate) {
@@ -220,7 +221,9 @@ public class ProductServiceImpl implements ProductService {
 
 		 Product filter = new Product();
 		 filter.setProductDispName(productDispName);
+		 if(null != activeInactive) {
 		 filter.setIsActive(activeInactive);
+		 }
 		 filter.setSku(sku);
 		 filter.setProductExpDate(endDate);
 		 filter.setProductStartDate(startDate);

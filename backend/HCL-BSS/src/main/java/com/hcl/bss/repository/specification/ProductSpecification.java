@@ -32,8 +32,11 @@ public class ProductSpecification {
 		return null;
 	}
 	
-	public static Specification<Product> isActive(int isActive){
+	public static Specification<Product> isActive(Integer isActive){
+		if(isActive != null) {
 		return (filter, cq,cb)-> cb.equal(filter.get("isActive"), isActive);
+		}
+		return null;
 	}
 	
 	public static Specification<Product> hasStartDate(Date startDate, Date endDate){
