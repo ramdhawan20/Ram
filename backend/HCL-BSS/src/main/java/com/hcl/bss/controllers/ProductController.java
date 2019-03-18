@@ -1,9 +1,6 @@
 package com.hcl.bss.controllers;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,11 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hcl.bss.domain.Product;
 import com.hcl.bss.domain.ProductTypeMaster;
-import com.hcl.bss.domain.Subscription1;
 import com.hcl.bss.dto.ErrorResponseDTO;
 import com.hcl.bss.dto.ProductDataDto;
 import com.hcl.bss.dto.ProductDto;
-import com.hcl.bss.dto.SubscriptionInOut;
+import com.hcl.bss.dto.ProductPlanAssociationDto;
 import com.hcl.bss.services.ProductService;
 
 import io.swagger.annotations.ApiOperation;
@@ -106,5 +101,13 @@ public class ProductController {
 			e.printStackTrace();
 			return new ResponseEntity<ProductDataDto>(productData, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-	}		
+	}	
+	@ApiOperation(value = "Associate Product with Plan", response = String.class)
+	@RequestMapping(value = "/associatePlan",method = RequestMethod.POST)
+	public String accociatePlan(@RequestBody ProductPlanAssociationDto productPlan) {
+		String msg ;
+		 msg = productService.associatePlan(productPlan);
+		return msg;
+
+	}
 }
