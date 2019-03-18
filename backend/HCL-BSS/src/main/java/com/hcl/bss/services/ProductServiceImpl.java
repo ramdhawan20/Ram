@@ -264,8 +264,7 @@ public class ProductServiceImpl implements ProductService {
 		Long rpId = productPlan.getRatePlan().getUidpk();
 		ratePlan = ratePlanRepository.getOne(rpId);
 		ratePlanSet.add(ratePlan);
-		prod.setRatePlans(ratePlanSet);
-		
+		prod.setRatePlans(ratePlanSet);		
 			 try {
 		productRepository.save(prod);
 		msg= "Successfully Associated product with Plan";

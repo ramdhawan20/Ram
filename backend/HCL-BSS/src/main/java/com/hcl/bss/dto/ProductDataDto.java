@@ -24,5 +24,4 @@ public Long getTotalPages() {
 public void setTotalPages(Long totalPages) {
 	this.totalPages = totalPages;
 }
-
 }

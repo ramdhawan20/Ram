@@ -21,7 +21,7 @@ public class RatePlanServiceImpl implements RatePlanService {
 	RatePlanRepository ratePlanRepository;
 	@Override
 	public Serializable addRatePlan(ProductDto product) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 

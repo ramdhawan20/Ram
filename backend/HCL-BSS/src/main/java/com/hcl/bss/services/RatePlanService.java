@@ -11,5 +11,4 @@ public interface RatePlanService {
 	Serializable addRatePlan(ProductDto product);
 
 	List<RatePlanProductDto> getAllPlans();
-
 }
