@@ -32,6 +32,7 @@ public class ProductSpecification {
 		return null;
 	}
 	
+	
 	public static Specification<Product> isActive(Integer isActive){
 		if(isActive != null) {
 		return (filter, cq,cb)-> cb.equal(filter.get("isActive"), isActive);

@@ -218,7 +218,6 @@ public class ProductServiceImpl implements ProductService {
 			e.printStackTrace();
 		}  
 		}
-
 		 Product filter = new Product();
 		 filter.setProductDispName(productDispName);
 		 if(null != activeInactive) {
