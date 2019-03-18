@@ -106,6 +106,11 @@ public class ProductServiceImpl implements ProductService {
 		List<ProductDto> productDtoList = new ArrayList<>();
 		Long noOfTotalRecords = 0L;
 		noOfTotalRecords = productRepository.count();
+		Long totalPages = noOfTotalRecords/reqCount.getPageSize();
+		if(noOfTotalRecords%reqCount.getPageSize() != 0) {
+			totalPages = totalPages+1;
+		}
+		productData.setTotalPages(totalPages);
 		productEntityList =  productRepository.findAll(reqCount);
 		Integer pageNumber = reqCount.getPageNumber()+1;
 		Integer lastRecord = pageNumber * reqCount.getPageSize();
