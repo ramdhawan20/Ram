@@ -1,5 +1,6 @@
 package com.hcl.bss.domain;
 
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Proxy;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -9,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -26,6 +28,8 @@ public class RatePlan implements Serializable {
     private String ratePlanId;
     @Column(name="RATEPLAN_DESC")
     private String ratePlanDescription;
+    @Column(name="BILLING_FREQUENCY")
+    private String billingFrequency;
     @Column(name="PRICE")
     private double price;
     @OneToOne
@@ -50,6 +54,10 @@ public class RatePlan implements Serializable {
     @LastModifiedDate
     @Column(name = "UPD_DT")
     private Timestamp updatedDate;
+    
+    @ManyToMany(mappedBy="ratePlans")
+    @Cascade({org.hibernate.annotations.CascadeType.ALL}) 
+	private Set<Product> products = new HashSet<Product>();
 
     public Set<SubscriptionRatePlan> getSubscriptionRatePlans() {
         return subscriptionRatePlans;
@@ -82,6 +90,14 @@ public class RatePlan implements Serializable {
     public void setRatePlanDescription(String ratePlanDescription) {
         this.ratePlanDescription = ratePlanDescription;
     }
+
+    public String getBillingFrequency() {
+		return billingFrequency;
+	}
+
+	public void setBillingFrequency(String billingFrequency) {
+		this.billingFrequency = billingFrequency;
+	}
 
     public double getPrice() {
         return price;
@@ -138,4 +154,21 @@ public class RatePlan implements Serializable {
     public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
     }
+
+	public Set<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(Set<Product> products) {
+		this.products = products;
+	}
+
+	@Override
+	public String toString() {
+		return "RatePlan [id=" + id + ", ratePlanId=" + ratePlanId + ", ratePlanDescription=" + ratePlanDescription
+				+ ", price=" + price + ", uom=" + uom + ", isActive=" + isActive + ", createdBy=" + createdBy
+				+ ", createdDate=" + createdDate + ", updatedBy=" + updatedBy + ", updatedDate=" + updatedDate
+				+ ", products=" + products + "]";
+	}
+    
 }
