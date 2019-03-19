@@ -67,7 +67,8 @@ public class SubscriptionRatePlan implements Serializable {
     private Timestamp updatedDate;
 
     @ManyToOne
-    @JoinColumn(name="RATEPLAN_VOLUME_UID", nullable = false)
+    @JoinColumn(name="RATEPLAN_VOLUME_UID") //Added By: Vinay
+    //@JoinColumn(name="RATEPLAN_VOLUME_UID", nullable = false) //Commented By: Vinay
     private RatePlanVolume ratePlanVolume;
     @Column(name="UPD_BY")
     @GeneratorType(type = LoggedUserGenerator.class)
@@ -75,17 +76,17 @@ public class SubscriptionRatePlan implements Serializable {
     
 /*    @ManyToOne
     //@JoinColumn(name="SUBSCRIPTION_UID", nullable = false)
-    @JoinColumn(name="SUBSCRIPTION_UID", referencedColumnName = "UIDPK", nullable = false)
-    private Subscription subscription;*/
+    //@JoinColumn(name="SUBSCRIPTION_UID", referencedColumnName = "UIDPK", nullable = false)
+    private Subscription subscription;
     
-/*    public Subscription getSubscription() {
+    public Subscription getSubscription() {
 		return subscription;
 	}
 
 	public void setSubscription(Subscription subscription) {
 		this.subscription = subscription;
-	}*/
-
+	}
+*/
 	public Long getId() {
         return id;
     }
