@@ -28,8 +28,6 @@ public class RatePlan implements Serializable {
     private String ratePlanId;
     @Column(name="RATEPLAN_DESC")
     private String ratePlanDescription;
-    @Column(name="BILLING_FREQUENCY")
-    private String billingFrequency;
     @Column(name="PRICE")
     private double price;
     @OneToOne
@@ -41,8 +39,8 @@ public class RatePlan implements Serializable {
     @Column(name="IS_ACTIVE")
     private Integer isActive;
 
-    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name="FREQUENCY_CODE")
+    @Column(name="FREQUENCY_CODE")
     private String frequencyCode;
     @Column(name="BILLING_CYCLE_TERM")
     private int billingCycleTerm;
@@ -50,7 +48,7 @@ public class RatePlan implements Serializable {
     private int freeTrial;
     @Column(name="SETUP_FEE")
     private int setupFee;
-    @Column(name="EXPIRES_AFTER")
+    @Column(name="EXPIRE_AFTER")
     private int expiresAfter;
 
     @CreatedBy
@@ -101,14 +99,6 @@ public class RatePlan implements Serializable {
     public void setRatePlanDescription(String ratePlanDescription) {
         this.ratePlanDescription = ratePlanDescription;
     }
-
-    public String getBillingFrequency() {
-		return billingFrequency;
-	}
-
-	public void setBillingFrequency(String billingFrequency) {
-		this.billingFrequency = billingFrequency;
-	}
 
     public double getPrice() {
         return price;
