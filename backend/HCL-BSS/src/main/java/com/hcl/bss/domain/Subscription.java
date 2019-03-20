@@ -2,15 +2,14 @@ package com.hcl.bss.domain;
 
 import com.hcl.bss.repository.generator.LoggedUserGenerator;
 import org.hibernate.annotations.GeneratorType;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,10 +35,10 @@ public class Subscription implements Serializable {
 
     @Column(name="SUBSCRIPTION_ID")
     private String subscriptionId;
-    
+
     @Column(name="CUST_ID",insertable= false, updatable= false)
     private Long customerId;
-    
+
     @Column(name="ACTIVATION_DT")
     private Timestamp activationDate;
     //@ManyToOne
@@ -48,8 +47,9 @@ public class Subscription implements Serializable {
     //@ManyToOne
     @Column(name="ORDER_SOURCE_CODE")
     private String orderSourceCode;
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "SUBSCRIPTION_UID", referencedColumnName = "UIDPK", nullable = false)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "SUBSCRIPTION_UID", referencedColumnName = "UIDPK",nullable = false)
+    //@OneToMany(mappedBy = "subscription", fetch = FetchType.EAGER)
     private Set<SubscriptionRatePlan> subscriptionRatePlan = new HashSet<>();
     @Column(name="SUBSCRIPTION_START_DT")
     private Timestamp subscriptionStartDate;
@@ -61,6 +61,11 @@ public class Subscription implements Serializable {
     private Integer isActive;
     @Column(name="STATUS")
     private String status;
+
+    @Column(name="LAST_BILL_DT")
+    private Date lastBillingDate;
+    @Column(name="NEXT_BILL_DT")
+    private Date nextBillingDate;
 
     @GeneratorType(type = LoggedUserGenerator.class)
     @Column(name = "CRE_BY")
@@ -74,22 +79,22 @@ public class Subscription implements Serializable {
     @LastModifiedDate
     @Column(name = "UPD_DT")
     private Timestamp updatedDate;
-    
-   
+
+
     //@ManyToOne(cascade = CascadeType.ALL)
 /*    @JoinColumn(name="CUST_ID")
    //@JoinColumn(name="UIDPK")
     private Customer customer;
     */
-   
+
 /*    public Customer getCustomer() {
 		return customer;
 	}
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
 	}*/
-    
-     public Long getId() {
+
+    public Long getId() {
         return id;
     }
 
@@ -210,17 +215,31 @@ public class Subscription implements Serializable {
         this.updatedBy = updatedBy;
     }
 
-	public void setSubscriptionRatePlan(Set<SubscriptionRatePlan> subscriptionRatePlan) {
-		this.subscriptionRatePlan = subscriptionRatePlan;
-	}
+    public void setSubscriptionRatePlan(Set<SubscriptionRatePlan> subscriptionRatePlan) {
+        this.subscriptionRatePlan = subscriptionRatePlan;
+    }
 
-	public Long getCustomerId() {
-		return customerId;
-	}
+    public Long getCustomerId() {
+        return customerId;
+    }
 
-	public void setCustomerId(Long customerId) {
-		this.customerId = customerId;
-	}
-    
-	
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public Date getLastBillingDate() {
+        return lastBillingDate;
+    }
+
+    public void setLastBillingDate(Date lastBillingDate) {
+        this.lastBillingDate = lastBillingDate;
+    }
+
+    public Date getNextBillingDate() {
+        return nextBillingDate;
+    }
+
+    public void setNextBillingDate(Date nextBillingDate) {
+        this.nextBillingDate = nextBillingDate;
+    }
 }

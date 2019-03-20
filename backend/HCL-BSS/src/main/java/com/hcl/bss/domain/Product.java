@@ -51,11 +51,16 @@ public class Product implements java.io.Serializable {
 	private Product parent;
 
 	//to handle bundle products
-	@ManyToMany
-	private Set<Product> bundles = new HashSet<>();
+	@Column(name="IS_BUNDLE_PRODUCT")
+	private int isBundleProduct;
 
 	//to handle multiple children for a parent
-	@OneToMany(mappedBy = "parent")
+	@OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name="TB_BUNDLE_PRODUCT_MAPPING",
+            joinColumns = @JoinColumn(name="BUNDLE_PRODUCT_UID"),
+            inverseJoinColumns = @JoinColumn(name="PRODUCT_UID")
+    )
 	private Set<Product> children = new HashSet<>();
 
 	@Column(name = "IS_ACTIVE", nullable = false)
@@ -121,7 +126,13 @@ public class Product implements java.io.Serializable {
 	}
 
 
+	public int getIsBundleProduct() {
+		return isBundleProduct;
+	}
 
+	public void setIsBundleProduct(int isBundleProduct) {
+		this.isBundleProduct = isBundleProduct;
+	}
 
 	public long getUidpk() {
 		return uidpk;
