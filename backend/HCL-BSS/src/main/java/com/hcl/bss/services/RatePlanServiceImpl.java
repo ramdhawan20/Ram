@@ -37,7 +37,7 @@ public class RatePlanServiceImpl implements RatePlanService {
 		List<RatePlanProductDto> ratePlanDtoList = new ArrayList<RatePlanProductDto>();
 		for(RatePlan rplan : ratePlanList) {
 			RatePlanProductDto rpDto = new RatePlanProductDto();
-			rpDto.setBillEvery(rplan.getBillingFrequency());
+			rpDto.setBillEvery(rplan.getFrequencyCode());
 			if(rplan.getIsActive() == 0) {
 				rpDto.setIsActive("Inactive");
 			}
