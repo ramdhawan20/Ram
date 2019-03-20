@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -238,6 +239,11 @@ public class ProductServiceImpl implements ProductService {
 		 Page<Product> result = productRepository.findAll(Specification.where(ProductSpecification.hasProductName(productDispName)).and(ProductSpecification.hasSku(sku)).and(ProductSpecification.isActive(activeInactive)).and(ProductSpecification.hasStartDate(startDate,endDate)).and(ProductSpecification.hasCode(code)),reqCount);
 		 filteredData = result.getContent();
 		 productDtoList = convertProductEntityToDto(filteredData);
+		 int totalPages = productDtoList.size()/reqCount.getPageSize();
+			if(productDtoList.size()%reqCount.getPageSize() != 0) {
+				totalPages = totalPages+1;
+			}
+			productDataDto.setTotalPages(Long.valueOf(totalPages));
 		 productDataDto.setProductList(productDtoList);
 		 Integer pageNumber = reqCount.getPageNumber()+1;
 			Integer lastRecord = pageNumber * reqCount.getPageSize();
@@ -255,15 +261,17 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public String associatePlan(ProductPlanAssociationDto productPlan) {
 		String msg = "Failed" ;
-		RatePlan ratePlan = new RatePlan();
+		List<RatePlan> ratePlan = new ArrayList<RatePlan>();
 		Long productId = productPlan.getProduct().getUidpk();
 		Product prod = new Product();
 		prod = productRepository.getOne(productId);
 		Set<RatePlan> ratePlanSet = new HashSet<RatePlan>();
-		ratePlanSet = prod.getRatePlans();
-		Long rpId = productPlan.getRatePlan().getUidpk();
-		ratePlan = ratePlanRepository.getOne(rpId);
-		ratePlanSet.add(ratePlan);
+		//ratePlanSet = prod.getRatePlans();
+		List<RatePlanProductDto> rpDtoList = productPlan.getRatePlan();
+		List<Long> ids = rpDtoList.stream().map(x->x.getUidpk()).collect(Collectors.toList());
+		//ratePlan = ratePlanRepository.getOne(rpId);
+		ratePlan = ratePlanRepository.findAllById(ids);
+		ratePlanSet.addAll(ratePlan);
 		prod.setRatePlans(ratePlanSet);		
 			 try {
 		productRepository.save(prod);

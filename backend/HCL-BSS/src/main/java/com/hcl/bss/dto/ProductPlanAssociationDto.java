@@ -1,8 +1,10 @@
 package com.hcl.bss.dto;
 
+import java.util.List;
+
 public class ProductPlanAssociationDto {
 private ProductDto product;
-private RatePlanProductDto ratePlan;
+private List<RatePlanProductDto> ratePlan;
 
 
 public ProductPlanAssociationDto() {
@@ -10,7 +12,7 @@ public ProductPlanAssociationDto() {
 }
 
 
-public ProductPlanAssociationDto(ProductDto product, RatePlanProductDto ratePlan) {
+public ProductPlanAssociationDto(ProductDto product, List<RatePlanProductDto> ratePlan) {
 	super();
 	this.product = product;
 	this.ratePlan = ratePlan;
@@ -27,12 +29,12 @@ public void setProduct(ProductDto product) {
 }
 
 
-public RatePlanProductDto getRatePlan() {
+public List<RatePlanProductDto> getRatePlan() {
 	return ratePlan;
 }
 
 
-public void setRatePlan(RatePlanProductDto ratePlan) {
+public void setRatePlan(List<RatePlanProductDto> ratePlan) {
 	this.ratePlan = ratePlan;
 }
 

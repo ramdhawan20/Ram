@@ -25,6 +25,7 @@ import com.hcl.bss.dto.ErrorResponseDTO;
 import com.hcl.bss.dto.ProductDataDto;
 import com.hcl.bss.dto.ProductDto;
 import com.hcl.bss.dto.ProductPlanAssociationDto;
+import com.hcl.bss.dto.StatusDto;
 import com.hcl.bss.services.ProductService;
 
 import io.swagger.annotations.ApiOperation;
@@ -89,25 +90,20 @@ public class ProductController {
 		Pageable reqCount = new PageRequest(pageNumber, recordPerPage);
 		try {
 			productData = productService.searchProducts(product,reqCount);
+			return new ResponseEntity<ProductDataDto>(productData, HttpStatus.OK);
 
-			if(productData.getProductList() != null && productData.getProductList().size() > 0) {
-				return new ResponseEntity<ProductDataDto>(productData, HttpStatus.OK);
-			}else {
-				
-				return new ResponseEntity<ProductDataDto>(productData, HttpStatus.NOT_FOUND);
-				
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<ProductDataDto>(productData, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}	
 	@ApiOperation(value = "Associate Product with Plan", response = String.class)
-	@RequestMapping(value = "/associatePlan",method = RequestMethod.POST)
-	public String accociatePlan(@RequestBody ProductPlanAssociationDto productPlan) {
-		String msg ;
-		 msg = productService.associatePlan(productPlan);
-		return msg;
+	@RequestMapping(value = "/associatePlan",produces = { "application/json" },method = RequestMethod.POST)
+	public ResponseEntity<StatusDto> accociatePlan(@RequestBody ProductPlanAssociationDto productPlan) {
+		StatusDto status = new StatusDto();
+		 String msg = productService.associatePlan(productPlan);
+		 status.setMsg(msg);
+		 return new ResponseEntity<StatusDto>(status, HttpStatus.OK);
 
 	}
 }
