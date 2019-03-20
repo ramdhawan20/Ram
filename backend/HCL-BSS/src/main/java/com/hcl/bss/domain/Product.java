@@ -4,7 +4,22 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "TB_PRODUCT")
@@ -55,29 +70,19 @@ public class Product implements java.io.Serializable {
 	private Date updatedDate;
 	@Column(name = "UPD_BY", length = 50)
 	private String updatedBy;
-
+	@ManyToMany(fetch=FetchType.LAZY,cascade={CascadeType.PERSIST,CascadeType.REMOVE})
+	@JoinTable(name = "TB_RATEPLAN_PRODUCT_MAPPING", joinColumns = { @JoinColumn(name = "PRODUCT_UID",referencedColumnName = "UIDPK")}, inverseJoinColumns = { @JoinColumn(name = "RATEPLAN_UID",referencedColumnName = "UIDPK") })
+	private Set<RatePlan> ratePlans = new HashSet<RatePlan>();
+	
 	public Product() {
 	}
 
-	public Product(String productDispName, String sku, Date productExpDate, Date productStartDate,
-				   ProductTypeMaster productTypeCode, int isActive, Date createdDate, String createdBy, Date updatedDate,
-				   String updatedBy) {
-		super();
-		this.productDispName = productDispName;
-		this.sku = sku;
-		this.productExpDate = productExpDate;
-		this.productStartDate = productStartDate;
-		this.productTypeCode = productTypeCode;
-		this.isActive = isActive;
-		this.createdDate = createdDate;
-		this.createdBy = createdBy;
-		this.updatedDate = updatedDate;
-		this.updatedBy = updatedBy;
-	}
+
+	
 
 	public Product(long uidpk, String productDispName, String sku, String productDescription, Date productExpDate,
-				   Date productStartDate, ProductTypeMaster productTypeCode, int isActive, Date createdDate, String createdBy,
-				   Date updatedDate, String updatedBy) {
+			Date productStartDate, ProductTypeMaster productTypeCode, int isActive, Date createdDate, String createdBy,
+			Date updatedDate, String updatedBy, Set<RatePlan> ratePlans) {
 		super();
 		this.uidpk = uidpk;
 		this.productDispName = productDispName;
@@ -91,7 +96,32 @@ public class Product implements java.io.Serializable {
 		this.createdBy = createdBy;
 		this.updatedDate = updatedDate;
 		this.updatedBy = updatedBy;
+		this.ratePlans = ratePlans;
 	}
+
+
+
+
+	public Product(String productDispName, String sku, String productDescription, Date productExpDate,
+			Date productStartDate, ProductTypeMaster productTypeCode, int isActive, Date createdDate, String createdBy,
+			Date updatedDate, String updatedBy, Set<RatePlan> ratePlans) {
+		super();
+		this.productDispName = productDispName;
+		this.sku = sku;
+		this.productDescription = productDescription;
+		this.productExpDate = productExpDate;
+		this.productStartDate = productStartDate;
+		this.productTypeCode = productTypeCode;
+		this.isActive = isActive;
+		this.createdDate = createdDate;
+		this.createdBy = createdBy;
+		this.updatedDate = updatedDate;
+		this.updatedBy = updatedBy;
+		this.ratePlans = ratePlans;
+	}
+
+
+
 
 	public long getUidpk() {
 		return uidpk;
@@ -185,25 +215,17 @@ public class Product implements java.io.Serializable {
 		return productDescription;
 	}
 
-	public Product(String productDispName, String sku, String productDescription, Date productExpDate,
-				   Date productStartDate, ProductTypeMaster productTypeCode, int isActive, Date createdDate, String createdBy,
-				   Date updatedDate, String updatedBy) {
-		super();
-		this.productDispName = productDispName;
-		this.sku = sku;
-		this.productDescription = productDescription;
-		this.productExpDate = productExpDate;
-		this.productStartDate = productStartDate;
-		this.productTypeCode = productTypeCode;
-		this.isActive = isActive;
-		this.createdDate = createdDate;
-		this.createdBy = createdBy;
-		this.updatedDate = updatedDate;
-		this.updatedBy = updatedBy;
-	}
 
 	public void setProductDescription(String productDescription) {
 		this.productDescription = productDescription;
+	}
+	
+	public Set<RatePlan> getRatePlans() {
+		return this.ratePlans;
+	}
+
+	public void setRatePlans(Set<RatePlan> ratePlans) {
+		this.ratePlans = ratePlans;
 	}
 
 	@Override

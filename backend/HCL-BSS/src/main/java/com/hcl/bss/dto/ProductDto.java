@@ -1,12 +1,14 @@
 package com.hcl.bss.dto;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.hcl.bss.domain.RatePlan;
 import com.hcl.bss.validator.CustomDateCompareScheme;
 import com.hcl.bss.validator.CustomDateScheme;
 import com.hcl.bss.validator.ProductStartDateScheme;
@@ -50,6 +52,8 @@ public class ProductDto implements java.io.Serializable {
 	private String fileHeader;
 	private String status;
 	private String pageNo;
+	private Set<RatePlanProductDto> ratePlans;
+	private boolean isAssociatedWithPlan;
 	public ProductDto() {
 		super();
 	}
@@ -213,6 +217,30 @@ public class ProductDto implements java.io.Serializable {
 
 	public void setPageNo(String pageNo) {
 		this.pageNo = pageNo;
+	}
+
+
+
+	public Set<RatePlanProductDto> getRatePlans() {
+		return ratePlans;
+	}
+
+
+
+	public void setRatePlans(Set<RatePlanProductDto> ratePlans) {
+		this.ratePlans = ratePlans;
+	}
+
+
+
+	public boolean isAssociatedWithPlan() {
+		return isAssociatedWithPlan;
+	}
+
+
+
+	public void setAssociatedWithPlan(boolean isAssociatedWithPlan) {
+		this.isAssociatedWithPlan = isAssociatedWithPlan;
 	}
 
 
