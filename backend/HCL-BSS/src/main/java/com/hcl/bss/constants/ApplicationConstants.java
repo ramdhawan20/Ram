@@ -57,5 +57,21 @@ public class ApplicationConstants {
     public static final String HYPHEN = "-";
     public static final String UNIT = "UNIT";
 
+
+    public enum BillingInvoicing{
+        ACTIVE(1),
+        INACTIVE(0);
+
+        private int active;
+
+        private BillingInvoicing(int number){
+            this.active  = number;
+        }
+
+        public int getActiveStatus(){
+            return this.active;
+        }
+    }
+
 }
 

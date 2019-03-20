@@ -3,16 +3,12 @@ package com.hcl.bss.domain;
 
 import com.hcl.bss.repository.generator.LoggedUserGenerator;
 import org.hibernate.annotations.GeneratorType;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.Set;
 /**
  *
  * @author- Aditya gupta
@@ -26,10 +22,6 @@ public class Order implements Serializable {
     private Long id;
     @Column(name="ORDER_NUMBER")
     private String orderNumber;
-/*
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order", fetch = FetchType.EAGER)
-    private Set<BatchLog> batchLogs = new HashSet<>();*/
-
 
     @Column(name="BILLTO_FIRSTNAME")
     private String billToFirstName;
@@ -115,11 +107,8 @@ public class Order implements Serializable {
     @Column(name="QUANTITY")
     private Integer quantity;
 
-    @Column(name="PARENT_ID")
-    private Long parentId;
-    @Column(name="BUNDLE_ID")
-    private Long bundleId;
-
+/*    @Column(name="PARENT_ID")
+    private Long parentId;*/
 
     @GeneratorType(type = LoggedUserGenerator.class)
     @Column(name = "CRE_BY")
@@ -407,21 +396,13 @@ public class Order implements Serializable {
     }
 
 
-    public Long getParentId() {
+/*    public Long getParentId() {
         return parentId;
     }
 
     public void setParentId(Long parentId) {
         this.parentId = parentId;
-    }
-
-    public Long getBundleId() {
-        return bundleId;
-    }
-
-    public void setBundleId(Long bundleId) {
-        this.bundleId = bundleId;
-    }
+    }*/
 
     public Timestamp getCreatedDate() {
         return createdDate;
