@@ -93,7 +93,8 @@ public class SubscriptionScheduler {
             else {
                 validateOrderData(order);
                 Subscription subscription = createSubscription(order);
-                boolean isAddOnProduct = order.getParentId()!=null?true:false;
+                //boolean isAddOnProduct = order.getParentId()!=null?true:false;
+                boolean isAddOnProduct = product.getParent()!=null?true:false;
                 if(!isAddOnProduct)
                     createCustomerAccount(order, subscription);
                 else
@@ -230,17 +231,25 @@ public class SubscriptionScheduler {
     @Transactional(rollbackOn = {Exception.class})
     private Subscription createSubscription(Order order){
         try {
+            Long productId = order.getProductId();
+            //Long parentId = null;
+            /*if(productId!=null){
+                Optional<Product> productOptional = productRepository.findById(productId);
+                Product currentProduct = productOptional.get();
+                parentId = currentProduct.getParent();
+            }*/
+            Product parentProduct = product.getParent();
             /**
              * if the product is a base product or a bundle product
              */
-            if(order.getParentId()==null){
+            if(parentProduct==null){
 
                 return populateSubscription(order);
             }
             /**
              * check if the product is an addon product
              */
-            else if(order.getParentId()!=null){
+            else if(parentProduct!=null){
                 List<BatchLog> batchLogs = batchLogRepository.findByOrderNumber(order.getOrderNumber());
                 if(batchLogs!=null && batchLogs.size()>0){
                     for(BatchLog log : batchLogs) {

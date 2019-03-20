@@ -30,7 +30,7 @@ public class Product implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "my_sequence")
 	@TableGenerator(name = "my_sequence", table = "id_gen", pkColumnName = "gen_name", valueColumnName = "gen_val", initialValue = 100000000, allocationSize = 1)
 	@Column(name = "UIDPK", nullable = false)
-	private long uidpk;
+	private Long uidpk;
 	@Column(name = "PRODUCT_DISP_NAME", nullable = false, length = 100)
 	private String productDispName;
 	@Column(name = "SKU", nullable = false, length = 20)
@@ -46,7 +46,7 @@ public class Product implements java.io.Serializable {
 	private ProductTypeMaster productTypeCode;
 
 	// to handle parent for a product
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	@JoinColumn(name = "PARENT_ID")
 	private Product parent;
 
@@ -85,7 +85,7 @@ public class Product implements java.io.Serializable {
 
 	
 
-	public Product(long uidpk, String productDispName, String sku, String productDescription, Date productExpDate,
+	public Product(Long uidpk, String productDispName, String sku, String productDescription, Date productExpDate,
 			Date productStartDate, ProductTypeMaster productTypeCode, int isActive, Date createdDate, String createdBy,
 			Date updatedDate, String updatedBy, Set<RatePlan> ratePlans) {
 		super();
@@ -134,7 +134,7 @@ public class Product implements java.io.Serializable {
 		this.isBundleProduct = isBundleProduct;
 	}
 
-	public long getUidpk() {
+	public Long getUidpk() {
 		return uidpk;
 	}
 
@@ -222,10 +222,17 @@ public class Product implements java.io.Serializable {
 		this.updatedBy = updatedBy;
 	}
 
+	public Product getParent() {
+		return parent;
+	}
+
+	public void setParent(Product parent) {
+		this.parent = parent;
+	}
+
 	public String getProductDescription() {
 		return productDescription;
 	}
-
 
 	public void setProductDescription(String productDescription) {
 		this.productDescription = productDescription;
