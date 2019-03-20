@@ -107,8 +107,8 @@ public class Order implements Serializable {
     @Column(name="QUANTITY")
     private Integer quantity;
 
-    @Column(name="PARENT_ID")
-    private Long parentId;
+/*    @Column(name="PARENT_ID")
+    private Long parentId;*/
 
     @GeneratorType(type = LoggedUserGenerator.class)
     @Column(name = "CRE_BY")
@@ -396,13 +396,13 @@ public class Order implements Serializable {
     }
 
 
-    public Long getParentId() {
+/*    public Long getParentId() {
         return parentId;
     }
 
     public void setParentId(Long parentId) {
         this.parentId = parentId;
-    }
+    }*/
 
     public Timestamp getCreatedDate() {
         return createdDate;
