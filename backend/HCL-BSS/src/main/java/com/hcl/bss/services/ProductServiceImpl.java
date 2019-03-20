@@ -16,6 +16,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import com.hcl.bss.domain.StatusDetails;
+import com.hcl.bss.repository.StatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -38,6 +40,10 @@ import com.hcl.bss.repository.specification.ProductSpecification;
 @Service
 @Transactional
 public class ProductServiceImpl implements ProductService {
+
+	@Autowired
+	StatusRepository statusRepository;
+
 	@Autowired
 	ProductRepository productRepository;
 	@Autowired
@@ -272,6 +278,11 @@ public class ProductServiceImpl implements ProductService {
 				 e.printStackTrace();
 			 }
 		return msg;
+	}
+
+	@Override
+	public List<StatusDetails> getDropDownData(Integer statusId){
+		return statusRepository.findByStatusId(statusId);
 	}
 
 }
