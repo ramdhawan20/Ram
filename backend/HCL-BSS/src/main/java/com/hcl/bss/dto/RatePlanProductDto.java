@@ -1,5 +1,7 @@
 package com.hcl.bss.dto;
 
+import java.math.BigDecimal;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RatePlanProductDto {
@@ -11,6 +13,10 @@ private Double price;
 private String unitOfMesureId;
 private String isActive;
 private String billEvery;
+private BigDecimal billingCycleTerm;
+private BigDecimal freeTrail;
+private BigDecimal setUpFee;
+private BigDecimal expireAfter;;
 public Long getUidpk() {
 	return uidpk;
 }
@@ -52,6 +58,30 @@ public String getBillEvery() {
 }
 public void setBillEvery(String billEvery) {
 	this.billEvery = billEvery;
+}
+public BigDecimal getBillingCycleTerm() {
+	return billingCycleTerm;
+}
+public void setBillingCycleTerm(BigDecimal billingCycleTerm) {
+	this.billingCycleTerm = billingCycleTerm;
+}
+public BigDecimal getFreeTrail() {
+	return freeTrail;
+}
+public void setFreeTrail(BigDecimal freeTrail) {
+	this.freeTrail = freeTrail;
+}
+public BigDecimal getSetUpFee() {
+	return setUpFee;
+}
+public void setSetUpFee(BigDecimal setUpFee) {
+	this.setUpFee = setUpFee;
+}
+public BigDecimal getExpireAfter() {
+	return expireAfter;
+}
+public void setExpireAfter(BigDecimal expireAfter) {
+	this.expireAfter = expireAfter;
 }
 
 }
