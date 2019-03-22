@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.List;
+
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long>, JpaSpecificationExecutor<Subscription>, PagingAndSortingRepository<Subscription, Long> {
     /**
      * This method will get the next sequence number which will be used to generate a unique SubscriptionID
@@ -15,4 +17,6 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
     public Integer getSubsSeq();
 
     public Subscription findBySubscriptionId(String name);
+
+    public List<Subscription> findByIsActive(int isActive);
 }

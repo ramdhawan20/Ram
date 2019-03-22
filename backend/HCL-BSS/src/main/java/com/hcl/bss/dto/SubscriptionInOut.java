@@ -29,6 +29,7 @@ public class SubscriptionInOut {
 	/*For Pagination*/
 	private int pageNo;
 	private int totalPages;
+	private boolean lastPage;
 	/*For Response*/
 	private Boolean success;
 	private String message;
@@ -116,5 +117,21 @@ public class SubscriptionInOut {
 	public void setResponseCode(int responseCode) {
 		this.responseCode = responseCode;
 	}
+
+	public boolean isLastPage() {
+		return lastPage;
+	}
+
+	public void setLastPage(boolean lastPage) {
+		this.lastPage = lastPage;
+	}
+
+	@Override
+	public String toString() {
+		return "SubscriptionInOut [subscriptionId=" + subscriptionId + ", customerName=" + customerName + ", planName="
+				+ planName + ", status=" + status + ", fromDateStr=" + fromDateStr + ", toDateStr=" + toDateStr + "]";
+	}
+	
+	
 	
 }
