@@ -1,6 +1,6 @@
 package com.hcl.bss.services;
 
-import com.hcl.bss.domain.StatusDetails;
+import com.hcl.bss.domain.AppConstantMaster;
 import org.springframework.data.domain.Pageable;
 
 import com.hcl.bss.domain.Product;
@@ -27,6 +27,6 @@ public interface ProductService {
 
 	String associatePlan(ProductPlanAssociationDto productPlan);
 
-	List<StatusDetails> getDropDownData(Integer statusId);
+	List<String> getDropDownData(String statusId);
 
 }

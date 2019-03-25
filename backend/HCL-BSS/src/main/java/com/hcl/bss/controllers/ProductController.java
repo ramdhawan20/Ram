@@ -3,7 +3,7 @@ package com.hcl.bss.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hcl.bss.domain.StatusDetails;
+import com.hcl.bss.domain.AppConstantMaster;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -105,7 +105,7 @@ public class ProductController {
 
 	@ApiOperation(value = "Get Dropdown Data", response = String.class)
 	@RequestMapping(value = "/getDropDownData",method = RequestMethod.POST)
-	public List<StatusDetails> dropDownData(@RequestParam Integer statusId) {
+	public List<String> dropDownData(@RequestParam String statusId) {
 		return productService.getDropDownData(statusId);
 	}
 }
