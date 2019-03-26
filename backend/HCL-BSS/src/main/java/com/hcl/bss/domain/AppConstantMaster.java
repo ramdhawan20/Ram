@@ -29,14 +29,14 @@ public class AppConstantMaster implements Serializable {
             allocationSize = 1)
     private Long id;
 
-    @Column(name="DROPDOWN_CODE")
-    private Integer dropdownCode;
+    @Column(name="APPCONSTANT_CODE")
+    private String appConstantCode;
 
-    @Column(name="SUB_DROPDOWN_CODE")
-    private Integer subDropdownCode;
+    @Column(name="SUB_APPCONSTANT_CODE")
+    private String subAppConstantCode;
 
-    @Column(name = "SUB_DROPDOWN_DESC")
-    private String subDropdownDesc;
+    @Column(name = "SUB_APPCONSTANT_DESC")
+    private String subAppConstantDesc;
 
     @Column(name = "CRE_BY")
     private String createdBy;
@@ -55,24 +55,23 @@ public class AppConstantMaster implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
-	public Integer getDropdownCode() {
-		return dropdownCode;
+	public String getAppConstantCode() {
+		return appConstantCode;
 	}
-	public void setDropdownCode(Integer dropdownCode) {
-		this.dropdownCode = dropdownCode;
+	public void setAppConstantCode(String appConstantCode) {
+		this.appConstantCode = appConstantCode;
 	}
-	public Integer getSubDropdownCode() {
-		return subDropdownCode;
+	public String getSubAppConstantCode() {
+		return subAppConstantCode;
 	}
-	public void setSubDropdownCode(Integer subDropdownCode) {
-		this.subDropdownCode = subDropdownCode;
+	public void setSubAppConstantCode(String subAppConstantCode) {
+		this.subAppConstantCode = subAppConstantCode;
 	}
-	public String getSubDropdownDesc() {
-		return subDropdownDesc;
+	public String getSubAppConstantDesc() {
+		return subAppConstantDesc;
 	}
-	public void setSubDropdownDesc(String subDropdownDesc) {
-		this.subDropdownDesc = subDropdownDesc;
+	public void setSubAppConstantDesc(String subAppConstantDesc) {
+		this.subAppConstantDesc = subAppConstantDesc;
 	}
 	public String getCreatedBy() {
 		return createdBy;

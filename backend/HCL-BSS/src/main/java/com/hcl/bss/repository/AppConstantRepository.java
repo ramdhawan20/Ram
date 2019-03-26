@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface AppConstantRepository extends JpaRepository<AppConstantMaster, Long> {
 
-    @Query(value="select SUB_DROPDOWN_CODE from TB_APP_CONSTANTS_MASTER where DROPDOWN_CODE=?",nativeQuery=true)
+    @Query(value="select SUB_APPCONSTANT_CODE from TB_APP_CONSTANTS_MASTER where APPCONSTANT_CODE=?",nativeQuery=true)
 	List<String> findByDropdownCode(String statusID);
 }
