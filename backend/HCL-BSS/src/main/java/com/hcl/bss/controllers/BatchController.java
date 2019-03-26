@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.hcl.bss.dto.BatchDto;
 import com.hcl.bss.dto.BatchRunLogDto;
@@ -114,4 +115,10 @@ public class BatchController {
 	  orderDto.setBatchRunLogDtoList(responseList);
 	  return new ResponseEntity<>(orderDto,HttpStatus.OK);
 	 }
+	
+	@ApiOperation(value = "Get Dropdown Data", response = String.class)
+	@RequestMapping(value = "/getDropDownData",method = RequestMethod.POST)
+	public List<String> dropDownData(@RequestParam String statusId) {
+		return batchLogService.getDropDownData(statusId);
+	}
 }

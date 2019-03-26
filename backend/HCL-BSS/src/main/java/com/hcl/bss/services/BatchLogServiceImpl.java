@@ -104,4 +104,13 @@ public class BatchLogServiceImpl implements BatchLogService {
 		formatedDate = dateFormat.format(dateToFormat);
 		return formatedDate;
 	}
+	@Override
+	public List<String> getDropDownData(String statusId) {
+		try {
+			return appConstantRepository.findByDropdownCode(statusId);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
