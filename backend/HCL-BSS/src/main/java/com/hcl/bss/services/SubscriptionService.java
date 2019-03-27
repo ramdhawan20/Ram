@@ -2,6 +2,8 @@ package com.hcl.bss.services;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.data.domain.Pageable;
 
 import com.hcl.bss.domain.Subscription;
@@ -16,6 +18,6 @@ import com.hcl.bss.dto.SubscriptionInOut;
  */
 public interface SubscriptionService {
 
-    List<SubscriptionDto> findAllSubscription(SubscriptionInOut subscriptionIn, Pageable pageable);
+    List<SubscriptionDto> findAllSubscription(SubscriptionInOut subscriptionIn, Pageable pageable, HttpServletResponse response);
 
 }

@@ -1,5 +1,7 @@
 package com.hcl.bss.services;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.data.domain.Pageable;
 
 import com.hcl.bss.domain.Product;
@@ -20,7 +22,7 @@ public interface ProductService {
 
 	Iterable<ProductTypeMaster> getProductType();
 
-	ProductDataDto searchProducts(ProductDto product, Pageable reqCount);
+	ProductDataDto searchProducts(ProductDto product, Pageable reqCount, HttpServletResponse response);
 
 	String associatePlan(ProductPlanAssociationDto productPlan);
 

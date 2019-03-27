@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,7 +148,7 @@ public class ProductServiceImpl implements ProductService {
 			}
 			prod.setUidpk(product.getUidpk());
 			prod.setProductDispName(product.getProductDispName());
-			prod.setProductTypeCode(product.getProductTypeCode().getProductTypeCode());
+			prod.setProductTypeCode(product.getProductTypeCode().getProductType());
 			prod.setProductDescription(product.getProductDescription());
 			prod.setSku(product.getSku());
 			prod.setProductStartDate(sDate);
@@ -193,7 +194,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public ProductDataDto searchProducts(ProductDto product, Pageable reqCount) {
+	public ProductDataDto searchProducts(ProductDto product, Pageable reqCount,HttpServletResponse response) {
 		List<ProductDto> productDtoList = new ArrayList<>();
 		ProductDataDto productDataDto = new ProductDataDto();
 		List<Product> filteredData = new ArrayList<>();
@@ -239,10 +240,9 @@ public class ProductServiceImpl implements ProductService {
 		 ProductTypeMaster ptm = new ProductTypeMaster();
 		 ptm.setProductTypeCode(code);
 		 filter.setProductTypeCode(ptm);
-
+		 if(reqCount != null) {
 		 Page<Product> result = productRepository.findAll(Specification.where(ProductSpecification.hasProductName(productDispName)).and(ProductSpecification.hasSku(sku)).and(ProductSpecification.isActive(activeInactive)).and(ProductSpecification.hasStartDate(startDate,endDate)).and(ProductSpecification.hasCode(code)),reqCount);
 		 filteredData = result.getContent();
-		 productDtoList = convertProductEntityToDto(filteredData);
 		 int totalPages = productDtoList.size()/reqCount.getPageSize();
 			if(productDtoList.size()%reqCount.getPageSize() != 0) {
 				totalPages = totalPages+1;
@@ -257,7 +257,15 @@ public class ProductServiceImpl implements ProductService {
 					productDataDto.setLastPage(true);
 				System.out.println("Last page to show");
 			}
+		 }
+		 
 			}
+		 else {
+			 filteredData = productRepository.findAll(Specification.where(ProductSpecification.hasProductName(productDispName)).and(ProductSpecification.hasSku(sku)).and(ProductSpecification.isActive(activeInactive)).and(ProductSpecification.hasStartDate(startDate,endDate)).and(ProductSpecification.hasCode(code))); 
+			 
+		 }
+		 productDtoList = convertProductEntityToDto(filteredData);
+		 productDataDto.setProductList(productDtoList);
 		return productDataDto;
 		
 	}

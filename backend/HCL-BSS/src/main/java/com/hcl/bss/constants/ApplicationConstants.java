@@ -56,6 +56,9 @@ public class ApplicationConstants {
     public static final String UPLOAD = "UPLOAD";
     public static final String HYPHEN = "-";
     public static final String UNIT = "UNIT";
-
+    public static final String PRODUCT_DATA = "/PROJECTS/SUBSCRIPTION/files/PRODUCT_DATA.CSV";
+    public static final String USER_DATA = "/PROJECTS/SUBSCRIPTION/files/USER_DATA.CSV";
+    public static final String SUBSCRIPTION_DATA = "/PROJECTS/SUBSCRIPTION/files/SUBSCRIPTION_DATA.CSV";
+    
 }
 

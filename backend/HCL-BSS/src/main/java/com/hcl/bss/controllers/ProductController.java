@@ -2,6 +2,8 @@ package com.hcl.bss.controllers;
 
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -83,13 +85,13 @@ public class ProductController {
 	}
 	@ApiOperation(value = "Get list of Product Based on Search Criteria", response = Product.class)
 	@PostMapping(value = "/searchProducts")
-	public ResponseEntity<ProductDataDto> searchProducts(@RequestBody ProductDto product) {
+	public ResponseEntity<ProductDataDto> searchProducts(@RequestBody ProductDto product,HttpServletResponse response) {
 		ProductDataDto productData = new  ProductDataDto();
 		Integer pageNumber = Integer.valueOf(product.getPageNo());
 		@SuppressWarnings("deprecation")
 		Pageable reqCount = new PageRequest(pageNumber, recordPerPage);
 		try {
-			productData = productService.searchProducts(product,reqCount);
+			productData = productService.searchProducts(product,reqCount,response);
 			return new ResponseEntity<ProductDataDto>(productData, HttpStatus.OK);
 
 		} catch (Exception e) {
