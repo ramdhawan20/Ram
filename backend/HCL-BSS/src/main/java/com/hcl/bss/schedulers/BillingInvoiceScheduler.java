@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -46,17 +47,17 @@ public class BillingInvoiceScheduler {
         Set<SubscriptionRatePlan> subRatePlans = subscription.getSubscriptionRatePlan();
         Optional<SubscriptionRatePlan> subscriptionRatePlanOptional = subRatePlans.stream().findFirst();
         SubscriptionRatePlan subRatePlan = subscriptionRatePlanOptional.get();
-        String billingFrequency = subRatePlan.getRatePlan().getFrequencyCode();
-        int billingCycleTerm = subRatePlan.getRatePlan().getBillingCycleTerm();
+        String billingFrequency = subRatePlan.getRatePlan().getBillingFrequency();
+        BigDecimal billingCycleTerm = subRatePlan.getRatePlan().getBillingCycleTerm();
         switch (billingFrequency) {
             case "WEEKLY":
-                subNextBillingDate = currentDate.plusWeeks(billingCycleTerm).plusDays(2);
+                subNextBillingDate = currentDate.plusWeeks(billingCycleTerm.intValue()).plusDays(2);
                 break;
             case "MONTHLY":
-                subNextBillingDate = currentDate.plusMonths(billingCycleTerm).plusDays(2);
+                subNextBillingDate = currentDate.plusMonths(billingCycleTerm.intValue()).plusDays(2);
                 break;
             case "ANNUAL":
-                subNextBillingDate = currentDate.plusYears(billingCycleTerm).plusDays(2);
+                subNextBillingDate = currentDate.plusYears(billingCycleTerm.intValue()).plusDays(2);
                 break;
         }
         if (subscription.getLastBillingDate() != null) {

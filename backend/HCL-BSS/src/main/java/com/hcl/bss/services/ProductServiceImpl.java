@@ -169,7 +169,7 @@ public class ProductServiceImpl implements ProductService {
 				rpDto.setUidpk(ratePlan.getId());
 				rpDto.setRatePlanId(ratePlan.getRatePlanId());
 				rpDto.setName(ratePlan.getRatePlanDescription());
-				rpDto.setBillEvery(ratePlan.getFrequencyCode());
+				rpDto.setBillEvery(ratePlan.getBillingFrequency());
 				rpDto.setPrice(ratePlan.getPrice());
 				rpDto.setBillingCycleTerm(ratePlan.getBillingCycleTerm());
 				rpDto.setExpireAfter(ratePlan.getExpireAfter());
