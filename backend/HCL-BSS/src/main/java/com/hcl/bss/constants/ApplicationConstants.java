@@ -1,6 +1,6 @@
 package com.hcl.bss.constants;
 
-public class ApplicationConstants {
+public final class ApplicationConstants {
 
 		
 
@@ -57,5 +57,14 @@ public class ApplicationConstants {
     public static final String HYPHEN = "-";
     public static final String UNIT = "UNIT";
 
+    //User Management
+    public static final int ROLE_ADMIN = 1;
+    public static final int ROLE_NORMAL = 2;
+    public static final String ADMIN = "Admin";
+    public static final String NORMAL = "Normal";
+    public static final String ACTIVE = "Active";
+    public static final String INACTIVE = "Inactive";
+       
+       
 }
 
