@@ -33,5 +33,6 @@ public class SsRestApplication implements CommandLineRunner {
 	public void run(String... arg0) throws IOException, URISyntaxException {
 		subscriptionScheduler.runSubscriptionBatch();
 	}
+
 }
 
