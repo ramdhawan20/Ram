@@ -57,6 +57,10 @@ public final class ApplicationConstants {
     public static final String HYPHEN = "-";
     public static final String UNIT = "UNIT";
 
+    public static final String PRODUCT_DATA = "/PROJECTS/SUBSCRIPTION/files/PRODUCT_DATA.CSV";
+    public static final String USER_DATA = "/PROJECTS/SUBSCRIPTION/files/USER_DATA.CSV";
+    public static final String SUBSCRIPTION_DATA = "/PROJECTS/SUBSCRIPTION/files/SUBSCRIPTION_DATA.CSV";
+
     //User Management
     public static final int ROLE_ADMIN = 1;
     public static final int ROLE_NORMAL = 2;
@@ -79,6 +83,6 @@ public final class ApplicationConstants {
             return this.active;
         }
     }
-  
+
 }
 

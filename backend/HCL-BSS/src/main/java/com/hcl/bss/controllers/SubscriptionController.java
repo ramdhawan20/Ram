@@ -2,6 +2,7 @@ package com.hcl.bss.controllers;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -40,7 +41,7 @@ public class SubscriptionController {
 	
 	@ApiOperation(value = "Get list of all subscription", response = SubscriptionInOut.class)
 	@PutMapping(value = "/subscriptions")
-	public ResponseEntity<?> findAllSubscription(@Valid @RequestBody SubscriptionInOut subscriptionIn) {
+	public ResponseEntity<?> findAllSubscription(@Valid @RequestBody SubscriptionInOut subscriptionIn, HttpServletResponse response) {
 	//public ResponseEntity<?> findAllSubscription(@Valid @RequestBody SubscriptionInOut subscriptionIn, Pageable pageable1) {
 		LOGGER.info("<-----------------------Start findAllSubscription() method-------------------------------->");
 		LOGGER.info("Optional I/P details: " + subscriptionIn.toString());
@@ -62,7 +63,7 @@ public class SubscriptionController {
 				return new ResponseEntity<>(subscriptionOut, HttpStatus.BAD_REQUEST);
 			}
 
-			List<SubscriptionDto> subscriptionList = subscriptionService.findAllSubscription(subscriptionIn, pageable);
+			List<SubscriptionDto> subscriptionList = subscriptionService.findAllSubscription(subscriptionIn, pageable, response);
 			
 			if(subscriptionList != null && subscriptionList.size() > 0) {
 				subscriptionOut.setSuccess(true);

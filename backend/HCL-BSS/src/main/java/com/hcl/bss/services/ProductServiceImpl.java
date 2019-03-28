@@ -12,9 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 import com.hcl.bss.domain.AppConstantMaster;
@@ -32,7 +30,7 @@ import com.hcl.bss.domain.RatePlan;
 import com.hcl.bss.dto.ProductDataDto;
 import com.hcl.bss.dto.ProductDto;
 import com.hcl.bss.dto.ProductPlanAssociationDto;
-import com.hcl.bss.dto.RatePlanProductDto;
+import com.hcl.bss.dto.RatePlanDto;
 import com.hcl.bss.repository.ProductRepository;
 import com.hcl.bss.repository.ProductTypeMasterRepository;
 import com.hcl.bss.repository.RatePlanRepository;
@@ -138,7 +136,7 @@ public class ProductServiceImpl implements ProductService {
 		Set<RatePlan> ratePlanSet = new HashSet<RatePlan>();
 		
 		for(Product product :productEntityList) {
-			Set<RatePlanProductDto> ratePlans = new HashSet<RatePlanProductDto>();
+			Set<RatePlanDto> ratePlans = new HashSet<RatePlanDto>();
 			ProductDto prod = new ProductDto();
 			String eDate = BLANK;
 			String sDate = BLANK;
@@ -153,14 +151,14 @@ public class ProductServiceImpl implements ProductService {
 			}
 			prod.setUidpk(product.getUidpk());
 			prod.setProductDispName(product.getProductDispName());
-			prod.setProductTypeCode(product.getProductTypeCode().getProductTypeCode());
+			prod.setProductTypeCode(product.getProductTypeCode().getProductType());
 			prod.setProductDescription(product.getProductDescription());
 			prod.setSku(product.getSku());
 			prod.setProductStartDate(sDate);
 			prod.setProductExpDate(eDate);
 			ratePlanSet = product.getRatePlans();
 			for(RatePlan ratePlan : ratePlanSet) {
-				RatePlanProductDto rpDto = new RatePlanProductDto();
+				RatePlanDto rpDto = new RatePlanDto();
 				
 				if(ratePlan.getIsActive() == 0) {
 				rpDto.setIsActive("InActive");
@@ -173,6 +171,10 @@ public class ProductServiceImpl implements ProductService {
 				rpDto.setName(ratePlan.getRatePlanDescription());
 				rpDto.setBillEvery(ratePlan.getFrequencyCode());
 				rpDto.setPrice(ratePlan.getPrice());
+				rpDto.setBillingCycleTerm(ratePlan.getBillingCycleTerm());
+				rpDto.setExpireAfter(ratePlan.getExpireAfter());
+				rpDto.setFreeTrail(ratePlan.getFreeTrail());
+				rpDto.setSetUpFee(ratePlan.getSetUpFee());
 				if(null != ratePlan.getUom()) {
 				rpDto.setUnitOfMesureId(ratePlan.getUom().getUnitOfMeasure());
 				}
@@ -195,7 +197,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public ProductDataDto searchProducts(ProductDto product, Pageable reqCount) {
+	public ProductDataDto searchProducts(ProductDto product, Pageable reqCount,HttpServletResponse response) {
 		List<ProductDto> productDtoList = new ArrayList<>();
 		ProductDataDto productDataDto = new ProductDataDto();
 		List<Product> filteredData = new ArrayList<>();
@@ -241,10 +243,9 @@ public class ProductServiceImpl implements ProductService {
 		 ProductTypeMaster ptm = new ProductTypeMaster();
 		 ptm.setProductTypeCode(code);
 		 filter.setProductTypeCode(ptm);
-
+		 if(reqCount != null) {
 		 Page<Product> result = productRepository.findAll(Specification.where(ProductSpecification.hasProductName(productDispName)).and(ProductSpecification.hasSku(sku)).and(ProductSpecification.isActive(activeInactive)).and(ProductSpecification.hasStartDate(startDate,endDate)).and(ProductSpecification.hasCode(code)),reqCount);
 		 filteredData = result.getContent();
-		 productDtoList = convertProductEntityToDto(filteredData);
 		 int totalPages = productDtoList.size()/reqCount.getPageSize();
 			if(productDtoList.size()%reqCount.getPageSize() != 0) {
 				totalPages = totalPages+1;
@@ -259,7 +260,15 @@ public class ProductServiceImpl implements ProductService {
 					productDataDto.setLastPage(true);
 				System.out.println("Last page to show");
 			}
+		 }
+		 
 			}
+		 else {
+			 filteredData = productRepository.findAll(Specification.where(ProductSpecification.hasProductName(productDispName)).and(ProductSpecification.hasSku(sku)).and(ProductSpecification.isActive(activeInactive)).and(ProductSpecification.hasStartDate(startDate,endDate)).and(ProductSpecification.hasCode(code))); 
+			 
+		 }
+		 productDtoList = convertProductEntityToDto(filteredData);
+		 productDataDto.setProductList(productDtoList);
 		return productDataDto;
 		
 	}
@@ -273,7 +282,7 @@ public class ProductServiceImpl implements ProductService {
 		prod = productRepository.getOne(productId);
 		Set<RatePlan> ratePlanSet = new HashSet<RatePlan>();
 		//ratePlanSet = prod.getRatePlans();
-		List<RatePlanProductDto> rpDtoList = productPlan.getRatePlan();
+		List<RatePlanDto> rpDtoList = productPlan.getRatePlan();
 		List<Long> ids = rpDtoList.stream().map(x->x.getUidpk()).collect(Collectors.toList());
 		//ratePlan = ratePlanRepository.getOne(rpId);
 		ratePlan = ratePlanRepository.findAllById(ids);

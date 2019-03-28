@@ -52,7 +52,7 @@ public class ProductDto implements java.io.Serializable {
 	private String fileHeader;
 	private String status;
 	private String pageNo;
-	private Set<RatePlanProductDto> ratePlans;
+	private Set<RatePlanDto> ratePlans;
 	private boolean isAssociatedWithPlan;
 	public ProductDto() {
 		super();
@@ -221,13 +221,13 @@ public class ProductDto implements java.io.Serializable {
 
 
 
-	public Set<RatePlanProductDto> getRatePlans() {
+	public Set<RatePlanDto> getRatePlans() {
 		return ratePlans;
 	}
 
 
 
-	public void setRatePlans(Set<RatePlanProductDto> ratePlans) {
+	public void setRatePlans(Set<RatePlanDto> ratePlans) {
 		this.ratePlans = ratePlans;
 	}
 
