@@ -28,7 +28,9 @@ public class User implements Serializable {
     @Column(name = "password") private String password;
     @Column(name = "role_id") private int roleId;
     @Column(name = "user_first_name") private String userFirstName;
-    @Column(name = "user_last_name") private String userLastName;
+    @Column(name = "user_middle_name")
+	private String userMiddleName;
+	@Column(name = "user_last_name") private String userLastName;
     @Column(name="last_login") private Timestamp lastLogin;
     @Column(name="is_locked") private  int isLocked;
     @Column(name="upd_by") private  String updatedBy;
@@ -147,5 +149,12 @@ public class User implements Serializable {
 
         this.createdDate = createdDate;
     }
+	public String getUserMiddleName() {
+		return userMiddleName;
+	}
+
+	public void setUserMiddleName(String userMiddleName) {
+		this.userMiddleName = userMiddleName;
+	}
 
 }

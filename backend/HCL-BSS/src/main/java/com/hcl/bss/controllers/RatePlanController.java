@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.hcl.bss.dto.ProductDto;
-import com.hcl.bss.dto.RatePlanProductDto;
+import com.hcl.bss.dto.RatePlanDto;
 import com.hcl.bss.services.RatePlanService;
 
 import io.swagger.annotations.ApiOperation;
@@ -28,11 +28,11 @@ public class RatePlanController {
 			return new ResponseEntity<>(productId, HttpStatus.OK);
 			
 		}
-		@ApiOperation(value = "Get All RatePlans", response = RatePlanProductDto.class)
+		@ApiOperation(value = "Get All RatePlans", response = RatePlanDto.class)
 		@RequestMapping(value = "/getRatePlan", produces = { "application/json" }, method = RequestMethod.GET)
-		public ResponseEntity<List<RatePlanProductDto>> getAllRatePlan() {
+		public ResponseEntity<List<RatePlanDto>> getAllRatePlan() {
 			
-			List<RatePlanProductDto> planList = new ArrayList<RatePlanProductDto>();
+			List<RatePlanDto> planList = new ArrayList<RatePlanDto>();
 			planList = ratePlanService.getAllPlans();
 			return new ResponseEntity<>(planList, HttpStatus.OK);
 

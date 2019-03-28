@@ -13,6 +13,6 @@ import com.hcl.bss.domain.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product>,PagingAndSortingRepository<Product, Long>{
 	 @Query("SELECT p.sku  FROM Product p")
-	Set<String> getSkus();
+	  Set<String> getSkus();
 
 }

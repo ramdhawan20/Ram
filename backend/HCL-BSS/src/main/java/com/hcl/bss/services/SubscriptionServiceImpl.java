@@ -1,9 +1,7 @@
 package com.hcl.bss.services;
 
 import static com.hcl.bss.constants.ApplicationConstants.DD_MM_YYYY;
-import static com.hcl.bss.constants.ApplicationConstants.DATE_FORMAT_DD_MM_YYYY;
 
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
@@ -50,7 +49,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	//DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY);
 
  	@Override
-	public List<SubscriptionDto> findAllSubscription(SubscriptionInOut subscriptionIn, Pageable pageable){
+	public List<SubscriptionDto> findAllSubscription(SubscriptionInOut subscriptionIn, Pageable pageable, HttpServletResponse response){
 		LOGGER.info("<-----------------------Start findAllSubscription() method in SubscriptionServiceImpl.java------------------------>");
 		List<Subscription> subscriptionList = null;
 		Date fromDate = null;
@@ -88,16 +87,22 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 									.where(SubscriptionSpecification.hasCustomerName(subscriptionIn.getCustomerName()))
 							: null);
 			/*End:- Defining specification for filter */
-			
+			if(null != pageable) {
 			Page<Subscription> subscriptionPages = subscriptionRepository.findAll(
 					Specification.where(specId).and(specStatus).and(specPlanName).and(specCustomerName).and(specDate),
 					pageable);
-			
 			subscriptionList = subscriptionPages.getContent();
+			subscriptionIn.setTotalPages(subscriptionPages.getTotalPages());
+			subscriptionIn.setLastPage(subscriptionPages.isLast());
+			}
+			else {
+				subscriptionList = subscriptionRepository.findAll(
+						Specification.where(specId).and(specStatus).and(specPlanName).and(specCustomerName).and(specDate));
+			}
 
 			if (subscriptionList != null && subscriptionList.size() > 0) {
-				subscriptionIn.setTotalPages(subscriptionPages.getTotalPages());
-				subscriptionIn.setLastPage(subscriptionPages.isLast());
+				
+
 				return convertSubscriptionsToDto(subscriptionList);
 			}
 			return null;

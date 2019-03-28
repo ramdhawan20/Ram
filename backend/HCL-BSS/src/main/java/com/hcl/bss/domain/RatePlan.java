@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,8 +29,17 @@ public class RatePlan implements Serializable {
     private String ratePlanId;
     @Column(name="RATEPLAN_DESC")
     private String ratePlanDescription;
-    @Column(name="BILLING_FREQUENCY")
+    @Column(name="FREQUENCY_CODE")
     private String billingFrequency;
+    @Column(name="BILLING_CYCLE_TERM")
+    private BigDecimal billingCycleTerm;
+    @Column(name="FREE_TRIAL")
+    private BigDecimal freeTrail;
+    @Column(name="SETUP_FEE")
+    private BigDecimal setUpFee;
+    @Column(name="EXPIRE_AFTER")
+    private BigDecimal expireAfter;
+
     @Column(name="PRICE")
     private double price;
     @OneToOne
@@ -41,6 +51,7 @@ public class RatePlan implements Serializable {
     @Column(name="IS_ACTIVE")
     private Integer isActive;
 
+  
 
     @CreatedBy
     @Column(name = "CRE_BY")
@@ -99,6 +110,39 @@ public class RatePlan implements Serializable {
 		this.billingFrequency = billingFrequency;
 	}
 
+	
+    public BigDecimal getBillingCycleTerm() {
+		return billingCycleTerm;
+	}
+
+	public void setBillingCycleTerm(BigDecimal billingCycleTerm) {
+		this.billingCycleTerm = billingCycleTerm;
+	}
+
+	public BigDecimal getFreeTrail() {
+		return freeTrail;
+	}
+
+	public void setFreeTrail(BigDecimal freeTrail) {
+		this.freeTrail = freeTrail;
+	}
+
+	public BigDecimal getSetUpFee() {
+		return setUpFee;
+	}
+
+	public void setSetUpFee(BigDecimal setUpFee) {
+		this.setUpFee = setUpFee;
+	}
+
+	public BigDecimal getExpireAfter() {
+		return expireAfter;
+	}
+
+	public void setExpireAfter(BigDecimal expireAfter) {
+		this.expireAfter = expireAfter;
+	}
+
     public double getPrice() {
         return price;
     }
@@ -122,6 +166,8 @@ public class RatePlan implements Serializable {
     public void setIsActive(Integer isActive) {
         this.isActive = isActive;
     }
+
+   
 
     public Timestamp getCreatedDate() {
         return createdDate;
