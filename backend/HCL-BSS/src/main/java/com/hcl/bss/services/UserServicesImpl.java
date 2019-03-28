@@ -209,7 +209,7 @@ public class UserServicesImpl implements UserServices {
 	public List<String> getDropDownList(String dropDownCode){
 		LOGGER.info("<-----------------------Start getDropDownData() method in UserServicesImpl-------------------------------->");		
 		try {
-			return appConstantRepository.findByDropdownCode(dropDownCode);
+			return appConstantRepository.findByAppConstantCode(dropDownCode);
 		} finally {
 			LOGGER.info("<-----------------------End getDropDownData() method in UserServicesImpl-------------------------------->");		
 		}

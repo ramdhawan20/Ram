@@ -14,11 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.hcl.bss.domain.BatchLog;
 import com.hcl.bss.repository.specification.BatchLogSpecification;
 import com.hcl.bss.dto.BatchRunLogDto;
+import com.hcl.bss.dto.DropDownOutDto;
 import com.hcl.bss.repository.AppConstantRepository;
 import com.hcl.bss.repository.BatchLogRepository;
 
@@ -110,11 +112,6 @@ public class BatchLogServiceImpl implements BatchLogService {
 	}
 	@Override
 	public List<String> getDropDownData(String statusId) {
-		try {
 			return appConstantRepository.findByDropdownCode(statusId);
-		}
-		catch (Exception e) {
-			return null;
-		}
 	}
 }

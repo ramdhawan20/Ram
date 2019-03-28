@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import com.hcl.bss.dto.BatchRunLogDto;
+import com.hcl.bss.dto.DropDownOutDto;
 
 public interface BatchLogService {
 

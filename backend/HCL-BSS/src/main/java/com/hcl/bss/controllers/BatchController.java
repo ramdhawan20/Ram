@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.hcl.bss.dto.BatchDto;
 import com.hcl.bss.dto.BatchRunLogDto;
+import com.hcl.bss.dto.DropDownOutDto;
 import com.hcl.bss.dto.FilterRequest;
 import com.hcl.bss.services.BatchLogService;
 
@@ -52,15 +53,11 @@ public class BatchController {
 	  orderDto.setSuccess(batchLogService.findLastSuccessCount(cal.getTime(),com.hcl.bss.constants.ApplicationConstants.STATUS_SUCCESS));
 	  List <BatchRunLogDto> responseList = batchLogService.findLastBatchOrders(reqCount, cal.getTime(), com.hcl.bss.constants.ApplicationConstants.FAIL_STATUS);
 	  Integer pageNum = reqCount.getPageNumber()+1;
-	  Integer lastRecord = pageNum * reqCount.getPageSize();
-	  if((batchLogService.findTotalCountByDate(cal.getTime(),null,com.hcl.bss.constants.ApplicationConstants.FAIL_STATUS))-lastRecord <= 0) {
-		  if(responseList.size()/lastRecord == 0) {
-			  orderDto.setLastPage(true);
-			}
-		}
-	  else
-		  orderDto.setLastPage(false);
 	  Long noOfTotalRecords = batchLogService.findTotalCountByDate(cal.getTime(),null,com.hcl.bss.constants.ApplicationConstants.FAIL_STATUS);
+	  if(noOfTotalRecords>pageNum*reqCount.getPageSize())
+		  orderDto.setLastPage(false);
+	  else
+		  orderDto.setLastPage(true);
 	  Long totalPages = noOfTotalRecords/reqCount.getPageSize();
 		if(noOfTotalRecords%reqCount.getPageSize() != 0) {
 			totalPages = totalPages+1;
@@ -98,15 +95,11 @@ public class BatchController {
 	  orderDto.setFailed(batchLogService.findFailCountByDate(startDate, endDate, com.hcl.bss.constants.ApplicationConstants.FAIL_STATUS));
 	  List <BatchRunLogDto> responseList = batchLogService.findBatchOrders(reqCount, startDate, endDate,filterRequest.getStatus());
 	  Integer pageNo = reqCount.getPageNumber()+1;
-	  Integer lastRecord = pageNo * reqCount.getPageSize();
-	  if((batchLogService.findTotalCountByDate(startDate,endDate,filterRequest.getStatus()))-lastRecord <= 0) {
-		  if(responseList.size()/lastRecord == 0) {
-			  orderDto.setLastPage(true);
-			}
-		}
-	  else
-		  orderDto.setLastPage(false);
 	  Long noOfTotalRecords = batchLogService.findTotalCountByDate(startDate,endDate,filterRequest.getStatus());
+	  if(noOfTotalRecords>pageNo*reqCount.getPageSize())
+		  orderDto.setLastPage(false);
+	  else
+		  orderDto.setLastPage(true);
 	  Long totalPages = noOfTotalRecords/reqCount.getPageSize();
 		if(noOfTotalRecords%reqCount.getPageSize() != 0) {
 			totalPages = totalPages+1;
@@ -116,9 +109,31 @@ public class BatchController {
 	  return new ResponseEntity<>(orderDto,HttpStatus.OK);
 	 }
 	
-	@ApiOperation(value = "Get Dropdown Data", response = String.class)
+	@ApiOperation(value = "Get Dropdown Data", response = DropDownOutDto.class)
 	@RequestMapping(value = "/getDropDownData",method = RequestMethod.POST)
-	public List<String> dropDownData(@RequestParam String statusId) {
-		return batchLogService.getDropDownData(statusId);
+	public ResponseEntity<DropDownOutDto> dropDownData(@RequestParam String statusId) {
+		DropDownOutDto dropDownOutDto = new DropDownOutDto();
+		try {
+			if(batchLogService.getDropDownData(statusId)!=null && !(batchLogService.getDropDownData(statusId).isEmpty())) {
+				dropDownOutDto.setMessage("Drop Down Fetched Successfully");
+				dropDownOutDto.setResponseCode(HttpStatus.OK.value());
+				dropDownOutDto.setSuccess(true);
+				dropDownOutDto.setDropDownList(batchLogService.getDropDownData(statusId));
+				return new ResponseEntity<DropDownOutDto>(dropDownOutDto,HttpStatus.OK);
+			}		
+			else {
+				dropDownOutDto.setMessage("Drop Down values not found in Database");
+				dropDownOutDto.setResponseCode(HttpStatus.NOT_FOUND.value());
+				dropDownOutDto.setSuccess(false);
+				return new ResponseEntity<DropDownOutDto>(dropDownOutDto,HttpStatus.NOT_FOUND);
+			}
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			dropDownOutDto.setMessage(e.getMessage());
+			dropDownOutDto.setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			dropDownOutDto.setSuccess(false);
+			return new ResponseEntity<DropDownOutDto>(dropDownOutDto,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 }

@@ -299,7 +299,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<String> getDropDownData(String statusId){
-		return appConstantRepository.findByDropdownCode(statusId);
+		return appConstantRepository.findByAppConstantCode(statusId);
 	}
 
 }
