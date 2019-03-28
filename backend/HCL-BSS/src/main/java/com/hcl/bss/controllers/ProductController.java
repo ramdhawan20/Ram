@@ -106,6 +106,5 @@ public class ProductController {
 		 String msg = productService.associatePlan(productPlan);
 		 status.setMsg(msg);
 		 return new ResponseEntity<StatusDto>(status, HttpStatus.OK);
-
 	}
 }
