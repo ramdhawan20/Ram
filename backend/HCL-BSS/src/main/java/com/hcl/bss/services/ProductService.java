@@ -2,6 +2,7 @@ package com.hcl.bss.services;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.hcl.bss.domain.AppConstantMaster;
 import org.springframework.data.domain.Pageable;
 
 import com.hcl.bss.domain.Product;
@@ -9,6 +10,8 @@ import com.hcl.bss.domain.ProductTypeMaster;
 import com.hcl.bss.dto.ProductDataDto;
 import com.hcl.bss.dto.ProductDto;
 import com.hcl.bss.dto.ProductPlanAssociationDto;
+
+import java.util.List;
 
 /**
  * Interface for Product services 
@@ -25,5 +28,7 @@ public interface ProductService {
 	ProductDataDto searchProducts(ProductDto product, Pageable reqCount, HttpServletResponse response);
 
 	String associatePlan(ProductPlanAssociationDto productPlan);
+
+	List<String> getDropDownData(String statusId);
 
 }

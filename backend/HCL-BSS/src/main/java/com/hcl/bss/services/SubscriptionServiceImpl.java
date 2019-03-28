@@ -102,6 +102,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			}
 
 			if (subscriptionList != null && subscriptionList.size() > 0) {
+				subscriptionIn.setTotalPages(subscriptionPages.getTotalPages());
+				subscriptionIn.setLastPage(subscriptionPages.isLast());
+
 				return convertSubscriptionsToDto(subscriptionList);
 			}
 			return null;

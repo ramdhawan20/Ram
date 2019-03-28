@@ -39,6 +39,7 @@ public class RatePlan implements Serializable {
     private BigDecimal setUpFee;
     @Column(name="EXPIRE_AFTER")
     private BigDecimal expireAfter;
+
     @Column(name="PRICE")
     private double price;
     @OneToOne
@@ -50,6 +51,17 @@ public class RatePlan implements Serializable {
     @Column(name="IS_ACTIVE")
     private Integer isActive;
 
+    @JoinColumn(name="FREQUENCY_CODE")
+    @Column(name="FREQUENCY_CODE")
+    private String frequencyCode;
+    @Column(name="BILLING_CYCLE_TERM")
+    private int billingCycleTerm;
+    @Column(name="FREE_TRIAL")
+    private int freeTrial;
+    @Column(name="SETUP_FEE")
+    private int setupFee;
+    @Column(name="EXPIRE_AFTER")
+    private int expiresAfter;
 
     @CreatedBy
     @Column(name = "CRE_BY")
@@ -141,7 +153,7 @@ public class RatePlan implements Serializable {
 		this.expireAfter = expireAfter;
 	}
 
-	public double getPrice() {
+    public double getPrice() {
         return price;
     }
 
@@ -163,6 +175,46 @@ public class RatePlan implements Serializable {
 
     public void setIsActive(Integer isActive) {
         this.isActive = isActive;
+    }
+
+    public String getFrequencyCode() {
+        return frequencyCode;
+    }
+
+    public void setFrequencyCode(String frequencyCode) {
+        this.frequencyCode = frequencyCode;
+    }
+
+    public int getBillingCycleTerm() {
+        return billingCycleTerm;
+    }
+
+    public void setBillingCycleTerm(int billingCycleTerm) {
+        this.billingCycleTerm = billingCycleTerm;
+    }
+
+    public int getFreeTrial() {
+        return freeTrial;
+    }
+
+    public void setFreeTrial(int freeTrial) {
+        this.freeTrial = freeTrial;
+    }
+
+    public int getSetupFee() {
+        return setupFee;
+    }
+
+    public void setSetupFee(int setupFee) {
+        this.setupFee = setupFee;
+    }
+
+    public int getExpiresAfter() {
+        return expiresAfter;
+    }
+
+    public void setExpiresAfter(int expiresAfter) {
+        this.expiresAfter = expiresAfter;
     }
 
     public Timestamp getCreatedDate() {

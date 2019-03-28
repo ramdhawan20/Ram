@@ -36,8 +36,10 @@ public class RatePlanServiceImpl implements RatePlanService {
 	private List<RatePlanDto> convertRatePlanEntityToDto(List<RatePlan> ratePlanList) {
 		List<RatePlanDto> ratePlanDtoList = new ArrayList<RatePlanDto>();
 		for(RatePlan rplan : ratePlanList) {
+
 			RatePlanDto rpDto = new RatePlanDto();
 			rpDto.setBillEvery(rplan.getBillingFrequency());
+
 			if(rplan.getIsActive() == 0) {
 				rpDto.setIsActive("Inactive");
 			}

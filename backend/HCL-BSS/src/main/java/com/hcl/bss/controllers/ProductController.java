@@ -1,8 +1,10 @@
 package com.hcl.bss.controllers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import com.hcl.bss.domain.AppConstantMaster;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,14 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hcl.bss.domain.Product;
 import com.hcl.bss.domain.ProductTypeMaster;
@@ -106,5 +101,12 @@ public class ProductController {
 		 String msg = productService.associatePlan(productPlan);
 		 status.setMsg(msg);
 		 return new ResponseEntity<StatusDto>(status, HttpStatus.OK);
+	}
+
+
+	@ApiOperation(value = "Get Dropdown Data", response = String.class)
+	@RequestMapping(value = "/getDropDownData",method = RequestMethod.POST)
+	public List<String> dropDownData(@RequestParam String statusId) {
+		return productService.getDropDownData(statusId);
 	}
 }

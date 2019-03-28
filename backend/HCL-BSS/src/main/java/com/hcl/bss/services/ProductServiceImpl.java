@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
+import com.hcl.bss.domain.AppConstantMaster;
+import com.hcl.bss.repository.AppConstantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -37,6 +39,10 @@ import com.hcl.bss.repository.specification.ProductSpecification;
 @Service
 @Transactional
 public class ProductServiceImpl implements ProductService {
+
+	@Autowired
+	AppConstantRepository appConstantRepository;
+
 	@Autowired
 	ProductRepository productRepository;
 	@Autowired
@@ -163,7 +169,7 @@ public class ProductServiceImpl implements ProductService {
 				rpDto.setUidpk(ratePlan.getId());
 				rpDto.setRatePlanId(ratePlan.getRatePlanId());
 				rpDto.setName(ratePlan.getRatePlanDescription());
-				rpDto.setBillEvery(ratePlan.getBillingFrequency());
+				rpDto.setBillEvery(ratePlan.getFrequencyCode());
 				rpDto.setPrice(ratePlan.getPrice());
 				rpDto.setBillingCycleTerm(ratePlan.getBillingCycleTerm());
 				rpDto.setExpireAfter(ratePlan.getExpireAfter());
@@ -289,6 +295,11 @@ public class ProductServiceImpl implements ProductService {
 				 e.printStackTrace();
 			 }
 		return msg;
+	}
+
+	@Override
+	public List<String> getDropDownData(String statusId){
+		return appConstantRepository.findByDropdownCode(statusId);
 	}
 
 }

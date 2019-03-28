@@ -71,6 +71,7 @@ public class SubscriptionController {
 				subscriptionOut.setMessage("All subscription fetched successfully!");
 				subscriptionOut.setSubscriptionList(subscriptionList);
 				subscriptionOut.setTotalPages(subscriptionIn.getTotalPages());
+				subscriptionOut.setLastPage(subscriptionIn.isLastPage());
 				
 				return new ResponseEntity<>(subscriptionOut, HttpStatus.OK);
 			}else {
