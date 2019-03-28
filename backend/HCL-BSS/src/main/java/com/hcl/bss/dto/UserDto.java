@@ -3,7 +3,7 @@ package com.hcl.bss.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-public class UserDetails {
+public class UserDto {
 	private String userProfile;
 	@NotEmpty @Email
 	private String userId;
@@ -11,12 +11,8 @@ public class UserDetails {
 	private String userFirstName;
 	private String userMiddleName;
 	private String userLastName;
-	private String isLocked;
-	private boolean isLoggedIn;
-	private String message;
-	private String attribute;
-	private String newAttribute;
-	
+	private String status;
+
 	public String getUserId() {
 		return userId;
 	}
@@ -47,35 +43,11 @@ public class UserDetails {
 	public void setUserProfile(String userProfile) {
 		this.userProfile = userProfile;
 	}
-	public boolean isLoggedIn() {
-		return isLoggedIn;
+	public String getStatus() {
+		return status;
 	}
-	public void setLoggedIn(boolean isLoggedIn) {
-		this.isLoggedIn = isLoggedIn;
+	public void setStatus(String status) {
+		this.status = status;
 	}
-	public String getMessage() {
-		return message;
-	}
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	public String getIsLocked() {
-		return isLocked;
-	}
-	public void setIsLocked(String isLocked) {
-		this.isLocked = isLocked;
-	}
-	public String getAttribute() {
-		return attribute;
-	}
-	public void setAttribute(String attribute) {
-		this.attribute = attribute;
-	}
-	public String getNewAttribute() {
-		return newAttribute;
-	}
-	public void setNewAttribute(String newAttribute) {
-		this.newAttribute = newAttribute;
-	}
-	
+
 }

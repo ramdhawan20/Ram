@@ -3,20 +3,40 @@ package com.hcl.bss.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-public class UserDetails {
+public class UserInDto {
 	private String userProfile;
-	@NotEmpty @Email
+	//@NotEmpty @Email
 	private String userId;
 	//@NotEmpty
 	private String userFirstName;
 	private String userMiddleName;
 	private String userLastName;
-	private String isLocked;
-	private boolean isLoggedIn;
-	private String message;
+	private String status;
 	private String attribute;
 	private String newAttribute;
-	
+	/*For Pagination*/
+	private int pageNo;
+	private int totalPages;
+	private boolean lastPage;
+
+	public int getPageNo() {
+		return pageNo;
+	}
+	public void setPageNo(int pageNo) {
+		this.pageNo = pageNo;
+	}
+	public int getTotalPages() {
+		return totalPages;
+	}
+	public void setTotalPages(int totalPages) {
+		this.totalPages = totalPages;
+	}
+	public boolean isLastPage() {
+		return lastPage;
+	}
+	public void setLastPage(boolean lastPage) {
+		this.lastPage = lastPage;
+	}
 	public String getUserId() {
 		return userId;
 	}
@@ -47,29 +67,11 @@ public class UserDetails {
 	public void setUserProfile(String userProfile) {
 		this.userProfile = userProfile;
 	}
-	public boolean isLoggedIn() {
-		return isLoggedIn;
+	public String getStatus() {
+		return status;
 	}
-	public void setLoggedIn(boolean isLoggedIn) {
-		this.isLoggedIn = isLoggedIn;
-	}
-	public String getMessage() {
-		return message;
-	}
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	public String getIsLocked() {
-		return isLocked;
-	}
-	public void setIsLocked(String isLocked) {
-		this.isLocked = isLocked;
-	}
-	public String getAttribute() {
-		return attribute;
-	}
-	public void setAttribute(String attribute) {
-		this.attribute = attribute;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	public String getNewAttribute() {
 		return newAttribute;
@@ -77,5 +79,18 @@ public class UserDetails {
 	public void setNewAttribute(String newAttribute) {
 		this.newAttribute = newAttribute;
 	}
+	public String getAttribute() {
+		return attribute;
+	}
+	public void setAttribute(String attribute) {
+		this.attribute = attribute;
+	}
 	
+	@Override
+	public String toString() {
+		return "UserInDto [userProfile=" + userProfile + ", userId=" + userId + ", userFirstName=" + userFirstName
+				+ ", userMiddleName=" + userMiddleName + ", userLastName=" + userLastName + ", newAttribute="
+				+ newAttribute + ", pageNo=" + pageNo + "]";
+	}
+		
 }

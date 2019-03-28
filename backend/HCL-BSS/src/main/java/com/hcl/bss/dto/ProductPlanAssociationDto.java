@@ -4,7 +4,7 @@ import java.util.List;
 
 public class ProductPlanAssociationDto {
 private ProductDto product;
-private List<RatePlanProductDto> ratePlan;
+private List<RatePlanDto> ratePlan;
 
 
 public ProductPlanAssociationDto() {
@@ -12,7 +12,7 @@ public ProductPlanAssociationDto() {
 }
 
 
-public ProductPlanAssociationDto(ProductDto product, List<RatePlanProductDto> ratePlan) {
+public ProductPlanAssociationDto(ProductDto product, List<RatePlanDto> ratePlan) {
 	super();
 	this.product = product;
 	this.ratePlan = ratePlan;
@@ -29,12 +29,12 @@ public void setProduct(ProductDto product) {
 }
 
 
-public List<RatePlanProductDto> getRatePlan() {
+public List<RatePlanDto> getRatePlan() {
 	return ratePlan;
 }
 
 
-public void setRatePlan(List<RatePlanProductDto> ratePlan) {
+public void setRatePlan(List<RatePlanDto> ratePlan) {
 	this.ratePlan = ratePlan;
 }
 
