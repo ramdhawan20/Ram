@@ -12,9 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
@@ -31,7 +28,7 @@ import com.hcl.bss.domain.RatePlan;
 import com.hcl.bss.dto.ProductDataDto;
 import com.hcl.bss.dto.ProductDto;
 import com.hcl.bss.dto.ProductPlanAssociationDto;
-import com.hcl.bss.dto.RatePlanProductDto;
+import com.hcl.bss.dto.RatePlanDto;
 import com.hcl.bss.repository.ProductRepository;
 import com.hcl.bss.repository.ProductTypeMasterRepository;
 import com.hcl.bss.repository.RatePlanRepository;
@@ -133,7 +130,7 @@ public class ProductServiceImpl implements ProductService {
 		Set<RatePlan> ratePlanSet = new HashSet<RatePlan>();
 		
 		for(Product product :productEntityList) {
-			Set<RatePlanProductDto> ratePlans = new HashSet<RatePlanProductDto>();
+			Set<RatePlanDto> ratePlans = new HashSet<RatePlanDto>();
 			ProductDto prod = new ProductDto();
 			String eDate = BLANK;
 			String sDate = BLANK;
@@ -155,7 +152,7 @@ public class ProductServiceImpl implements ProductService {
 			prod.setProductExpDate(eDate);
 			ratePlanSet = product.getRatePlans();
 			for(RatePlan ratePlan : ratePlanSet) {
-				RatePlanProductDto rpDto = new RatePlanProductDto();
+				RatePlanDto rpDto = new RatePlanDto();
 				
 				if(ratePlan.getIsActive() == 0) {
 				rpDto.setIsActive("InActive");
@@ -279,7 +276,7 @@ public class ProductServiceImpl implements ProductService {
 		prod = productRepository.getOne(productId);
 		Set<RatePlan> ratePlanSet = new HashSet<RatePlan>();
 		//ratePlanSet = prod.getRatePlans();
-		List<RatePlanProductDto> rpDtoList = productPlan.getRatePlan();
+		List<RatePlanDto> rpDtoList = productPlan.getRatePlan();
 		List<Long> ids = rpDtoList.stream().map(x->x.getUidpk()).collect(Collectors.toList());
 		//ratePlan = ratePlanRepository.getOne(rpId);
 		ratePlan = ratePlanRepository.findAllById(ids);

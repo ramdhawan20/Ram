@@ -5,20 +5,15 @@ import static com.hcl.bss.constants.ApplicationConstants.DD_MM_YYYY;
 import static com.hcl.bss.constants.ApplicationConstants.EXTERNAL_FILE_PATH;
 import static com.hcl.bss.constants.ApplicationConstants.NEW_LINE_SEPARATOR;
 import static com.hcl.bss.constants.ApplicationConstants.PRODUCT_DATA;
-import static com.hcl.bss.constants.ApplicationConstants.USER_DATA;
 import static com.hcl.bss.constants.ApplicationConstants.SUBSCRIPTION_DATA;
+import static com.hcl.bss.constants.ApplicationConstants.USER_DATA;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -36,9 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
@@ -52,14 +45,13 @@ import com.hcl.bss.dto.CSVRecordDataDto;
 import com.hcl.bss.dto.MultipleRatePlanDto;
 import com.hcl.bss.dto.ProductDataDto;
 import com.hcl.bss.dto.ProductDto;
-import com.hcl.bss.dto.RatePlanProductDto;
+import com.hcl.bss.dto.RatePlanDto;
 import com.hcl.bss.dto.SubscriptionDto;
 import com.hcl.bss.dto.SubscriptionInOut;
 import com.hcl.bss.repository.CustomerRepository;
 import com.hcl.bss.repository.ProductRepository;
 import com.hcl.bss.repository.SubscriptionRepository;
 import com.hcl.bss.repository.UserRepository;
-import com.hcl.bss.repository.specification.ProductSpecification;
 @Service
 @Transactional
 public class DownloadRecordServiceImpl implements DownloadRecordService {
@@ -371,7 +363,7 @@ FileWriter fileWriter = null;
 		Set<RatePlan> ratePlanSet = new HashSet<RatePlan>();
 		
 		for(Product product :productEntityList) {
-			Set<RatePlanProductDto> ratePlans = new HashSet<RatePlanProductDto>();
+			Set<RatePlanDto> ratePlans = new HashSet<RatePlanDto>();
 			ProductDto prod = new ProductDto();
 			String eDate = BLANK;
 			String sDate = BLANK;
@@ -393,7 +385,7 @@ FileWriter fileWriter = null;
 			prod.setProductExpDate(eDate);
 			ratePlanSet = product.getRatePlans();
 			for(RatePlan ratePlan : ratePlanSet) {
-				RatePlanProductDto rpDto = new RatePlanProductDto();
+				RatePlanDto rpDto = new RatePlanDto();
 				
 				if(ratePlan.getIsActive() == 0) {
 				rpDto.setIsActive("InActive");

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.hcl.bss.domain.RatePlan;
 import com.hcl.bss.dto.ProductDto;
-import com.hcl.bss.dto.RatePlanProductDto;
+import com.hcl.bss.dto.RatePlanDto;
 import com.hcl.bss.repository.RatePlanRepository;
 @Service
 @Transactional
@@ -26,17 +26,17 @@ public class RatePlanServiceImpl implements RatePlanService {
 	}
 
 	@Override
-	public List<RatePlanProductDto> getAllPlans() {
+	public List<RatePlanDto> getAllPlans() {
 		List<RatePlan> ratePlanList = new ArrayList<>();
 		ratePlanList = ratePlanRepository.findAll();
 		return convertRatePlanEntityToDto(ratePlanList);
 		
 	}
 
-	private List<RatePlanProductDto> convertRatePlanEntityToDto(List<RatePlan> ratePlanList) {
-		List<RatePlanProductDto> ratePlanDtoList = new ArrayList<RatePlanProductDto>();
+	private List<RatePlanDto> convertRatePlanEntityToDto(List<RatePlan> ratePlanList) {
+		List<RatePlanDto> ratePlanDtoList = new ArrayList<RatePlanDto>();
 		for(RatePlan rplan : ratePlanList) {
-			RatePlanProductDto rpDto = new RatePlanProductDto();
+			RatePlanDto rpDto = new RatePlanDto();
 			rpDto.setBillEvery(rplan.getBillingFrequency());
 			if(rplan.getIsActive() == 0) {
 				rpDto.setIsActive("Inactive");
