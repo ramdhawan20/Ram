@@ -60,7 +60,7 @@ public class Customer implements Serializable {
     private Long companyId;
 
     //@OneToMany(mappedBy="customer")
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch= FetchType.EAGER)
     @JoinColumn(name="CUST_ID",referencedColumnName = "UIDPK", nullable = false)
     //@JoinColumn(name="CUST_ID", nullable = false)
     private Set<Subscription> subscriptions = new HashSet<>();

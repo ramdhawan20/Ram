@@ -1,7 +1,9 @@
 package com.hcl.bss.controllers;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.hcl.bss.domain.AppConstantMaster;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -10,14 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hcl.bss.domain.Product;
 import com.hcl.bss.domain.ProductTypeMaster;
@@ -25,6 +20,7 @@ import com.hcl.bss.dto.ErrorResponseDTO;
 import com.hcl.bss.dto.ProductDataDto;
 import com.hcl.bss.dto.ProductDto;
 import com.hcl.bss.dto.ProductPlanAssociationDto;
+import com.hcl.bss.dto.StatusDto;
 import com.hcl.bss.services.ProductService;
 
 import io.swagger.annotations.ApiOperation;
@@ -89,25 +85,27 @@ public class ProductController {
 		Pageable reqCount = new PageRequest(pageNumber, recordPerPage);
 		try {
 			productData = productService.searchProducts(product,reqCount);
+			return new ResponseEntity<ProductDataDto>(productData, HttpStatus.OK);
 
-			if(productData.getProductList() != null && productData.getProductList().size() > 0) {
-				return new ResponseEntity<ProductDataDto>(productData, HttpStatus.OK);
-			}else {
-				
-				return new ResponseEntity<ProductDataDto>(productData, HttpStatus.NOT_FOUND);
-				
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<ProductDataDto>(productData, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}	
 	@ApiOperation(value = "Associate Product with Plan", response = String.class)
-	@RequestMapping(value = "/associatePlan",method = RequestMethod.POST)
-	public String accociatePlan(@RequestBody ProductPlanAssociationDto productPlan) {
-		String msg ;
-		 msg = productService.associatePlan(productPlan);
-		return msg;
+	@RequestMapping(value = "/associatePlan",produces = { "application/json" },method = RequestMethod.POST)
+	public ResponseEntity<StatusDto> accociatePlan(@RequestBody ProductPlanAssociationDto productPlan) {
+		StatusDto status = new StatusDto();
+		 String msg = productService.associatePlan(productPlan);
+		 status.setMsg(msg);
+		 return new ResponseEntity<StatusDto>(status, HttpStatus.OK);
 
+	}
+
+
+	@ApiOperation(value = "Get Dropdown Data", response = String.class)
+	@RequestMapping(value = "/getDropDownData",method = RequestMethod.POST)
+	public List<String> dropDownData(@RequestParam String statusId) {
+		return productService.getDropDownData(statusId);
 	}
 }

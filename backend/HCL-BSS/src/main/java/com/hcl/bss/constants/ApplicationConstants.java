@@ -65,6 +65,20 @@ public final class ApplicationConstants {
     public static final String ACTIVE = "Active";
     public static final String INACTIVE = "Inactive";
        
-       
+     public enum BillingInvoicing{
+        ACTIVE(1),
+        INACTIVE(0);
+
+        private int active;
+
+        private BillingInvoicing(int number){
+            this.active  = number;
+        }
+
+        public int getActiveStatus(){
+            return this.active;
+        }
+    }
+  
 }
 

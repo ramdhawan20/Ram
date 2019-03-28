@@ -57,6 +57,7 @@ public class SubscriptionScheduler {
 
     private Long companyId;
 
+    private Product product;
     public void setCompanyId(Long companyId) {
         this.companyId = companyId;
     }
@@ -92,7 +93,8 @@ public class SubscriptionScheduler {
             else {
                 validateOrderData(order);
                 Subscription subscription = createSubscription(order);
-                boolean isAddOnProduct = order.getParentId()!=null?true:false;
+                //boolean isAddOnProduct = order.getParentId()!=null?true:false;
+                boolean isAddOnProduct = product.getParent()!=null?true:false;
                 if(!isAddOnProduct)
                     createCustomerAccount(order, subscription);
                 else
@@ -106,11 +108,6 @@ public class SubscriptionScheduler {
     private void createCustomerAccount(Order order, Subscription subscription){
         try{
             Customer customer= null;
-            /* if the order has parentId then customer exists so just return the existing customer
-             *
-             */
-
-
             //check if subscription is for the same order
             //i.e. multiple subscription for same order
             List<BatchLog> batchLogs = batchLogRepository.findByOrderNumber(order.getOrderNumber());
@@ -234,17 +231,25 @@ public class SubscriptionScheduler {
     @Transactional(rollbackOn = {Exception.class})
     private Subscription createSubscription(Order order){
         try {
+            Long productId = order.getProductId();
+            //Long parentId = null;
+            /*if(productId!=null){
+                Optional<Product> productOptional = productRepository.findById(productId);
+                Product currentProduct = productOptional.get();
+                parentId = currentProduct.getParent();
+            }*/
+            Product parentProduct = product.getParent();
             /**
-             * if the product is a base product
+             * if the product is a base product or a bundle product
              */
-            if(order.getParentId()==null && order.getBundleId()==null){
+            if(parentProduct==null){
 
                 return populateSubscription(order);
             }
             /**
              * check if the product is an addon product
              */
-            else if(order.getParentId()!=null){
+            else if(parentProduct!=null){
                 List<BatchLog> batchLogs = batchLogRepository.findByOrderNumber(order.getOrderNumber());
                 if(batchLogs!=null && batchLogs.size()>0){
                     for(BatchLog log : batchLogs) {
@@ -260,10 +265,10 @@ public class SubscriptionScheduler {
             /**
              * check if the product is bundle product
              */
-            else if(order.getBundleId()!=null){
+           /* else if(order.getBundleId()!=null){
                 //if()
                 return populateSubscription(order);
-            }
+            }*/
             return null;
         }
         catch(Exception ex){
@@ -279,6 +284,14 @@ public class SubscriptionScheduler {
             subscription.setOrderSourceCode(orderSource.getOrderSourceCode());
         else {
             updateOrder(order,"Order Source: "+order.getOrderSourceCode() + " is not configured");
+        }
+
+        boolean isBundledProduct = verifyBundleProduct(order.getProductId());
+        if(isBundledProduct){
+
+        }
+        else{
+
         }
         subscription.setAutorenew(order.getAutoRenew());
         subscription.setIsActive(1);
@@ -390,13 +403,15 @@ public class SubscriptionScheduler {
      * @param order
      */
     private boolean validateProduct(Order order){
-        Optional<Product> product = productRepository.findById(order.getProductId());
-        if(!product.isPresent()){
+        Optional<Product> productOptional = productRepository.findById(order.getProductId());
+        if(!productOptional.isPresent()){
+
             return updateOrder(order, "Product:"+ order.getProductId()+ " is not configured");
             //return updateOrder(order, "Product:", order.getProductId());
         }
-        System.out.println("Product "+ product.get().getProductDispName()+" is present");
+        System.out.println("Product "+ productOptional.get().getProductDispName()+" is present");
         // product is found
+        product = productOptional.get();
         return true;
 
     }
@@ -519,4 +534,7 @@ public class SubscriptionScheduler {
         companyId = 0L;
     }
 
+    private boolean verifyBundleProduct(Long productId){
+        return product.getIsBundleProduct()==1? true:false;
+    }
 }
