@@ -112,6 +112,6 @@ public class BatchLogServiceImpl implements BatchLogService {
 	}
 	@Override
 	public List<String> getDropDownData(String statusId) {
-			return appConstantRepository.findByDropdownCode(statusId);
+			return appConstantRepository.findByAppConstantCode(statusId);
 	}
 }
