@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import com.hcl.bss.dto.BatchRunLogDto;
+import com.hcl.bss.dto.DropDownOutDto;
 
 public interface BatchLogService {
 
@@ -21,4 +22,6 @@ public interface BatchLogService {
 	long findFailCountByDate(Date startDate, Date endDate, String string);
 	
 	long findTotalCountByDate(Date startDate, Date endDate, String string);
+
+	List<String> getDropDownData(String statusId);
 }
