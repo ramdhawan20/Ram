@@ -1,9 +1,7 @@
 package com.hcl.bss.services;
 
 import static com.hcl.bss.constants.ApplicationConstants.DD_MM_YYYY;
-import static com.hcl.bss.constants.ApplicationConstants.DATE_FORMAT_DD_MM_YYYY;
 
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -95,6 +93,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 					pageable);
 			subscriptionList = subscriptionPages.getContent();
 			subscriptionIn.setTotalPages(subscriptionPages.getTotalPages());
+			subscriptionIn.setLastPage(subscriptionPages.isLast());
 			}
 			else {
 				subscriptionList = subscriptionRepository.findAll(
@@ -102,8 +101,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			}
 
 			if (subscriptionList != null && subscriptionList.size() > 0) {
-				subscriptionIn.setTotalPages(subscriptionPages.getTotalPages());
-				subscriptionIn.setLastPage(subscriptionPages.isLast());
+				
 
 				return convertSubscriptionsToDto(subscriptionList);
 			}
