@@ -49,24 +49,36 @@ public class BatchController {
 	  
 	  Calendar cal = Calendar.getInstance();
 	  cal.add(Calendar.DATE, -1);
-	  orderDto.setFailed(batchLogService.findLastFailCount(com.hcl.bss.constants.ApplicationConstants.FAIL_STATUS));
-	  orderDto.setSuccess(batchLogService.findLastSuccessCount(cal.getTime(),com.hcl.bss.constants.ApplicationConstants.STATUS_SUCCESS));
-	  List <BatchRunLogDto> responseList = batchLogService.findLastBatchOrders(reqCount, cal.getTime(), com.hcl.bss.constants.ApplicationConstants.FAIL_STATUS);
-	  Integer pageNum = reqCount.getPageNumber()+1;
-	  Long noOfTotalRecords = batchLogService.findTotalCountByDate(cal.getTime(),null,com.hcl.bss.constants.ApplicationConstants.FAIL_STATUS);
-	  if(noOfTotalRecords>pageNum*reqCount.getPageSize())
-		  orderDto.setLastPage(false);
-	  else
-		  orderDto.setLastPage(true);
-	  Long totalPages = noOfTotalRecords/reqCount.getPageSize();
-		if(noOfTotalRecords%reqCount.getPageSize() != 0) {
-			totalPages = totalPages+1;
+	  try{
+		  orderDto.setFailed(batchLogService.findLastFailCount(com.hcl.bss.constants.ApplicationConstants.FAIL_STATUS));
+		  orderDto.setSuccess(batchLogService.findLastSuccessCount(cal.getTime(),com.hcl.bss.constants.ApplicationConstants.STATUS_SUCCESS));
+		  List <BatchRunLogDto> responseList = batchLogService.findLastBatchOrders(reqCount, cal.getTime(), com.hcl.bss.constants.ApplicationConstants.FAIL_STATUS);
+		  Integer pageNum = reqCount.getPageNumber()+1;
+		  Long noOfTotalRecords = batchLogService.findTotalCountByDate(cal.getTime(),null,com.hcl.bss.constants.ApplicationConstants.FAIL_STATUS);
+		  if(noOfTotalRecords>pageNum*reqCount.getPageSize())
+			  orderDto.setLastPage(false);
+		  else
+			  orderDto.setLastPage(true);
+		  Long totalPages = noOfTotalRecords/reqCount.getPageSize();
+		  if(noOfTotalRecords%reqCount.getPageSize() != 0) {
+			  totalPages = totalPages+1;
+		  }
+		  orderDto.setTotalPages(totalPages);
+		  orderDto.setBatchRunLogDtoList(responseList);
+		  cal.clear();
+		  if(responseList.isEmpty()) {
+			  orderDto.setMessage("There are no Failed Subscription");
+			  return new ResponseEntity<>(orderDto, HttpStatus.OK);
+	  		}else {
+	  		return new ResponseEntity<>(orderDto, HttpStatus.OK);
+	  		}
+	  }
+	  catch (Exception e) {
+			// TODO: handle exception
+			  return new ResponseEntity<BatchDto>(orderDto, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-	  orderDto.setTotalPages(totalPages);
-	  orderDto.setBatchRunLogDtoList(responseList);
-	  cal.clear();
-	  return new ResponseEntity<>(orderDto, HttpStatus.OK);
-	}
+	  
+}
 	
 	@ApiOperation(value = "Get filtered subscription batch report log", response = BatchDto.class)
 	 @RequestMapping(value = "/batchRunLog", produces = {
@@ -78,36 +90,47 @@ public class BatchController {
 	  Integer pageNumber = Integer.valueOf(filterRequest.getPageNo());
 	  @SuppressWarnings("deprecation")
       Pageable reqCount = new PageRequest(pageNumber, recordPerPage);
-	  Date startDate = null;
-	  Date endDate = null;
 	  try{
-		  if(filterRequest.getStartDate()!=null && filterRequest.getEndDate()!=null) {
-			  startDate = new SimpleDateFormat(DATE_FORMAT_DDMMYYYY).parse(filterRequest.getStartDate());
-			  endDate = new SimpleDateFormat(DATE_FORMAT_DDMMYYYY).parse(filterRequest.getEndDate());
+		  Date startDate = null;
+		  Date endDate = null;
+		  try{
+			  if(filterRequest.getStartDate()!=null && filterRequest.getEndDate()!=null) {
+				  startDate = new SimpleDateFormat(DATE_FORMAT_DDMMYYYY).parse(filterRequest.getStartDate());
+				  endDate = new SimpleDateFormat(DATE_FORMAT_DDMMYYYY).parse(filterRequest.getEndDate());
+			  }
+			  else
+				  startDate = new SimpleDateFormat(DATE_FORMAT_DDMMYYYY).parse(filterRequest.getStartDate());			 
 		  }
+		  catch (Exception e) {
+			  e.printStackTrace();
+		  }
+		  orderDto.setSuccess(batchLogService.findSuccessCountByDate(startDate, endDate, com.hcl.bss.constants.ApplicationConstants.STATUS_SUCCESS));
+		  orderDto.setFailed(batchLogService.findFailCountByDate(startDate, endDate, com.hcl.bss.constants.ApplicationConstants.FAIL_STATUS));
+		  List <BatchRunLogDto> responseList = batchLogService.findBatchOrders(reqCount, startDate, endDate,filterRequest.getStatus());
+		  Integer pageNo = reqCount.getPageNumber()+1;
+		  Long noOfTotalRecords = batchLogService.findTotalCountByDate(startDate,endDate,filterRequest.getStatus());
+		  if(noOfTotalRecords>pageNo*reqCount.getPageSize())
+			  orderDto.setLastPage(false);
 		  else
-			  startDate = new SimpleDateFormat(DATE_FORMAT_DDMMYYYY).parse(filterRequest.getStartDate());			 
+			  orderDto.setLastPage(true);
+		  Long totalPages = noOfTotalRecords/reqCount.getPageSize();
+		  if(noOfTotalRecords%reqCount.getPageSize() != 0) {
+			  totalPages = totalPages+1;
+		  }
+		  orderDto.setTotalPages(totalPages);
+		  orderDto.setBatchRunLogDtoList(responseList);
+		  if(responseList.isEmpty()) {
+			  orderDto.setMessage("No Record Found");
+			  return new ResponseEntity<>(orderDto,HttpStatus.OK);
+		  }else {
+			  return new ResponseEntity<>(orderDto,HttpStatus.OK);  
+		  }
 	  }
 	  catch (Exception e) {
-		e.printStackTrace();
-	}
-	  orderDto.setSuccess(batchLogService.findSuccessCountByDate(startDate, endDate, com.hcl.bss.constants.ApplicationConstants.STATUS_SUCCESS));
-	  orderDto.setFailed(batchLogService.findFailCountByDate(startDate, endDate, com.hcl.bss.constants.ApplicationConstants.FAIL_STATUS));
-	  List <BatchRunLogDto> responseList = batchLogService.findBatchOrders(reqCount, startDate, endDate,filterRequest.getStatus());
-	  Integer pageNo = reqCount.getPageNumber()+1;
-	  Long noOfTotalRecords = batchLogService.findTotalCountByDate(startDate,endDate,filterRequest.getStatus());
-	  if(noOfTotalRecords>pageNo*reqCount.getPageSize())
-		  orderDto.setLastPage(false);
-	  else
-		  orderDto.setLastPage(true);
-	  Long totalPages = noOfTotalRecords/reqCount.getPageSize();
-		if(noOfTotalRecords%reqCount.getPageSize() != 0) {
-			totalPages = totalPages+1;
+			// TODO: handle exception
+			  return new ResponseEntity<BatchDto>(orderDto, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-	  orderDto.setTotalPages(totalPages);
-	  orderDto.setBatchRunLogDtoList(responseList);
-	  return new ResponseEntity<>(orderDto,HttpStatus.OK);
-	 }
+	}
 	
 	@ApiOperation(value = "Get Dropdown Data", response = DropDownOutDto.class)
 	@RequestMapping(value = "/getBatchDropDown",method = RequestMethod.POST)
