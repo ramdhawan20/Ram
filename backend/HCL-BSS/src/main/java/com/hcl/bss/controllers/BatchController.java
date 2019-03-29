@@ -110,7 +110,7 @@ public class BatchController {
 	 }
 	
 	@ApiOperation(value = "Get Dropdown Data", response = DropDownOutDto.class)
-	@RequestMapping(value = "/getDropDownData",method = RequestMethod.POST)
+	@RequestMapping(value = "/getBatchDropDown",method = RequestMethod.POST)
 	public ResponseEntity<DropDownOutDto> dropDownData(@RequestParam String statusId) {
 		DropDownOutDto dropDownOutDto = new DropDownOutDto();
 		try {
