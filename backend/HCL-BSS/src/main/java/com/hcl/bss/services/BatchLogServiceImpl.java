@@ -14,11 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.hcl.bss.domain.BatchLog;
 import com.hcl.bss.repository.specification.BatchLogSpecification;
 import com.hcl.bss.dto.BatchRunLogDto;
+import com.hcl.bss.dto.DropDownOutDto;
+import com.hcl.bss.repository.AppConstantRepository;
 import com.hcl.bss.repository.BatchLogRepository;
 
 @Service
@@ -26,6 +29,9 @@ public class BatchLogServiceImpl implements BatchLogService {
 	
 	@Autowired
     private BatchLogRepository batchLogRepository;
+	
+	@Autowired
+	AppConstantRepository appConstantRepository;
 		
 	@Override
 	public List <BatchRunLogDto> findBatchOrders(Pageable reqCount,Date startDate, Date endDate, String status) {
@@ -103,5 +109,9 @@ public class BatchLogServiceImpl implements BatchLogService {
 		DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY);
 		formatedDate = dateFormat.format(dateToFormat);
 		return formatedDate;
+	}
+	@Override
+	public List<String> getDropDownData(String statusId) {
+			return appConstantRepository.findByAppConstantCode(statusId);
 	}
 }
