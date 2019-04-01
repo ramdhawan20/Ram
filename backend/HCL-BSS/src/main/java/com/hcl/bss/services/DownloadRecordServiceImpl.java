@@ -399,7 +399,7 @@ FileWriter fileWriter = null;
 				rpDto.setBillEvery(ratePlan.getBillingFrequency());
 				rpDto.setPrice(ratePlan.getPrice());
 				if(null != ratePlan.getUom()) {
-				rpDto.setUnitOfMesureId(ratePlan.getUom().getUnitOfMeasure());
+				rpDto.setUnitOfMesureId(ratePlan.getUom());
 				}
 				ratePlans.add(rpDto);
 			}

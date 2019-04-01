@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -23,6 +24,14 @@ import java.util.Set;
 @Proxy(lazy = false)
 public class RatePlan implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "uidpk_sequence")
+    @TableGenerator(
+            name = "uidpk_sequence",
+            table = "id_gen",
+            pkColumnName = "gen_name",
+            valueColumnName = "gen_val",
+            initialValue = 1000000000,
+            allocationSize = 1)
     @Column(name="UIDPK")
     private Long id;
     @Column(name="RATEPLAN_ID")
@@ -42,9 +51,13 @@ public class RatePlan implements Serializable {
 
     @Column(name="PRICE")
     private double price;
-    @OneToOne
-    @JoinColumn(name = "UNIT_OF_MEASUREID", referencedColumnName = "UNIT_OF_MEASURE")
-    private UOM uom;
+//    @OneToOne
+//    @JoinColumn(name = "UNIT_OF_MEASUREID", referencedColumnName = "UNIT_OF_MEASURE")
+//    private UOM uom;
+    
+    @Column(name="UNIT_OF_MEASUREID")
+    private String uom;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy="ratePlan")
     //@JoinColumn(name="RATE_PLAN_UID")
     private Set<SubscriptionRatePlan> subscriptionRatePlans;
@@ -69,8 +82,44 @@ public class RatePlan implements Serializable {
     @ManyToMany(mappedBy="ratePlans")
     @Cascade({org.hibernate.annotations.CascadeType.ALL}) 
 	private Set<Product> products = new HashSet<Product>();
+    
+    @Column(name="PRICING_SCHEME")
+    private String pricingScheme;
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @JoinColumn(name="RATE_PLAN_UID", referencedColumnName="UIDPK")
+    private List<RatePlanVolume> ratePlanVolume;
+    
+    @ManyToOne(fetch=FetchType.LAZY,cascade={CascadeType.PERSIST,CascadeType.REMOVE})
+    @JoinTable(name = "TB_RATEPLAN_CURRENCY_MAPPING", joinColumns = { @JoinColumn(name = "RATEPLAN_UID",referencedColumnName = "UIDPK")}, inverseJoinColumns = { @JoinColumn(name = "CURRENCY_CODE",referencedColumnName = "CURRENCY_CODE") })
+    private Currency currency;
+    
+    public List<RatePlanVolume> getRatePlanVolume() {
+		return ratePlanVolume;
+	}
 
-    public Set<SubscriptionRatePlan> getSubscriptionRatePlans() {
+	public void setRatePlanVolume(List<RatePlanVolume> ratePlanVolume) {
+		this.ratePlanVolume = ratePlanVolume;
+	}
+
+	public Currency getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
+	}
+
+	
+    public String getPricingScheme() {
+		return pricingScheme;
+	}
+
+	public void setPricingScheme(String pricingScheme) {
+		this.pricingScheme = pricingScheme;
+	}
+
+	public Set<SubscriptionRatePlan> getSubscriptionRatePlans() {
         return subscriptionRatePlans;
     }
 
@@ -150,14 +199,14 @@ public class RatePlan implements Serializable {
     public void setPrice(double price) {
         this.price = price;
     }
-
-    public UOM getUom() {
-        return uom;
-    }
-
-    public void setUom(UOM uom) {
-        this.uom = uom;
-    }
+//
+//    public UOM getUom() {
+//        return uom;
+//    }
+//
+//    public void setUom(UOM uom) {
+//        this.uom = uom;
+//    }
 
     public Integer getIsActive() {
         return isActive;
@@ -207,6 +256,15 @@ public class RatePlan implements Serializable {
 
 	public void setProducts(Set<Product> products) {
 		this.products = products;
+	}
+	
+	
+	public String getUom() {
+		return uom;
+	}
+
+	public void setUom(String uom) {
+		this.uom = uom;
 	}
 
 	@Override
