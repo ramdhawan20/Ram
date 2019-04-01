@@ -54,6 +54,7 @@ public class ProductDto implements java.io.Serializable {
 	private String pageNo;
 	private Set<RatePlanDto> ratePlans;
 	private boolean isAssociatedWithPlan;
+	private boolean transactionFlag;
 	public ProductDto() {
 		super();
 	}
@@ -76,6 +77,18 @@ public class ProductDto implements java.io.Serializable {
 		this.productDescription = productDescription;
 
 	}
+	
+	public boolean isTransactionFlag() {
+		return transactionFlag;
+	}
+
+
+
+	public void setTransactionFlag(boolean transactionFlag) {
+		this.transactionFlag = transactionFlag;
+	}
+
+
 
 	public String getProductTypeCode() {
 		return productTypeCode;

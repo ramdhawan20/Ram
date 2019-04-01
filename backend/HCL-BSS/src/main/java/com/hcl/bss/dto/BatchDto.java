@@ -9,6 +9,13 @@ public class BatchDto {
 	private boolean lastPage;
 	private long totalPages;
 	private List<BatchRunLogDto> batchRunLogDtoList;
+	private String message;
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
 	public List<BatchRunLogDto> getBatchRunLogDtoList() {
 		return batchRunLogDtoList;
 	}

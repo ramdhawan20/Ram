@@ -1,10 +1,8 @@
 package com.hcl.bss.controllers;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
-import com.hcl.bss.domain.AppConstantMaster;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,10 +16,12 @@ import org.springframework.web.bind.annotation.*;
 
 import com.hcl.bss.domain.Product;
 import com.hcl.bss.domain.ProductTypeMaster;
+import com.hcl.bss.dto.DropDownOutDto;
 import com.hcl.bss.dto.ErrorResponseDTO;
 import com.hcl.bss.dto.ProductDataDto;
 import com.hcl.bss.dto.ProductDto;
 import com.hcl.bss.dto.ProductPlanAssociationDto;
+import com.hcl.bss.dto.ResponseDto;
 import com.hcl.bss.dto.StatusDto;
 import com.hcl.bss.services.ProductService;
 
@@ -105,8 +105,47 @@ public class ProductController {
 
 
 	@ApiOperation(value = "Get Dropdown Data", response = String.class)
-	@RequestMapping(value = "/getDropDownData",method = RequestMethod.POST)
-	public List<String> dropDownData(@RequestParam String statusId) {
-		return productService.getDropDownData(statusId);
+	@RequestMapping(value = "/getProductDropDown",method = RequestMethod.POST)
+	public ResponseEntity<DropDownOutDto> dropDownData(@RequestParam String statusId) {
+		DropDownOutDto dropDownOutDto = new DropDownOutDto();
+		try {
+			if(productService.getDropDownData(statusId)!=null && !(productService.getDropDownData(statusId).isEmpty())) {
+				dropDownOutDto.setMessage("Drop Down Fetched Successfully");
+				dropDownOutDto.setResponseCode(HttpStatus.OK.value());
+				dropDownOutDto.setSuccess(true);
+				dropDownOutDto.setDropDownList(productService.getDropDownData(statusId));
+				return new ResponseEntity<DropDownOutDto>(dropDownOutDto,HttpStatus.OK);
+			}		
+			else {
+				dropDownOutDto.setMessage("Drop Down values not found in Database");
+				dropDownOutDto.setResponseCode(HttpStatus.NOT_FOUND.value());
+				dropDownOutDto.setSuccess(false);
+				return new ResponseEntity<DropDownOutDto>(dropDownOutDto,HttpStatus.NOT_FOUND);
+			}
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			dropDownOutDto.setMessage(e.getMessage());
+			dropDownOutDto.setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			dropDownOutDto.setSuccess(false);
+			return new ResponseEntity<DropDownOutDto>(dropDownOutDto,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@ApiOperation(value="Update Product",response = ResponseDto.class)
+	@RequestMapping(value="/updateProduct", produces= {"application/json"},method=RequestMethod.POST)
+	public ResponseEntity<ResponseDto> updateProduct(@RequestBody ProductDto product){
+		ResponseDto responseDto = new ResponseDto();
+		try{
+			responseDto = productService.updateProduct(product);
+			return new ResponseEntity<>(responseDto,HttpStatus.OK);
+		}
+		catch (Exception e) {
+			
+			responseDto.setResponseCode(404);
+			responseDto.setResponseStatus("Fail");
+			responseDto.setMessage("Product could not be update");
+			return new ResponseEntity<>(responseDto,HttpStatus.INTERNAL_SERVER_ERROR);
+ 		}
 	}
 }
