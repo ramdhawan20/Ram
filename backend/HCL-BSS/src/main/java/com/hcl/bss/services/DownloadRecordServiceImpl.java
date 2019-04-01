@@ -215,7 +215,7 @@ FileWriter fileWriter = null;
 			subscriptionDto.setCustomerName(customer.getFirstName());
 			subscriptionDto.setEmail(customer.getEmail());
 			
-			for(SubscriptionRatePlan susRatePlan : subscription.getSubscriptionRatePlan()) {
+			for(SubscriptionRatePlan susRatePlan : subscription.getSubscriptionRatePlans()) {
 				multipleRatePlanDto = new MultipleRatePlanDto();
 				ratePlanList = new ArrayList<>();
 				
@@ -399,7 +399,7 @@ FileWriter fileWriter = null;
 				rpDto.setBillEvery(ratePlan.getBillingFrequency());
 				rpDto.setPrice(ratePlan.getPrice());
 				if(null != ratePlan.getUom()) {
-				rpDto.setUnitOfMesureId(ratePlan.getUom());
+				rpDto.setUnitOfMesureId(ratePlan.getUom().getUnitOfMeasure());
 				}
 				ratePlans.add(rpDto);
 			}

@@ -2,11 +2,8 @@ package com.hcl.bss.domain;
 
 import com.hcl.bss.repository.generator.LoggedUserGenerator;
 import org.hibernate.annotations.GeneratorType;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Proxy;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
@@ -59,10 +56,8 @@ public class Customer implements Serializable {
     @Column(name="COMP_ID")
     private Long companyId;
 
-    //@OneToMany(mappedBy="customer")
-    @OneToMany(cascade = CascadeType.ALL, fetch= FetchType.EAGER)
-    @JoinColumn(name="CUST_ID",referencedColumnName = "UIDPK", nullable = false)
-    //@JoinColumn(name="CUST_ID", nullable = false)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name="CUST_ID", nullable = false)
     private Set<Subscription> subscriptions = new HashSet<>();
 
 
@@ -83,8 +78,12 @@ public class Customer implements Serializable {
         return subscriptions;
     }
 
-    public void setSubscriptions(Subscription subscription) {
+    /*public void setSubscriptions(Subscription subscription) {
         this.subscriptions.add(subscription);
+    }*/
+
+    public void setSubscriptions(Set<Subscription> subscriptions) {
+            this.subscriptions = subscriptions;
     }
 
     public Long getId() {

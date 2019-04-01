@@ -85,5 +85,27 @@ public final class ApplicationConstants {
         }
     }
 
+    public enum Autorenew{
+        AUTORENEW_ON(1),
+        AUTORENEW_OFF(0);
+
+        private int autoRenewStatus;
+
+        private Autorenew(int autoRenewStatus){
+            this.autoRenewStatus = autoRenewStatus;
+        }
+        public int getAutoRenewStatus(){
+            return this.autoRenewStatus;
+        }
+    }
+
+    public enum TransactionReasonCode{
+        NEW,
+        RENEWAL,
+        CHANGE_IN_PRICE,
+        CHANGE_IN_QUANTITY,
+        EXPIRED_WITH_RENEWAL,
+        EXPIRED;
+    }
 }
 

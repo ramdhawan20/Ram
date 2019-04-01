@@ -51,20 +51,14 @@ public class RatePlan implements Serializable {
 
     @Column(name="PRICE")
     private double price;
-//    @OneToOne
-//    @JoinColumn(name = "UNIT_OF_MEASUREID", referencedColumnName = "UNIT_OF_MEASURE")
-//    private UOM uom;
-    
-    @Column(name="UNIT_OF_MEASUREID")
-    private String uom;
-    
+    @OneToOne
+    @JoinColumn(name = "UNIT_OF_MEASUREID", referencedColumnName = "UNIT_OF_MEASURE")
+    private UOM uom;
     @OneToMany(cascade = CascadeType.ALL, mappedBy="ratePlan")
     //@JoinColumn(name="RATE_PLAN_UID")
     private Set<SubscriptionRatePlan> subscriptionRatePlans;
     @Column(name="IS_ACTIVE")
     private Integer isActive;
-
-  
 
     @CreatedBy
     @Column(name = "CRE_BY")
@@ -78,22 +72,22 @@ public class RatePlan implements Serializable {
     @LastModifiedDate
     @Column(name = "UPD_DT")
     private Timestamp updatedDate;
-    
+
     @ManyToMany(mappedBy="ratePlans")
-    @Cascade({org.hibernate.annotations.CascadeType.ALL}) 
+    @Cascade({org.hibernate.annotations.CascadeType.ALL})
 	private Set<Product> products = new HashSet<Product>();
-    
+
     @Column(name="PRICING_SCHEME")
     private String pricingScheme;
-    
+
     @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     @JoinColumn(name="RATE_PLAN_UID", referencedColumnName="UIDPK")
     private List<RatePlanVolume> ratePlanVolume;
-    
+
     @ManyToOne(fetch=FetchType.LAZY,cascade={CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinTable(name = "TB_RATEPLAN_CURRENCY_MAPPING", joinColumns = { @JoinColumn(name = "RATEPLAN_UID",referencedColumnName = "UIDPK")}, inverseJoinColumns = { @JoinColumn(name = "CURRENCY_CODE",referencedColumnName = "CURRENCY_CODE") })
     private Currency currency;
-    
+
     public List<RatePlanVolume> getRatePlanVolume() {
 		return ratePlanVolume;
 	}
@@ -110,7 +104,7 @@ public class RatePlan implements Serializable {
 		this.currency = currency;
 	}
 
-	
+
     public String getPricingScheme() {
 		return pricingScheme;
 	}
@@ -159,7 +153,7 @@ public class RatePlan implements Serializable {
 		this.billingFrequency = billingFrequency;
 	}
 
-	
+
     public BigDecimal getBillingCycleTerm() {
 		return billingCycleTerm;
 	}
@@ -199,14 +193,14 @@ public class RatePlan implements Serializable {
     public void setPrice(double price) {
         this.price = price;
     }
-//
-//    public UOM getUom() {
-//        return uom;
-//    }
-//
-//    public void setUom(UOM uom) {
-//        this.uom = uom;
-//    }
+
+    public UOM getUom() {
+        return uom;
+    }
+
+    public void setUom(UOM uom) {
+        this.uom = uom;
+    }
 
     public Integer getIsActive() {
         return isActive;
@@ -216,7 +210,7 @@ public class RatePlan implements Serializable {
         this.isActive = isActive;
     }
 
-   
+
 
     public Timestamp getCreatedDate() {
         return createdDate;
@@ -257,15 +251,6 @@ public class RatePlan implements Serializable {
 	public void setProducts(Set<Product> products) {
 		this.products = products;
 	}
-	
-	
-	public String getUom() {
-		return uom;
-	}
-
-	public void setUom(String uom) {
-		this.uom = uom;
-	}
 
 	@Override
 	public String toString() {
@@ -274,5 +259,5 @@ public class RatePlan implements Serializable {
 				+ ", createdDate=" + createdDate + ", updatedBy=" + updatedBy + ", updatedDate=" + updatedDate
 				+ ", products=" + products + "]";
 	}
-    
+
 }
