@@ -38,6 +38,9 @@ public class Subscription implements Serializable {
 
     @Column(name="CUST_ID",insertable= false, updatable= false)
     private Long customerId;
+    /*@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="CUST_ID",nullable = false,updatable = false,insertable = true)
+    private Customer customer;*/
 
     @Column(name="ACTIVATION_DT")
     private Timestamp activationDate;
@@ -48,9 +51,9 @@ public class Subscription implements Serializable {
     @Column(name="ORDER_SOURCE_CODE")
     private String orderSourceCode;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "SUBSCRIPTION_UID", referencedColumnName = "UIDPK",nullable = false)
+    @JoinColumn(name = "SUBSCRIPTION_UID", referencedColumnName = "UIDPK", nullable = false)
     //@OneToMany(mappedBy = "subscription", fetch = FetchType.EAGER)
-    private Set<SubscriptionRatePlan> subscriptionRatePlan = new HashSet<>();
+    private Set<SubscriptionRatePlan> subscriptionRatePlans = new HashSet<>();
     @Column(name="SUBSCRIPTION_START_DT")
     private Timestamp subscriptionStartDate;
     @Column(name="SUBSCRIPTION_END_DT")
@@ -67,6 +70,10 @@ public class Subscription implements Serializable {
     @Column(name="NEXT_BILL_DT")
     private Date nextBillingDate;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "PREVIOUS_SUBSCRIPTION_ID", referencedColumnName = "SUBSCRIPTION_ID", nullable = true)
+    private Subscription previousSubscriptionId;
+
     @GeneratorType(type = LoggedUserGenerator.class)
     @Column(name = "CRE_BY")
     private String createdBy;
@@ -79,20 +86,6 @@ public class Subscription implements Serializable {
     @LastModifiedDate
     @Column(name = "UPD_DT")
     private Timestamp updatedDate;
-
-
-    //@ManyToOne(cascade = CascadeType.ALL)
-/*    @JoinColumn(name="CUST_ID")
-   //@JoinColumn(name="UIDPK")
-    private Customer customer;
-    */
-
-/*    public Customer getCustomer() {
-		return customer;
-	}
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}*/
 
     public Long getId() {
         return id;
@@ -134,12 +127,12 @@ public class Subscription implements Serializable {
         this.orderSourceCode = orderSourceCode;
     }
 
-    public Set<SubscriptionRatePlan> getSubscriptionRatePlan() {
-        return subscriptionRatePlan;
+    public Set<SubscriptionRatePlan> getSubscriptionRatePlans() {
+        return subscriptionRatePlans;
     }
 
-    public void setSubscriptionRatePlan(SubscriptionRatePlan subscriptionRatePlan) {
-        this.subscriptionRatePlan.add(subscriptionRatePlan);
+    public void setSubscriptionRatePlans(Set<SubscriptionRatePlan> subscriptionRatePlans) {
+        this.subscriptionRatePlans = subscriptionRatePlans;
     }
 
     public Timestamp getSubscriptionStartDate() {
@@ -215,9 +208,9 @@ public class Subscription implements Serializable {
         this.updatedBy = updatedBy;
     }
 
-    public void setSubscriptionRatePlan(Set<SubscriptionRatePlan> subscriptionRatePlan) {
+/*    public void setSubscriptionRatePlan(Set<SubscriptionRatePlan> subscriptionRatePlan) {
         this.subscriptionRatePlan = subscriptionRatePlan;
-    }
+    }*/
 
     public Long getCustomerId() {
         return customerId;
@@ -225,6 +218,16 @@ public class Subscription implements Serializable {
 
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
+    }
+
+
+
+    public Subscription getPreviousSubscriptionId() {
+        return previousSubscriptionId;
+    }
+
+    public void setPreviousSubscriptionId(Subscription previousSubscriptionId) {
+        this.previousSubscriptionId = previousSubscriptionId;
     }
 
     public Date getLastBillingDate() {

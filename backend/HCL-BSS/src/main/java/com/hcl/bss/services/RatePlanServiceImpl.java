@@ -67,7 +67,7 @@ public class RatePlanServiceImpl implements RatePlanService {
 			rpDto.setName(rplan.getRatePlanDescription());
 			rpDto.setBillEvery(rplan.getBillingCycleTerm().toString()+rplan.getBillingFrequency());
 			rpDto.setPricingScheme(rplan.getPricingScheme());
-			rpDto.setUnitOfMesureId(rplan.getUom());
+			//rpDto.setUnitOfMesureId(rplan.getUom());
 			rpDto.setPrice(rplan.getPrice());
 			if(rplan.getIsActive() == 0) {
 				rpDto.setIsActive("Inactive");
@@ -102,7 +102,7 @@ private RatePlan convertRatePlanDtoToEntity(RatePlanDto ratePlanDto) {
 			ratePlan.setRatePlanVolume(convertRatePlanVolumeDtoToEntity(ratePlanDto.getRatePlanVolumeDtoList(), ratePlan));
 		}
 		
-		ratePlan.setUom(ratePlanDto.getUnitOfMesureId());
+		//ratePlan.setUom(ratePlanDto.getUnitOfMesureId());
 		
 		if(ratePlanDto.getIsActive().equals("INACTIVE"))
 			ratePlan.setIsActive(0);

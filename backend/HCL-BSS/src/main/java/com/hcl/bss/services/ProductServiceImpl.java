@@ -195,7 +195,7 @@ public class ProductServiceImpl implements ProductService {
 				rpDto.setFreeTrail(ratePlan.getFreeTrail());
 				rpDto.setSetUpFee(ratePlan.getSetUpFee());
 				if(null != ratePlan.getUom()) {
-				rpDto.setUnitOfMesureId(ratePlan.getUom());
+				rpDto.setUnitOfMesureId(ratePlan.getUom().getUnitOfMeasure());
 				}
 				ratePlans.add(rpDto);
 			}

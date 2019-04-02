@@ -2,6 +2,7 @@ package com.hcl.bss.schedulers;
 
 import com.hcl.bss.domain.*;
 import com.hcl.bss.repository.*;
+import com.hcl.bss.util.SubscriptionUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Component;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.*;
 
 import static com.hcl.bss.constants.ApplicationConstants.*;
@@ -50,7 +53,10 @@ public class SubscriptionScheduler {
     private RatePlanVolumeRepository ratePlanVolumeRepository;
 
     @Autowired
-    private ErrorLogRepository errorLogRepository;
+    private SubscriptionUtility subscriptionUtility;
+/*
+    @Autowired
+    private ErrorLogRepository errorLogRepository;*/
 
     @Autowired
     private BatchLogRepository batchLogRepository;
@@ -122,7 +128,10 @@ public class SubscriptionScheduler {
                     Subscription sub = subscriptionRepository.findBySubscriptionId(log.getSubscriptionId());
                     if (sub != null && subscription!=null) {
                         customer = customerRepository.findBySubscriptions(sub);
-                        customer.setSubscriptions(subscription);
+                        Set<Subscription> subscriptions = new HashSet<>();
+                        subscriptions.add(subscription);
+                        customer.setSubscriptions(subscriptions);
+                        //subscription.setCustomer(customer);
                         break;
                     }
                 }
@@ -145,7 +154,9 @@ public class SubscriptionScheduler {
                 customer.setPhone(order.getBillToPhone());
                 customer.setBillTo(billToId);
                 customer.setSoldTo(soldToId);
-                customer.setSubscriptions(subscription);
+                Set<Subscription> subscriptions = new HashSet<>();
+                subscriptions.add(subscription);
+                customer.setSubscriptions(subscriptions);
             }
             if(!FAIL_STATUS.equals(order.getStatus())){
                 customerRepository.save(customer);
@@ -155,7 +166,8 @@ public class SubscriptionScheduler {
             }
         }
         catch(Exception ex){
-            updateErrLog("Customer could not be created : "+ex.getMessage());
+            SubscriptionUtility.updateErrLog("Customer could not be created : "+ex.getMessage(), orderErrorsRepository);
+            ex.printStackTrace();
         }
     }
 
@@ -174,7 +186,7 @@ public class SubscriptionScheduler {
 
         }
         catch(Exception ex){
-            updateErrLog("Company could not be created : "+ex.getMessage());
+            SubscriptionUtility.updateErrLog("Company could not be created : "+ex.getMessage(),orderErrorsRepository);
         }
     }
 
@@ -257,7 +269,9 @@ public class SubscriptionScheduler {
                             continue;
                         Subscription sub = subscriptionRepository.findBySubscriptionId(log.getSubscriptionId());
                         SubscriptionRatePlan subscriptionRatePlan = createSubscriptionRatePlan(order);
-                        sub.setSubscriptionRatePlan(subscriptionRatePlan);
+                        Set<SubscriptionRatePlan> subRatePlans = new HashSet<>();
+                        subRatePlans.add(subscriptionRatePlan);
+                        sub.setSubscriptionRatePlans(subRatePlans);
                         return sub;
                     }
                 }
@@ -293,6 +307,14 @@ public class SubscriptionScheduler {
         else{
 
         }
+
+        //creating subscription rate plan
+        Set<SubscriptionRatePlan> subscriptionRatePlans = new HashSet<>();
+        SubscriptionRatePlan subRatePlan = createSubscriptionRatePlan(order);
+        subscriptionRatePlans.add(subRatePlan);
+        subscription.setSubscriptionRatePlans(subscriptionRatePlans);
+
+
         subscription.setAutorenew(order.getAutoRenew());
         subscription.setIsActive(1);
         // to be discussed --where to get this info from
@@ -306,31 +328,62 @@ public class SubscriptionScheduler {
         Integer billCycle = order.getBillingCycle();
         String billFrequency = order.getBillingFrequency();
 
+
+        BigDecimal expireAfter = subRatePlan.getRatePlan().getExpireAfter();
+        String frequencyCode = subRatePlan.getRatePlan().getBillingFrequency();
+        BigDecimal billingCycleTerm = subRatePlan.getRatePlan().getBillingCycleTerm();
+        /*int expireAfter = subRatePlan.getRatePlan().getExpireAfter();
+        String frequencyCode = subRatePlan.getRatePlan().getFrequencyCode();
+        int billingCycleTerm = subRatePlan.getRatePlan().getBillingCycleTerm();*/
+        int subEndTerm = expireAfter.intValue()*billingCycleTerm.intValue();
+
         // check for evergreen subscription
         if(billCycle==null || billFrequency == null || "".equals(billFrequency)){
-            cal.set(9999,11,31);
-            subscription.setSubscriptionEndDate(new Timestamp(cal.getTimeInMillis()));
+            //cal.set(9999,11,31);
+            //subscription.setSubscriptionEndDate(new Timestamp(cal.getTimeInMillis()));
         }
         else{
+            LocalDate subscriptionEndDate = null;
+            LocalDate currentDate = LocalDate.now();
+            LocalDate nextBillingDate = null;
             switch(billFrequency){
                 case "WEEK":
-                    cal.add(Calendar.WEEK_OF_YEAR, billCycle);
+                    //cal.add(Calendar.WEEK_OF_YEAR, billCycle);
+                    nextBillingDate = currentDate.plusWeeks(billingCycleTerm.longValue());
+                    //nextBillingDate = currentDate.plusWeeks(billingCycleTerm);
+                    subscriptionEndDate = currentDate.plusWeeks(subEndTerm);
                     break;
                 case "MONTH":
-                    cal.add(Calendar.MONTH, billCycle);
+                    //cal.add(Calendar.MONTH, billCycle);
+                    nextBillingDate = currentDate.plusMonths(billingCycleTerm.longValue());
+                    //nextBillingDate = currentDate.plusMonths(billingCycleTerm);
+                    subscriptionEndDate = currentDate.plusMonths(subEndTerm);
                     break;
                 case "YEAR":
-                    cal.add(Calendar.YEAR, billCycle);
+                    //cal.add(Calendar.YEAR, billCycle);
+                    nextBillingDate = currentDate.plusYears(billingCycleTerm.longValue());
+                    //nextBillingDate = currentDate.plusYears(billingCycleTerm);
+                    subscriptionEndDate = currentDate.plusYears(subEndTerm);
                     break;
             }
-            subscription.setSubscriptionEndDate(new Timestamp(cal.getTimeInMillis()));
+            subscription.setSubscriptionEndDate(Timestamp.valueOf(subscriptionEndDate.atStartOfDay()));
+            subscription.setNextBillingDate(Timestamp.valueOf(nextBillingDate.atStartOfDay()));
+            //if(expireAfter.intValue() == 9999){
+            if(expireAfter.intValue() == 9999){
+                cal.set(9999,11,31);
+                subscription.setSubscriptionEndDate(new Timestamp(cal.getTimeInMillis()));
+            }
         }
 
         subscription.setActivationDate(new Timestamp(System.currentTimeMillis()));
-        String subscriptionId = generateSubscriptionId(order);
-        subscription.setSubscriptionId(subscriptionId);
-        SubscriptionRatePlan subscriptionRatePlan = createSubscriptionRatePlan(order);
-        subscription.setSubscriptionRatePlan(subscriptionRatePlan);
+
+        String subscriptionId =subscriptionUtility.generateSubscriptionId(order);
+        if(subscriptionId!=null)
+            subscription.setSubscriptionId(subscriptionId);
+
+        //SubscriptionRatePlan subscriptionRatePlan = createSubscriptionRatePlan(order);
+        //subscription.setSubscriptionRatePlan(subscriptionRatePlan);
+
         return subscription;
     }
 
@@ -497,34 +550,6 @@ public class SubscriptionScheduler {
         return true;
     }
 
-    private String generateSubscriptionId(Order order){
-        try{
-            Product product = entityManager.find(Product.class,order.getProductId());
-            String sku = product.getSku();
-            RatePlan ratePlan = entityManager.find(RatePlan.class,order.getRatePlanId());
-            String ratePlanName = ratePlan.getRatePlanId();
-            Calendar cal = Calendar.getInstance();
-            int month = cal.get(Calendar.MONTH);
-            int year = cal.get(Calendar.YEAR);
-            StringBuilder builder = new StringBuilder();
-            int sequenceNumber = subscriptionRepository.getSubsSeq();
-            builder.append(sku).append(ratePlanName).append(month).append(year).append(sequenceNumber);
-            return builder.toString();
-        }
-        catch(Exception ex){
-            updateErrLog("Exception occurred while generating subscriptionID:"+ ex.getMessage());
-            return null;
-        }
-    }
-
-    private void updateErrLog(String msg){
-        ErrorLog errLog = new ErrorLog();
-        errLog.setDescription(msg);
-        errLog.setOperation("To be setup");
-        errLog.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-        errLog.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
-        errorLogRepository.save(errLog);
-    }
     /**
      * This method will reset the ids for next record processing
      */

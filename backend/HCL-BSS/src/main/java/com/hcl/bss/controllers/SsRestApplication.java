@@ -1,5 +1,6 @@
 package com.hcl.bss.controllers;
 
+import com.hcl.bss.schedulers.BillingInvoiceScheduler;
 import com.hcl.bss.schedulers.SubscriptionScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -23,6 +24,11 @@ public class SsRestApplication implements CommandLineRunner {
 	@Autowired
 	SubscriptionScheduler subscriptionScheduler;
 
+/*	@Autowired
+	SubscriptionRenewalScheduler subscriptionRenewalScheduler;*/
+
+	/*@Autowired
+	BillingInvoiceScheduler billingInvoiceScheduler;*/
 
 	public static void main(String[] args) {
 		SpringApplication.run(SsRestApplication.class, args);
@@ -31,7 +37,9 @@ public class SsRestApplication implements CommandLineRunner {
 	/*TO run SubscriptionBatch*/
 	@Override
 	public void run(String... arg0) throws IOException, URISyntaxException {
-		subscriptionScheduler.runSubscriptionBatch();
+		//subscriptionScheduler.runSubscriptionBatch();
+		//billingInvoiceScheduler.updateBillingInvoice();
+		//subscriptionRenewalScheduler.runAutorenewSubscriptionsScheduler();
 	}
 
 }
