@@ -12,7 +12,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.hcl.bss.constants.ApplicationConstants.STATUS_SUCCESS;
 
@@ -62,14 +65,24 @@ public class SubscriptionUtility {
     public String generateSubscriptionIdForRenewal(Subscription subscription){
         try{
             Set<SubscriptionRatePlan> subRatePlans = subscription.getSubscriptionRatePlans();
-            SubscriptionRatePlan subRatePlan = subRatePlans.stream().findFirst().get();
-            Set<Product> products = subRatePlan.getRatePlan().getProducts();
-            Product product = products.stream()
-                                    .filter(prod ->prod.getParent()==null && prod.getUidpk()==subRatePlan.getProduct())
-                                    .findFirst()
-                                    .get();
-            String sku = product.getSku();
-            String ratePlanName= subRatePlan.getRatePlan().getRatePlanId();
+            List<Long> products = subRatePlans.stream()
+                                                    .map(sRatePlan->sRatePlan.getRatePlan().getProducts())
+                                                    .flatMap(prods -> prods.stream())
+                                                    .filter(prod->prod.getParent()==null).map(p->p.getUidpk())
+                                                    .collect(Collectors.toList());
+            //Set<Product> products = subRatePlan.getRatePlan().getProducts();
+
+//            Product product = products.stream().findFirst().get();
+            String sku="";
+            String ratePlanName="";
+            for(SubscriptionRatePlan subRatePlan: subRatePlans){
+                if(products.contains(subRatePlan.getProduct())){
+                //if(subRatePlan.getProduct().equals(product.getUidpk())){
+                    ratePlanName=subRatePlan.getRatePlan().getRatePlanId();
+                    sku= subRatePlan.getRatePlan().getProducts().stream().filter(pro->pro.getUidpk().equals(subRatePlan.getProduct())).map(pro->pro.getSku()).findFirst().get();
+                    break;
+                }
+            }
             Calendar cal = Calendar.getInstance();
             int month = cal.get(Calendar.MONTH);
             int year = cal.get(Calendar.YEAR);

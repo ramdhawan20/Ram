@@ -73,7 +73,7 @@ public class RatePlan implements Serializable {
     @Column(name = "UPD_DT")
     private Timestamp updatedDate;
 
-    @ManyToMany(mappedBy="ratePlans")
+    @ManyToMany(mappedBy="ratePlans", fetch = FetchType.EAGER)
     @Cascade({org.hibernate.annotations.CascadeType.ALL})
 	private Set<Product> products = new HashSet<Product>();
 
