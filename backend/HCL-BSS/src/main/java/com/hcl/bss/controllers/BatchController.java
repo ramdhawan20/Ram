@@ -33,7 +33,7 @@ public class BatchController {
 	@Autowired
 	BatchLogService batchLogService;
 	
-	@Value("${default.recordPerPage:5}")
+	@Value("${default.recordPerPage:10}")
 	Integer recordPerPage;
 	
 	@ApiOperation(value = "Get last subscription batch report error log", response = BatchDto.class)

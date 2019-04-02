@@ -12,4 +12,6 @@ public interface RatePlanService {
 	ResponseDto addRatePlan(RatePlanDto ratePlanDto);
 	List<RatePlanDto> getAllPlans();
 	List<String> getCurrency();
+	Iterable<UOM> getUom();
+	List<String> getDropDownData(String statusId);
 }
