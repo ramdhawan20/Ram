@@ -44,7 +44,8 @@ public final class ApplicationConstants {
     public static final String DUPLICATE_SKU_DB = " SKU in Database exists: ";
     public static final String DEFAULT_EXP_DATE = "31/12/9999";
     public static final String PRODUCT_TYPE_CODE_NOT_DEFIENED_IN_MASTER = "ProductTypeCode Value is not defiened in ProductTypeMaster DB Constraint Violation: ";
-
+    public static final boolean TRANSACTION_FLAG_YES=true;
+    public static final boolean TRANSACTION_FLAG_NO=false;
     //subscription batch
     public static final String PASS_STATUS = "Pass";
     public static final String FAIL_STATUS = "Fail";
@@ -84,5 +85,27 @@ public final class ApplicationConstants {
         }
     }
 
+    public enum Autorenew{
+        AUTORENEW_ON(1),
+        AUTORENEW_OFF(0);
+
+        private int autoRenewStatus;
+
+        private Autorenew(int autoRenewStatus){
+            this.autoRenewStatus = autoRenewStatus;
+        }
+        public int getAutoRenewStatus(){
+            return this.autoRenewStatus;
+        }
+    }
+
+    public enum TransactionReasonCode{
+        NEW,
+        RENEWAL,
+        CHANGE_IN_PRICE,
+        CHANGE_IN_QUANTITY,
+        EXPIRED_WITH_RENEWAL,
+        EXPIRED;
+    }
 }
 

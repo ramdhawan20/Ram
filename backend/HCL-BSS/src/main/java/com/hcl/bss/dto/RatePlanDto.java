@@ -19,7 +19,7 @@ private BigDecimal freeTrail;
 private BigDecimal setUpFee;
 private BigDecimal expireAfter;
 private String pricingScheme;
-private Long currencyUid;
+private String currencyCode;
 private List<RatePlanVolumeDto> ratePlanVolumeDtoList;
 public Long getUidpk() {
 	return uidpk;
@@ -93,12 +93,11 @@ public String getPricingScheme() {
 public void setPricingScheme(String pricingScheme) {
 	this.pricingScheme = pricingScheme;
 }
-public Long getCurrencyUid()
-{
-	return currencyUid;
+public String getCurrencyCode() {
+	return currencyCode;
 }
-public void setCurrencyUid(Long currencyUid) {
-	this.currencyUid = currencyUid;
+public void setCurrencyCode(String currencyCode) {
+	this.currencyCode = currencyCode;
 }
 public List<RatePlanVolumeDto> getRatePlanVolumeDtoList() {
 	return ratePlanVolumeDtoList;

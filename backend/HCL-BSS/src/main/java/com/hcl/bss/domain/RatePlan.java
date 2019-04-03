@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -23,6 +24,14 @@ import java.util.Set;
 @Proxy(lazy = false)
 public class RatePlan implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "uidpk_sequence")
+    @TableGenerator(
+            name = "uidpk_sequence",
+            table = "id_gen",
+            pkColumnName = "gen_name",
+            valueColumnName = "gen_val",
+            initialValue = 1000000000,
+            allocationSize = 1)
     @Column(name="UIDPK")
     private Long id;
     @Column(name="RATEPLAN_ID")
@@ -51,8 +60,6 @@ public class RatePlan implements Serializable {
     @Column(name="IS_ACTIVE")
     private Integer isActive;
 
-  
-
     @CreatedBy
     @Column(name = "CRE_BY")
     private String createdBy;
@@ -65,12 +72,48 @@ public class RatePlan implements Serializable {
     @LastModifiedDate
     @Column(name = "UPD_DT")
     private Timestamp updatedDate;
-    
-    @ManyToMany(mappedBy="ratePlans")
-    @Cascade({org.hibernate.annotations.CascadeType.ALL}) 
+
+    @ManyToMany(mappedBy="ratePlans", fetch = FetchType.EAGER)
+    @Cascade({org.hibernate.annotations.CascadeType.ALL})
 	private Set<Product> products = new HashSet<Product>();
 
-    public Set<SubscriptionRatePlan> getSubscriptionRatePlans() {
+    @Column(name="PRICING_SCHEME")
+    private String pricingScheme;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @JoinColumn(name="RATE_PLAN_UID", referencedColumnName="UIDPK")
+    private List<RatePlanVolume> ratePlanVolume;
+
+    @ManyToOne(fetch=FetchType.LAZY,cascade={CascadeType.PERSIST,CascadeType.REMOVE})
+    @JoinTable(name = "TB_RATEPLAN_CURRENCY_MAPPING", joinColumns = { @JoinColumn(name = "RATEPLAN_UID",referencedColumnName = "UIDPK")}, inverseJoinColumns = { @JoinColumn(name = "CURRENCY_CODE",referencedColumnName = "CURRENCY_CODE") })
+    private Currency currency;
+
+    public List<RatePlanVolume> getRatePlanVolume() {
+		return ratePlanVolume;
+	}
+
+	public void setRatePlanVolume(List<RatePlanVolume> ratePlanVolume) {
+		this.ratePlanVolume = ratePlanVolume;
+	}
+
+	public Currency getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
+	}
+
+
+    public String getPricingScheme() {
+		return pricingScheme;
+	}
+
+	public void setPricingScheme(String pricingScheme) {
+		this.pricingScheme = pricingScheme;
+	}
+
+	public Set<SubscriptionRatePlan> getSubscriptionRatePlans() {
         return subscriptionRatePlans;
     }
 
@@ -110,7 +153,7 @@ public class RatePlan implements Serializable {
 		this.billingFrequency = billingFrequency;
 	}
 
-	
+
     public BigDecimal getBillingCycleTerm() {
 		return billingCycleTerm;
 	}
@@ -167,7 +210,7 @@ public class RatePlan implements Serializable {
         this.isActive = isActive;
     }
 
-   
+
 
     public Timestamp getCreatedDate() {
         return createdDate;
@@ -216,5 +259,5 @@ public class RatePlan implements Serializable {
 				+ ", createdDate=" + createdDate + ", updatedBy=" + updatedBy + ", updatedDate=" + updatedDate
 				+ ", products=" + products + "]";
 	}
-    
+
 }

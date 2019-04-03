@@ -2,6 +2,8 @@ package com.hcl.bss.services;
 
 import static com.hcl.bss.constants.ApplicationConstants.BLANK;
 import static com.hcl.bss.constants.ApplicationConstants.DD_MM_YYYY;
+import static com.hcl.bss.constants.ApplicationConstants.TRANSACTION_FLAG_YES;
+import static com.hcl.bss.constants.ApplicationConstants.TRANSACTION_FLAG_NO;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -17,6 +19,8 @@ import javax.transaction.Transactional;
 
 import com.hcl.bss.domain.AppConstantMaster;
 import com.hcl.bss.repository.AppConstantRepository;
+import com.hcl.bss.repository.OrderRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -31,10 +35,14 @@ import com.hcl.bss.dto.ProductDataDto;
 import com.hcl.bss.dto.ProductDto;
 import com.hcl.bss.dto.ProductPlanAssociationDto;
 import com.hcl.bss.dto.RatePlanDto;
+import com.hcl.bss.dto.ResponseDto;
 import com.hcl.bss.repository.ProductRepository;
 import com.hcl.bss.repository.ProductTypeMasterRepository;
 import com.hcl.bss.repository.RatePlanRepository;
+import com.hcl.bss.repository.SubscriptionRatePlanRepository;
+import com.hcl.bss.repository.specification.OrderSpecification;
 import com.hcl.bss.repository.specification.ProductSpecification;
+import com.hcl.bss.repository.specification.SubscriptionRatePlanSpecification;
 
 @Service
 @Transactional
@@ -42,7 +50,10 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	AppConstantRepository appConstantRepository;
-
+	@Autowired
+	SubscriptionRatePlanRepository subscriptionRatePlanRepository;
+	@Autowired
+	OrderRepository orderRepository;
 	@Autowired
 	ProductRepository productRepository;
 	@Autowired
@@ -149,11 +160,25 @@ public class ProductServiceImpl implements ProductService {
 			if(startDate != null) {
 			sDate = dateFormat.format(startDate);
 			}
+			if(subscriptionRatePlanRepository.count(Specification.where(SubscriptionRatePlanSpecification.hasProductUID(product.getUidpk())))!=0||orderRepository.count(Specification.where(OrderSpecification.hasProdutId(product.getUidpk())))!=0) {
+				prod.setTransactionFlag(TRANSACTION_FLAG_YES);
+			}
+			else {
+				prod.setTransactionFlag(TRANSACTION_FLAG_NO);
+			}
 			prod.setUidpk(product.getUidpk());
 			prod.setProductDispName(product.getProductDispName());
+			//Added to get product type master from code while updating product 
+			prod.setProductType(product.getProductTypeCode().getProductTypeCode());
 			prod.setProductTypeCode(product.getProductTypeCode().getProductType());
 			prod.setProductDescription(product.getProductDescription());
 			prod.setSku(product.getSku());
+			if(product.getIsActive()==0) {
+				prod.setStatus("InActive");
+				}
+				else if(product.getIsActive()==1) {
+				prod.setStatus("Active");
+				}
 			prod.setProductStartDate(sDate);
 			prod.setProductExpDate(eDate);
 			ratePlanSet = product.getRatePlans();
@@ -302,4 +327,45 @@ public class ProductServiceImpl implements ProductService {
 		return appConstantRepository.findByAppConstantCode(statusId);
 	}
 
+	@Override
+	public ResponseDto updateProduct(ProductDto product) {
+		// TODO Auto-generated method stub
+		ResponseDto responseDto = new ResponseDto();
+		try {
+			Product productEntity = productRepository.getOne(product.getUidpk());
+			productEntity.setProductDispName(product.getProductDispName());
+			productEntity.setProductDescription(product.getProductDescription());
+			productEntity.setSku(product.getSku());
+			productEntity.setProductTypeCode(productTypeMasterRepository.getOne(product.getProductType()));
+			Integer activeInactive = 0;
+			String status = product.getStatus();
+			if("Active".equalsIgnoreCase(status)) {
+			activeInactive = 1;
+			}
+			else if("Inactive".equalsIgnoreCase(status)) {
+				activeInactive = 0;
+			}
+			productEntity.setIsActive(activeInactive);
+			try{
+				productEntity.setProductStartDate(new SimpleDateFormat(DD_MM_YYYY).parse(product.getProductStartDate()));
+			}catch (ParseException e) {
+				e.printStackTrace();
+			}
+			try {
+				productEntity.setProductExpDate(new SimpleDateFormat(DD_MM_YYYY).parse(product.getProductExpDate()));
+			}catch (ParseException e) {
+				e.printStackTrace();
+			}
+			productEntity=productRepository.save(productEntity);
+			responseDto.setResponseCode(200);
+			responseDto.setResponseStatus("Okay");
+			responseDto.setMessage("Product Updated Successfully");
+			return responseDto;	
+		}
+		catch (DataIntegrityViolationException ex) {
+			// TODO: handle exception
+			throw new DataIntegrityViolationException("Erro", ex);
+		}
+	}
+	
 }

@@ -65,7 +65,7 @@ public class SubscriptionRatePlan implements Serializable {
     private Timestamp updatedDate;
 
     @ManyToOne
-    @JoinColumn(name="RATEPLAN_VOLUME_UID", nullable = false)
+    @JoinColumn(name="RATEPLAN_VOLUME_UID")
     private RatePlanVolume ratePlanVolume;
     @Column(name="UPD_BY")
     @GeneratorType(type = LoggedUserGenerator.class)

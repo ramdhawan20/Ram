@@ -215,7 +215,7 @@ FileWriter fileWriter = null;
 			subscriptionDto.setCustomerName(customer.getFirstName());
 			subscriptionDto.setEmail(customer.getEmail());
 			
-			for(SubscriptionRatePlan susRatePlan : subscription.getSubscriptionRatePlan()) {
+			for(SubscriptionRatePlan susRatePlan : subscription.getSubscriptionRatePlans()) {
 				multipleRatePlanDto = new MultipleRatePlanDto();
 				ratePlanList = new ArrayList<>();
 				

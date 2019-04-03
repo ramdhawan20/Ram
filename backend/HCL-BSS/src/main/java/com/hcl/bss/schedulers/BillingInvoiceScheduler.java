@@ -5,6 +5,7 @@ import com.hcl.bss.domain.Subscription;
 import com.hcl.bss.domain.SubscriptionRatePlan;
 import com.hcl.bss.repository.SubscriptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,8 @@ import java.util.stream.Collectors;
 @Component
 public class BillingInvoiceScheduler {
 
+    @Value("${app.billing.invoice.days}")
+    private int daysBeforeToBePicked;
     @Autowired
     public SubscriptionRepository subscriptionRepository;
 
@@ -38,32 +41,31 @@ public class BillingInvoiceScheduler {
      * This will calculate the subscription is due for billing in the next2 days
      *
      * @param subscription
-     * @return true/false
+      * @return true/false
      */
     private boolean getSubscriptionBillingDate(Subscription subscription) {
         LocalDate currentDate = LocalDate.now();//LocalDate.of(2019,04,20);//
         LocalDate subLastBillingDate = null;
         LocalDate subNextBillingDate = null;
-        Set<SubscriptionRatePlan> subRatePlans = subscription.getSubscriptionRatePlan();
+        Set<SubscriptionRatePlan> subRatePlans = subscription.getSubscriptionRatePlans();
         Optional<SubscriptionRatePlan> subscriptionRatePlanOptional = subRatePlans.stream().findFirst();
         SubscriptionRatePlan subRatePlan = subscriptionRatePlanOptional.get();
         String billingFrequency = subRatePlan.getRatePlan().getBillingFrequency();
         BigDecimal billingCycleTerm = subRatePlan.getRatePlan().getBillingCycleTerm();
         switch (billingFrequency) {
             case "WEEKLY":
-                subNextBillingDate = currentDate.plusWeeks(billingCycleTerm.intValue()).plusDays(2);
+                subNextBillingDate = currentDate.plusWeeks(billingCycleTerm.intValue()).plusDays(daysBeforeToBePicked);
                 break;
             case "MONTHLY":
-                subNextBillingDate = currentDate.plusMonths(billingCycleTerm.intValue()).plusDays(2);
+                subNextBillingDate = currentDate.plusMonths(billingCycleTerm.intValue()).plusDays(daysBeforeToBePicked);
                 break;
             case "ANNUAL":
-                subNextBillingDate = currentDate.plusYears(billingCycleTerm.intValue()).plusDays(2);
+                subNextBillingDate = currentDate.plusYears(billingCycleTerm.intValue()).plusDays(daysBeforeToBePicked);
                 break;
         }
         if (subscription.getLastBillingDate() != null) {
             subLastBillingDate = subscription.getLastBillingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            //if (currentDate.isAfter(subLastBillingDate) && currentDate.plusDays(2).equals(subscription.getNextBillingDate())) {
-            if (currentDate.isAfter(subLastBillingDate) && currentDate.plusDays(2).equals(subscription.getNextBillingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())) {
+            if (currentDate.isAfter(subLastBillingDate) && currentDate.plusDays(daysBeforeToBePicked).equals(subscription.getNextBillingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())) {
                 Date nextBillingDate = Date.from(subNextBillingDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
                 subscription.setLastBillingDate(subscription.getNextBillingDate());
                 subscription.setNextBillingDate(nextBillingDate);
