@@ -105,6 +105,8 @@ public class SubscriptionScheduler {
                     createCustomerAccount(order, subscription);
                 else
                     subscriptionRepository.save(subscription);
+                    order.setStatus(STATUS_SUCCESS);
+                    orderRepository.save(order);
                 reset();
             }
         }
@@ -349,19 +351,22 @@ public class SubscriptionScheduler {
             switch(billFrequency){
                 case "WEEK":
                     //cal.add(Calendar.WEEK_OF_YEAR, billCycle);
-                    nextBillingDate = currentDate.plusWeeks(billingCycleTerm.longValue());
+                    //nextBillingDate = currentDate.plusWeeks(billingCycleTerm.longValue());
+                    nextBillingDate = currentDate.plusWeeks(1);
                     //nextBillingDate = currentDate.plusWeeks(billingCycleTerm);
                     subscriptionEndDate = currentDate.plusWeeks(subEndTerm);
                     break;
                 case "MONTH":
                     //cal.add(Calendar.MONTH, billCycle);
-                    nextBillingDate = currentDate.plusMonths(billingCycleTerm.longValue());
+                    //nextBillingDate = currentDate.plusMonths(billingCycleTerm.longValue());
+                    nextBillingDate = currentDate.plusMonths(1);
                     //nextBillingDate = currentDate.plusMonths(billingCycleTerm);
                     subscriptionEndDate = currentDate.plusMonths(subEndTerm);
                     break;
                 case "YEAR":
                     //cal.add(Calendar.YEAR, billCycle);
-                    nextBillingDate = currentDate.plusYears(billingCycleTerm.longValue());
+                    //nextBillingDate = currentDate.plusYears(billingCycleTerm.longValue());
+                    nextBillingDate = currentDate.plusYears(1);
                     //nextBillingDate = currentDate.plusYears(billingCycleTerm);
                     subscriptionEndDate = currentDate.plusYears(subEndTerm);
                     break;

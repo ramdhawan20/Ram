@@ -58,21 +58,28 @@ public class SubscriptionRenewalScheduler {
 
     private Timestamp runDownBatch;
 
+    private List<AppConstantMaster> notificationsConstant;
+    private Predicate<AppConstantMaster> numOfNotification;
+
+    private Predicate<AppConstantMaster> notificationTrigger;
+
     @Scheduled(cron="0 0 0 * * ?")
-    @Transactional
+    //@Transactional
     public void runAutorenewSubscriptionsScheduler(){
         runDownBatch = new Timestamp(System.currentTimeMillis());
         //get all customers whose subscriptions are due for renewal.
         List<Customer> customers = customerRepository.findBySubscriptions(BillingInvoicing.ACTIVE.getActiveStatus(),
                 ApplicationConstants.Autorenew.AUTORENEW_ON.getAutoRenewStatus());
-        //customers.stream().map(customer -> customer.getSubscriptions()).flatMap(subscription->subscription.stream()).
+
+        //get notification config
+        getNotificationConfig();
 
         //check for auto renew notifications and send accordingly
         Map<String,Set<Customer>> customerMap = sendAutoRenewalNotifications(customers);
 
-        if(customerMap.containsKey("notNotifiedCustomers") && !customerMap.get("notNotifiedCustomers").isEmpty()){
+        if(customerMap.containsKey("autorenewCustomers") && !customerMap.get("autorenewCustomers").isEmpty()){
 
-            Set<Customer> updatedCustomers = customerMap.get("notNotifiedCustomers").stream().map(customer -> saveRenewableSubscriptions(customer)).collect(Collectors.toSet());
+            Set<Customer> updatedCustomers = customerMap.get("autorenewCustomers").stream().map(customer -> saveRenewableSubscriptions(customer)).collect(Collectors.toSet());
 
             //get all customers whose subscription auto renewal is turned off
             List<Customer> nonrenewableCustomers = customerRepository.findBySubscriptions(BillingInvoicing.ACTIVE.getActiveStatus(),
@@ -93,12 +100,12 @@ public class SubscriptionRenewalScheduler {
         try{
             List<Subscription> customerSubscriptions = new ArrayList<>(customer.getSubscriptions());
             Set<Subscription> renewableSubscriptions = customerSubscriptions.stream()
-                                                            .filter(currentSubscription -> isSubscriptionRenewable(currentSubscription))
+                                                            //.filter(currentSubscription -> isSubscriptionRenewable(currentSubscription))
                                                             .map(customerSubscription -> renewSubscription(customerSubscription))
                                                             .collect(Collectors.toSet());
             //update current subscriptions
             Set<Subscription> updateCurrentSubscriptions = customerSubscriptions.stream()
-                                                                    .filter(currentSubscription -> isSubscriptionRenewable(currentSubscription))
+                                                                    //.filter(currentSubscription -> isSubscriptionRenewable(currentSubscription))
                                                                     .map(customerSubscription -> updateCurrentSubscription(customerSubscription))
                                                                     .collect(Collectors.toSet());
             Set<Subscription> allSubscriptions = new HashSet<>();
@@ -120,10 +127,20 @@ public class SubscriptionRenewalScheduler {
      * @return isSubscriptionRenewable
      */
 
-    private boolean isSubscriptionRenewable(Subscription subscription){
+    /*private boolean isSubscriptionRenewable(Subscription subscription){
         try{
-            LocalDate subscriptionEndDate = LocalDate.now();//subscription.getSubscriptionEndDate().toLocalDateTime().toLocalDate();//LocalDate.now();
+            int maxNotifications = filterNotification(notificationsConstant,numOfNotification);
+            int notificationTriggerDays = filterNotification(notificationsConstant,notificationTrigger);
+            int notificationsInterval = notificationTriggerDays/maxNotifications;
+            LocalDate subscriptionEndDate = subscription.getSubscriptionEndDate().toLocalDateTime().toLocalDate();//LocalDate.now();
             LocalDate currentDate = LocalDate.now();
+            if(notification!=null) {
+                if (notification.getNotificationsSentCount() == maxNotifications)
+                    return true;
+                return false;
+            }
+                //if(notification.getNotificationsSentCount())
+            //}
             return currentDate.plusDays(renewalDays).equals(subscriptionEndDate);
         }
         catch(Exception ex){
@@ -131,7 +148,7 @@ public class SubscriptionRenewalScheduler {
                     ex.getStackTrace()[0].getMethodName(),errorLogRepository);
             return false;
         }
-    }
+    }*/
 
 
     /**
@@ -183,15 +200,18 @@ public class SubscriptionRenewalScheduler {
             String frequency = subRatePlan.getRatePlan().getBillingFrequency();
             switch(frequency){
                 case "ANNUAL":
-                    nextBillingDate = subscription.getNextBillingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusYears(billingCycleTerm);
+                    //nextBillingDate = subscription.getNextBillingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusYears(billingCycleTerm);
+                    nextBillingDate = currentDate.plusYears(1);
                     subscriptionEndDate = subscription.getSubscriptionEndDate().toLocalDateTime().toLocalDate().plusYears(expiresAfter);
                     break;
                 case "MONTHLY":
-                    nextBillingDate = subscription.getNextBillingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusMonths(billingCycleTerm);
+                    //nextBillingDate = subscription.getNextBillingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusMonths(billingCycleTerm);
+                    nextBillingDate = currentDate.plusMonths(1);
                     subscriptionEndDate = subscription.getSubscriptionEndDate().toLocalDateTime().toLocalDate().plusMonths(expiresAfter);
                     break;
                 case "WEEKLY":
-                    nextBillingDate = subscription.getNextBillingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusWeeks(billingCycleTerm);
+                    //nextBillingDate = subscription.getNextBillingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusWeeks(billingCycleTerm);
+                    nextBillingDate = currentDate.plusWeeks(1);
                     subscriptionEndDate = subscription.getSubscriptionEndDate().toLocalDateTime().toLocalDate().plusWeeks(expiresAfter);
                     break;
             }
@@ -274,14 +294,12 @@ public class SubscriptionRenewalScheduler {
         Long ratePlanUid = ratePlan.getId();
         if(VOLUME.equals(pricingScheme.getPricingSchemeCode())){
             if(quantity<0){
-                //SubscriptionUtility.updateErrLog("Subscription could not be renewed as quantity is less than 0 ", errorLogRepository);
                 updateRenewalBatchLog(subscriptionId,"Subscription could not be renewed as quantity is less than 0 ","FAILURE");
                 return subRatePlan;
             }
             List<RatePlanVolume> ratePlanVolumes = ratePlanVolumeRepository.findByRatePlan(ratePlanUid);
             if(ratePlanVolumes == null || ratePlanVolumes.size()==0){
                 updateRenewalBatchLog(subscriptionId,"Subscription could not be renewed as Rate Plan Volume is not configured for the Rate Plan:"+ratePlan.getRatePlanId(),"FAILURE");
-                //SubscriptionUtility.updateErrLog("Subscription could not be renewed as Rate Plan Volume is not configured for the Rate Plan:"+ratePlan.getRatePlanId(), errorLogRepository);
                 return subRatePlan;
             }
             RatePlanVolume ratePlanVolume = null;
@@ -302,7 +320,6 @@ public class SubscriptionRenewalScheduler {
             if(quantity<0){
                 updateRenewalBatchLog(subscriptionId,"Subscription could not be renewed as quantity is less than 0", "FAILURE");
                 //update err
-                //SubscriptionUtility.updateErrLog("Subscription could not be renewed as quantity is less than 0 ", errorLogRepository);
                 return subRatePlan;
             }
             double price = ratePlan.getPrice()* quantity;
@@ -340,56 +357,59 @@ public class SubscriptionRenewalScheduler {
      * This method will check if any renewal notifications are to be sent or not.
      * @param customers
      */
-    private Map<String,Set<Customer>> sendAutoRenewalNotifications(List<Customer> customers){
-        List<AppConstantMaster> notificationsConstant = constantRepository.findByAppConstantCodeContaining("NOTIFICATION");
-        Predicate<AppConstantMaster> numOfNotification = notification-> notification.getAppConstantCode().equals("NUMBER_OF_NOTIFICATION");
-        Predicate<AppConstantMaster> notificationTrigger =notification-> notification.getAppConstantCode().equals("NOTIFICATION_TRIGGER_DAYS");
-        int maxNotifications = filterNotification(notificationsConstant,numOfNotification);
-        int notificationTriggerDays = filterNotification(notificationsConstant,notificationTrigger);
-        int notificationsInterval = notificationTriggerDays/maxNotifications;
+    private Map<String,Set<Customer>> sendAutoRenewalNotifications(List<Customer> customers) {
+
+        int maxNotifications = filterNotification(notificationsConstant, numOfNotification);
+        int notificationTriggerDays = filterNotification(notificationsConstant, notificationTrigger);
+        int notificationsInterval = notificationTriggerDays / maxNotifications;
         Set<Customer> notifiedCustomerSet = new HashSet<>();
-        Set<Customer> notNotifiedCustomerSet = new HashSet<>();
+        Set<Customer> autorenewCustomerSet = new HashSet<>();
         LocalDate currentDate = LocalDate.now();
         LocalDate nextNotificationDate = currentDate.plusDays(notificationsInterval);
-        for(Customer customer: customers){
+        for (Customer customer : customers) {
             Set<Subscription> subscriptions = customer.getSubscriptions();
-            for(Subscription subscription: subscriptions){
-                Notification notification = notificationRepository.findBySubscriptionId(subscription.getSubscriptionId());
-                if(notification==null && isSubscriptionRenewable(subscription)){
-                    //no notification has been sent and it is due for first time auto renewal
+            for (Subscription subscription : subscriptions) {
+                Notification notification = notificationRepository.findBySubscriptionId(subscription.getSubscriptionId());;
+                //if the subscription is due for auto renewal and first notification should be sent
+                if (subscription.getSubscriptionEndDate().toLocalDateTime().toLocalDate().minusDays(notificationTriggerDays).equals(currentDate) && notification==null) {
+                    //send notification
+                    //Notification notification = notificationRepository.findBySubscriptionId(subscription.getSubscriptionId());
                     notification = new Notification();
                     notification.setSubscriptionId(subscription.getSubscriptionId());
                     notification.setNotificationsSentCount(1);
                     notification.setLastNotificationDate(new Timestamp(System.currentTimeMillis()));
                     notification.setNextNotificationDate(Timestamp.valueOf(nextNotificationDate.atStartOfDay()));
-                }
-                else if(notification!=null){
+                    notifiedCustomerSet.add(customer);
+                    notificationRepository.save(notification);
+                } else {
+                    notification = notificationRepository.findBySubscriptionId(subscription.getSubscriptionId());
+                    if(notification==null)
+                        break;
                     int count = notification.getNotificationsSentCount();
-                    if(count>=0 && count<maxNotifications && notification.getNextNotificationDate().toLocalDateTime().toLocalDate().equals(currentDate)){
-                    //if(count>=0 && count<maxNotifications && currentDate.equals(currentDate)){
+                    //if(count>=0 && count<maxNotifications && notification.getNextNotificationDate().toLocalDateTime().toLocalDate().equals(currentDate)){
+                    if (count >= 0 && count < maxNotifications && notification.getNextNotificationDate().toLocalDateTime().toLocalDate().equals(currentDate)) {
+                        //if(count>=0 && count<maxNotifications && currentDate.equals(currentDate)){
                         //send notification
-                        notification.setNotificationsSentCount(count+1);
+                        notification.setNotificationsSentCount(count + 1);
                         notification.setLastNotificationDate(new Timestamp(System.currentTimeMillis()));
                         nextNotificationDate = currentDate.plusDays(notificationsInterval);
                         notification.setNextNotificationDate(Timestamp.valueOf(nextNotificationDate.atStartOfDay()));
-                    }
-                    else{
-                        //subscription is already renewed
-                        if(!subscription.getTransactionReasonCode().contains("EXPIRED") && notification!=null && notification.getNextNotificationDate().toLocalDateTime().toLocalDate().equals(currentDate)){
-                        //if(!subscription.getTransactionReasonCode().contains("EXPIRED") && currentDate.equals(currentDate)){
+                        notifiedCustomerSet.add(customer);
+                        notificationRepository.save(notification);
+                    } else {
+                        //checking if subscription is already renewed then skip it
+                        if (!subscription.getTransactionReasonCode().contains("EXPIRED") && notification != null && notification.getNextNotificationDate().toLocalDateTime().toLocalDate().equals(currentDate)) {
+                            //if(!subscription.getTransactionReasonCode().contains("EXPIRED") && currentDate.equals(currentDate)){
                             // already max number of notifications have been sent
-                            notNotifiedCustomerSet.add(customer);
+                            autorenewCustomerSet.add(customer);
                         }
-
                     }
                 }
-                notifiedCustomerSet.add(customer);
-                notificationRepository.save(notification);
             }
         }
         Map<String, Set<Customer>> customerMap = new HashMap<>();
         customerMap.put("notifiedCustomers", notifiedCustomerSet);
-        customerMap.put("notNotifiedCustomers", notNotifiedCustomerSet);
+        customerMap.put("autorenewCustomers", autorenewCustomerSet);
         return customerMap;
     }
 
@@ -414,4 +434,11 @@ public class SubscriptionRenewalScheduler {
         batchLog.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
         renewalBatchLogRepository.save(batchLog);
     }
+
+    private void getNotificationConfig(){
+        notificationsConstant = constantRepository.findByAppConstantCodeContaining("NOTIFICATION");
+        numOfNotification = notification-> notification.getAppConstantCode().equals("NUMBER_OF_NOTIFICATION");
+        notificationTrigger =notification-> notification.getAppConstantCode().equals("NOTIFICATION_TRIGGER_DAYS");
+    }
+
 }
