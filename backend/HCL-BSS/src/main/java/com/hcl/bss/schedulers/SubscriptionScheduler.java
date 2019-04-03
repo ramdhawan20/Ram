@@ -103,10 +103,12 @@ public class SubscriptionScheduler {
                 boolean isAddOnProduct = product.getParent()!=null?true:false;
                 if(!isAddOnProduct)
                     createCustomerAccount(order, subscription);
-                else
+                else{
                     subscriptionRepository.save(subscription);
                     order.setStatus(STATUS_SUCCESS);
                     orderRepository.save(order);
+                }
+
                 reset();
             }
         }
