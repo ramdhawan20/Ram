@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.hcl.bss.domain.UOM;
+import com.hcl.bss.dto.DropDownOutDto;
 import com.hcl.bss.dto.ProductDto;
 import com.hcl.bss.dto.RatePlanDto;
 import com.hcl.bss.dto.ResponseDto;
@@ -54,7 +58,61 @@ public class RatePlanController {
 		@RequestMapping(value = "/getCurrency", produces = { "application/json" }, method = RequestMethod.GET)
 		public ResponseEntity<List<String>> getCurrency() {
 			List<String> currencyList=new ArrayList<String>();
-			currencyList = ratePlanService.getCurrency();
-			return new ResponseEntity<>(currencyList, HttpStatus.OK);
+			try{
+				currencyList = ratePlanService.getCurrency();
+				if(!currencyList.isEmpty())
+					return new ResponseEntity<>(currencyList, HttpStatus.OK);
+				else
+					return new ResponseEntity<>(currencyList, HttpStatus.NOT_FOUND);
+			}catch (Exception e) {
+				// TODO: handle exception
+				return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+		
+		@ApiOperation(value = "Get UOM", response = UOM.class)
+		@RequestMapping(value = "/getUOM", produces = { "application/json" }, method = RequestMethod.GET)
+		public ResponseEntity<Iterable<UOM>> getUom() {
+			Iterable<UOM> uomList = new ArrayList<>();
+			
+			try{
+				uomList = ratePlanService.getUom();
+				if(uomList!=null)
+				return new ResponseEntity<>(uomList, HttpStatus.OK);
+				else
+				return new ResponseEntity<>(uomList, HttpStatus.NOT_FOUND);
+			}
+			catch (Exception e) {
+				// TODO: handle exception
+				return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+		
+		@ApiOperation(value = "Get Dropdown Data", response = String.class)
+		@RequestMapping(value = "/getRateplanDropDown",method = RequestMethod.POST)
+		public ResponseEntity<DropDownOutDto> dropDownData(@RequestParam String statusId) {
+			DropDownOutDto dropDownOutDto = new DropDownOutDto();
+			try {
+				if(ratePlanService.getDropDownData(statusId)!=null && !(ratePlanService.getDropDownData(statusId).isEmpty())) {
+					dropDownOutDto.setMessage("Drop Down Fetched Successfully");
+					dropDownOutDto.setResponseCode(HttpStatus.OK.value());
+					dropDownOutDto.setSuccess(true);
+					dropDownOutDto.setDropDownList(ratePlanService.getDropDownData(statusId));
+					return new ResponseEntity<DropDownOutDto>(dropDownOutDto,HttpStatus.OK);
+				}		
+				else {
+					dropDownOutDto.setMessage("Drop Down values not found in Database");
+					dropDownOutDto.setResponseCode(HttpStatus.NOT_FOUND.value());
+					dropDownOutDto.setSuccess(false);
+					return new ResponseEntity<DropDownOutDto>(dropDownOutDto,HttpStatus.NOT_FOUND);
+				}
+			}
+			catch (Exception e) {
+				// TODO: handle exception
+				dropDownOutDto.setMessage(e.getMessage());
+				dropDownOutDto.setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+				dropDownOutDto.setSuccess(false);
+				return new ResponseEntity<DropDownOutDto>(dropDownOutDto,HttpStatus.INTERNAL_SERVER_ERROR);
+			}
 		}
 }

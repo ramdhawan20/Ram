@@ -173,6 +173,12 @@ public class ProductServiceImpl implements ProductService {
 			prod.setProductTypeCode(product.getProductTypeCode().getProductType());
 			prod.setProductDescription(product.getProductDescription());
 			prod.setSku(product.getSku());
+			if(product.getIsActive()==0) {
+				prod.setStatus("InActive");
+				}
+				else if(product.getIsActive()==1) {
+				prod.setStatus("Active");
+				}
 			prod.setProductStartDate(sDate);
 			prod.setProductExpDate(eDate);
 			ratePlanSet = product.getRatePlans();

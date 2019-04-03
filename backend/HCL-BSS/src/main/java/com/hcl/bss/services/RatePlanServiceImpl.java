@@ -13,12 +13,15 @@ import org.springframework.stereotype.Service;
 
 import com.hcl.bss.domain.RatePlan;
 import com.hcl.bss.domain.RatePlanVolume;
+import com.hcl.bss.domain.UOM;
 import com.hcl.bss.dto.ProductDto;
 import com.hcl.bss.dto.RatePlanDto;
 import com.hcl.bss.dto.RatePlanVolumeDto;
 import com.hcl.bss.dto.ResponseDto;
+import com.hcl.bss.repository.AppConstantRepository;
 import com.hcl.bss.repository.CurrencyMasterRepository;
 import com.hcl.bss.repository.RatePlanRepository;
+import com.hcl.bss.repository.UOMRepository;
 @Service
 @Transactional
 public class RatePlanServiceImpl implements RatePlanService {
@@ -27,6 +30,10 @@ public class RatePlanServiceImpl implements RatePlanService {
 	RatePlanRepository ratePlanRepository;
 	@Autowired
 	CurrencyMasterRepository currencyMasterRepository;
+	@Autowired
+	UOMRepository uomRepository;
+	@Autowired
+	AppConstantRepository appConstantRepository;
 	
 	@Override
 	public ResponseDto addRatePlan(RatePlanDto ratePlanDto) {
@@ -67,7 +74,7 @@ public class RatePlanServiceImpl implements RatePlanService {
 			rpDto.setName(rplan.getRatePlanDescription());
 			rpDto.setBillEvery(rplan.getBillingCycleTerm().toString()+rplan.getBillingFrequency());
 			rpDto.setPricingScheme(rplan.getPricingScheme());
-			//rpDto.setUnitOfMesureId(rplan.getUom());
+			rpDto.setUnitOfMesureId(rplan.getUom().getUnitOfMeasure());
 			rpDto.setPrice(rplan.getPrice());
 			if(rplan.getIsActive() == 0) {
 				rpDto.setIsActive("Inactive");
@@ -102,7 +109,9 @@ private RatePlan convertRatePlanDtoToEntity(RatePlanDto ratePlanDto) {
 			ratePlan.setRatePlanVolume(convertRatePlanVolumeDtoToEntity(ratePlanDto.getRatePlanVolumeDtoList(), ratePlan));
 		}
 		
-		//ratePlan.setUom(ratePlanDto.getUnitOfMesureId());
+		if(uomRepository.getOne(ratePlanDto.getUnitOfMesureId())!=null)
+		ratePlan.setUom(uomRepository.getOne(ratePlanDto.getUnitOfMesureId()));
+		
 		
 		if(ratePlanDto.getIsActive().equals("INACTIVE"))
 			ratePlan.setIsActive(0);
@@ -143,5 +152,19 @@ private RatePlan convertRatePlanDtoToEntity(RatePlanDto ratePlanDto) {
 			currencyList.add("Currency code could not be fetch");
 			return currencyList;
 		}
+	}
+	
+	@Override
+	public Iterable<UOM> getUom() {
+		
+		return uomRepository.findAll();
+	}
+
+
+
+	@Override
+	public List<String> getDropDownData(String statusId) {
+		// TODO Auto-generated method stub
+		return appConstantRepository.findByAppConstantCode(statusId);
 	}
 }
