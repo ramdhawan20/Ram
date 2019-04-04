@@ -28,6 +28,8 @@ public class BillingInvoiceScheduler {
     @Autowired
     public SubscriptionRepository subscriptionRepository;
 
+    @Value("${app.subscription.renewal.days}")
+    private int renewalDays;
     @Scheduled(cron="0 0 0 * * ?")
     public void updateBillingInvoice() {
         // get all the active subscriptions
@@ -46,37 +48,47 @@ public class BillingInvoiceScheduler {
     private boolean getSubscriptionBillingDate(Subscription subscription) {
         LocalDate currentDate = LocalDate.now();//LocalDate.of(2019,04,20);//
         LocalDate subLastBillingDate = null;
-        LocalDate subNextBillingDate = null;
         Set<SubscriptionRatePlan> subRatePlans = subscription.getSubscriptionRatePlans();
         Optional<SubscriptionRatePlan> subscriptionRatePlanOptional = subRatePlans.stream().findFirst();
         SubscriptionRatePlan subRatePlan = subscriptionRatePlanOptional.get();
         String billingFrequency = subRatePlan.getRatePlan().getBillingFrequency();
         BigDecimal billingCycleTerm = subRatePlan.getRatePlan().getBillingCycleTerm();
-        switch (billingFrequency) {
-            case "WEEKLY":
-                subNextBillingDate = currentDate.plusWeeks(billingCycleTerm.intValue()).plusDays(daysBeforeToBePicked);
-                break;
-            case "MONTHLY":
-                subNextBillingDate = currentDate.plusMonths(billingCycleTerm.intValue()).plusDays(daysBeforeToBePicked);
-                break;
-            case "ANNUAL":
-                subNextBillingDate = currentDate.plusYears(billingCycleTerm.intValue()).plusDays(daysBeforeToBePicked);
-                break;
-        }
-        if (subscription.getLastBillingDate() != null) {
-            subLastBillingDate = subscription.getLastBillingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            if (currentDate.isAfter(subLastBillingDate) && currentDate.plusDays(daysBeforeToBePicked).equals(subscription.getNextBillingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())) {
-                Date nextBillingDate = Date.from(subNextBillingDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        LocalDate nextBillingDate = subscription.getNextBillingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        LocalDate renewalDate = subscription.getSubscriptionEndDate().toLocalDateTime().toLocalDate().minusDays(renewalDays);
+
+        if(nextBillingDate.minusDays(daysBeforeToBePicked).equals(currentDate) && renewalDate.isAfter(nextBillingDate)){
+            if (subscription.getLastBillingDate() != null) {
+                subLastBillingDate = subscription.getLastBillingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if (currentDate.isAfter(subLastBillingDate) && currentDate.plusDays(daysBeforeToBePicked).equals(subscription.getNextBillingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())) {
+                    //Date nextBillDate = Date.from(nextBillingDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    subscription.setLastBillingDate(subscription.getNextBillingDate());
+                    subscription.setNextBillingDate(getNextBillingDate(billingCycleTerm,billingFrequency,nextBillingDate));
+                    return true;
+                }
+            } else {
                 subscription.setLastBillingDate(subscription.getNextBillingDate());
-                subscription.setNextBillingDate(nextBillingDate);
+                Date nextBillDate = getNextBillingDate(billingCycleTerm,billingFrequency,nextBillingDate);
+                subscription.setNextBillingDate(nextBillDate);
                 return true;
             }
-            return false;
-        } else {
-            subscription.setLastBillingDate(subscription.getNextBillingDate());
-            Date nextBillingDate = Date.from(subNextBillingDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-            subscription.setNextBillingDate(nextBillingDate);
-            return true;
         }
+        return false;
     }
+
+    private Date getNextBillingDate(BigDecimal billingCycleTerm,String billingFrequency, LocalDate nextBillingDate){
+        switch (billingFrequency) {
+            case "WEEKLY":
+                nextBillingDate = nextBillingDate.plusWeeks(billingCycleTerm.intValue());
+                break;
+            case "MONTHLY":
+                nextBillingDate = nextBillingDate.plusMonths(billingCycleTerm.intValue());
+                break;
+            case "ANNUAL":
+                nextBillingDate = nextBillingDate.plusYears(billingCycleTerm.intValue());
+                break;
+        }
+        return Date.from(nextBillingDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
 }
