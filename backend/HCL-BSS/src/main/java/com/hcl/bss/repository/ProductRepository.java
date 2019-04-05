@@ -1,9 +1,7 @@
 package com.hcl.bss.repository;
 
-import java.util.List;
 import java.util.Set;
 
-import com.hcl.bss.domain.StatusDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
