@@ -1,35 +1,38 @@
 package com.hcl.bss.controllers;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import static com.hcl.bss.constants.ApplicationConstants.DATE_FORMAT_DDMMYYYY;
+import com.hcl.bss.dto.BatchDto;
+import com.hcl.bss.dto.BatchRunLogDto;
+import com.hcl.bss.dto.DropDownOutDto;
+import com.hcl.bss.dto.FilterRequest;
+import com.hcl.bss.schedulers.SubscriptionRenewalScheduler;
+import com.hcl.bss.schedulers.SubscriptionScheduler;
+import com.hcl.bss.services.BatchLogService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import com.hcl.bss.dto.BatchDto;
-import com.hcl.bss.dto.BatchRunLogDto;
-import com.hcl.bss.dto.DropDownOutDto;
-import com.hcl.bss.dto.FilterRequest;
-import com.hcl.bss.services.BatchLogService;
+import org.springframework.web.bind.annotation.*;
 
-import io.swagger.annotations.ApiOperation;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import static com.hcl.bss.constants.ApplicationConstants.DATE_FORMAT_DDMMYYYY;
 
 @CrossOrigin(origins = "*")
 @RestController
 public class BatchController {
-	
+
+	@Autowired
+	SubscriptionScheduler subscriptionScheduler;
+
+	@Autowired
+	SubscriptionRenewalScheduler subscriptionRenewalScheduler;
+
 	@Autowired
 	BatchLogService batchLogService;
 	
@@ -158,5 +161,25 @@ public class BatchController {
 			dropDownOutDto.setSuccess(false);
 			return new ResponseEntity<DropDownOutDto>(dropDownOutDto,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+
+	@ApiOperation(value = "Execute Schedulers", response = String.class)
+	@RequestMapping(value = "/executeSchedulers",
+			produces = { "application/json" }, method = RequestMethod.GET)
+	public boolean executeScheduler(@RequestParam(value = "schedulerId", required = true) int schedulerId) {
+
+		boolean status = false;
+		switch (schedulerId){
+			case 1:
+				subscriptionScheduler.runSubscriptionBatch();
+				status = true;
+			break;
+			case 2:
+				subscriptionRenewalScheduler.runAutorenewSubscriptionsScheduler();
+				status = true;
+			break;
+		}
+		return status;
 	}
 }

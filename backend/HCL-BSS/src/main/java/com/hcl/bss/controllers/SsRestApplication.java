@@ -38,9 +38,9 @@ public class SsRestApplication implements CommandLineRunner {
 	/*TO run SubscriptionBatch*/
 	@Override
 	public void run(String... arg0) throws IOException, URISyntaxException {
-		subscriptionScheduler.runSubscriptionBatch();
+		/*subscriptionScheduler.runSubscriptionBatch();
 		//billingInvoiceScheduler.updateBillingInvoice();
-		subscriptionRenewalScheduler.runAutorenewSubscriptionsScheduler();
+		subscriptionRenewalScheduler.runAutorenewSubscriptionsScheduler();*/
 	}
 
 }
