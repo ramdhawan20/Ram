@@ -309,7 +309,8 @@ public class SubscriptionRenewalScheduler {
                     double price = rpv.getPrice()* quantity;
                     subRatePlan.setPrice(price);
                     subRatePlan.setRatePlanVolume(rpv);
-                    return subRatePlan;
+                    //return subRatePlan;
+                    break;
                 }
             }
             //if qty is greater than the highest tier than default to highest tier price
