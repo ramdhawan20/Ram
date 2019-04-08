@@ -21,8 +21,16 @@ public class SubscriptionSpecification {
 
 //root-->Entity(i.e. Subscription) cq --> CriteriaQuery , cb--> CriteriaBuilder
 
-	public static Specification<Subscription> hasSubscriptionId(String subscriptionId){
+/*	public static Specification<Subscription> hasSubscriptionId(String subscriptionId){
 		return (root, cq, cb)-> cb.equal(root.get("subscriptionId"), subscriptionId);
+	}
+*/
+	public static Specification<Subscription> hasSubscriptionId(String searchTerm){
+		return (root, query, cb) -> {
+			String containsLikePattern = getContainsLikePattern(searchTerm);
+			return cb.like(cb.lower(root.get("subscriptionId")), containsLikePattern);
+		};
+
 	}
 
 	public static Specification<Subscription> hasStatus(String status){

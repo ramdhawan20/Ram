@@ -122,7 +122,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		LOGGER.info("<--------------Start convertSubscriptionsToDto() method in SubscriptionServiceImpl.java---------------------->");
 		List<SubscriptionDto> subscriptionDtoList = new ArrayList<>();
 		SubscriptionDto subscriptionDto = null;
-		List <MultipleRatePlanDto> ratePlanList = null;
+		List <MultipleRatePlanDto> ratePlanList = new ArrayList<>();
 		MultipleRatePlanDto multipleRatePlanDto = null;
 
 		for(Subscription subscription : subsList) {
@@ -137,7 +137,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			
 			for(SubscriptionRatePlan susRatePlan : subscription.getSubscriptionRatePlans()) {
 				multipleRatePlanDto = new MultipleRatePlanDto();
-				ratePlanList = new ArrayList<>();
 				
 				multipleRatePlanDto.setPlanName(susRatePlan.getRatePlan().getRatePlanDescription());
 				multipleRatePlanDto.setPrice(susRatePlan.getPrice());
