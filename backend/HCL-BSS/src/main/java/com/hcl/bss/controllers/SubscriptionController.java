@@ -18,8 +18,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hcl.bss.dto.CustomerDto;
 import com.hcl.bss.dto.SubscriptionDto;
 import com.hcl.bss.dto.SubscriptionInOut;
 import com.hcl.bss.services.SubscriptionService;
@@ -49,7 +53,7 @@ public class SubscriptionController {
 		SubscriptionInOut subscriptionOut = new SubscriptionInOut();
 		
 		//Pageable pageable = new PageRequest(subscriptionIn.getPageNo(), 1, Sort.Direction.DESC, "createdDate");
-		Pageable pageable = new PageRequest(subscriptionIn.getPageNo(), Integer.parseInt(pageSize), Sort.Direction.DESC, "createdDate");
+		Pageable pageable = PageRequest.of(subscriptionIn.getPageNo(), Integer.parseInt(pageSize), Sort.Direction.DESC, "createdDate");
 
 		try {
 			if((subscriptionIn.getFromDateStr()!= null && subscriptionIn.getToDateStr()== null) || 
@@ -93,4 +97,11 @@ public class SubscriptionController {
 		
 	}
 	
+	@ApiOperation(value="Get Details of a Subscription", response= CustomerDto.class)
+	@RequestMapping(value="/subscriptionDetail", produces = { "application/json" }, method = RequestMethod.GET)
+	public ResponseEntity<CustomerDto> findSubscriptionDetail(@RequestParam(value = "subscriptionId", required = true) String subId){
+		
+		return new ResponseEntity<>(subscriptionService.findSubscriptionDetail(subId), HttpStatus.OK);
+		
+	}
 }

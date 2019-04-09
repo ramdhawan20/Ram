@@ -46,6 +46,7 @@ public final class ApplicationConstants {
     public static final String PRODUCT_TYPE_CODE_NOT_DEFIENED_IN_MASTER = "ProductTypeCode Value is not defiened in ProductTypeMaster DB Constraint Violation: ";
     public static final boolean TRANSACTION_FLAG_YES=true;
     public static final boolean TRANSACTION_FLAG_NO=false;
+    public static final String NOT_APPLICABLE="N/A";
     //subscription batch
     public static final String PASS_STATUS = "Pass";
     public static final String FAIL_STATUS = "Fail";

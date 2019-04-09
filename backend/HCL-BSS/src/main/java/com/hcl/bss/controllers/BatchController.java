@@ -36,7 +36,7 @@ public class BatchController {
 	@Autowired
 	BatchLogService batchLogService;
 	
-	@Value("${default.recordPerPage:10}")
+	@Value("${app.page.size}")
 	Integer recordPerPage;
 	
 	@ApiOperation(value = "Get last subscription batch report error log", response = BatchDto.class)
@@ -47,8 +47,8 @@ public class BatchController {
 	
 	  BatchDto orderDto = new BatchDto();
 	  Integer pageNumber = Integer.valueOf(pageNo);
-	  @SuppressWarnings("deprecation")
-      Pageable reqCount = new PageRequest(pageNumber, recordPerPage);
+	  
+      Pageable reqCount = PageRequest.of(pageNumber, recordPerPage);
 	  
 	  Calendar cal = Calendar.getInstance();
 	  cal.add(Calendar.DATE, -1);
@@ -91,8 +91,8 @@ public class BatchController {
 
 	  BatchDto orderDto = new BatchDto();
 	  Integer pageNumber = Integer.valueOf(filterRequest.getPageNo());
-	  @SuppressWarnings("deprecation")
-      Pageable reqCount = new PageRequest(pageNumber, recordPerPage);
+	  
+      Pageable reqCount = PageRequest.of(pageNumber, recordPerPage);
 	  try{
 		  Date startDate = null;
 		  Date endDate = null;

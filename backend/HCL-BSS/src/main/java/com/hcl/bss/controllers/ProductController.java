@@ -33,7 +33,7 @@ import io.swagger.annotations.ApiOperation;
 public class ProductController {
 	@Autowired
 	ProductService productService;
-	@Value("${default.recordPerPage:10}")
+	@Value("${app.page.size}")
 	 Integer recordPerPage;
 
 	@ApiOperation(value = "Add product", response = ProductDto.class)
@@ -63,8 +63,8 @@ public class ProductController {
 	@RequestMapping(value = "/getProducts/{pageNo}", produces = { "application/json" }, method = RequestMethod.GET)
 	public ResponseEntity<ProductDataDto> getAllProduct(@PathVariable("pageNo") String pageNo) {
 		Integer pageNumber = Integer.valueOf(pageNo);
-		@SuppressWarnings("deprecation")
-		Pageable reqCount = new PageRequest(pageNumber, recordPerPage);
+		
+		Pageable reqCount = PageRequest.of(pageNumber, recordPerPage);
 		ProductDataDto productData = new  ProductDataDto();
 		productData = productService.getAllProducts(reqCount);
 		return new ResponseEntity<>(productData, HttpStatus.OK);
@@ -83,8 +83,8 @@ public class ProductController {
 	public ResponseEntity<ProductDataDto> searchProducts(@RequestBody ProductDto product,HttpServletResponse response) {
 		ProductDataDto productData = new  ProductDataDto();
 		Integer pageNumber = Integer.valueOf(product.getPageNo());
-		@SuppressWarnings("deprecation")
-		Pageable reqCount = new PageRequest(pageNumber, recordPerPage);
+		
+		Pageable reqCount = PageRequest.of(pageNumber, recordPerPage);
 		try {
 			productData = productService.searchProducts(product,reqCount,response);
 			return new ResponseEntity<ProductDataDto>(productData, HttpStatus.OK);

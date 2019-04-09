@@ -89,7 +89,7 @@ public class RatePlanController {
 		}
 		
 		@ApiOperation(value = "Get Dropdown Data", response = String.class)
-		@RequestMapping(value = "/getRateplanDropDown",method = RequestMethod.POST)
+		@RequestMapping(value = "/getRateplanDropDown",method = RequestMethod.GET)
 		public ResponseEntity<DropDownOutDto> dropDownData(@RequestParam String statusId) {
 			DropDownOutDto dropDownOutDto = new DropDownOutDto();
 			try {

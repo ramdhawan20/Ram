@@ -86,7 +86,7 @@ public class UserManagementController {
 		UserOutDto userOut = new UserOutDto();
 		List<User> userList = null;
 		//Pageable pageable = new PageRequest(userIn.getPageNo(), 1);
-		Pageable pageable = new PageRequest(userIn.getPageNo(), Integer.parseInt(pageSize));
+		Pageable pageable = PageRequest.of(userIn.getPageNo(), Integer.parseInt(pageSize));
 		
 		try {
 			userList = userServices.findAllUser(userIn, pageable);

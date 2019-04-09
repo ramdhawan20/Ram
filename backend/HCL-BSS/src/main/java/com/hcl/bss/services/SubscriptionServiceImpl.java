@@ -1,7 +1,8 @@
 package com.hcl.bss.services;
 
-import static com.hcl.bss.constants.ApplicationConstants.DD_MM_YYYY;
+import static com.hcl.bss.constants.ApplicationConstants.*;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -21,13 +23,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.hcl.bss.domain.Address;
 import com.hcl.bss.domain.Customer;
+import com.hcl.bss.domain.Product;
 import com.hcl.bss.domain.Subscription;
 import com.hcl.bss.domain.SubscriptionRatePlan;
+import com.hcl.bss.dto.AddressDto;
+import com.hcl.bss.dto.CustomerDto;
 import com.hcl.bss.dto.MultipleRatePlanDto;
+import com.hcl.bss.dto.SubscriptionDetailDto;
 import com.hcl.bss.dto.SubscriptionDto;
 import com.hcl.bss.dto.SubscriptionInOut;
+import com.hcl.bss.dto.SubscriptionRatePlanDto;
+import com.hcl.bss.exceptions.CustomSubscriptionException;
+import com.hcl.bss.repository.AddressRepository;
 import com.hcl.bss.repository.CustomerRepository;
+import com.hcl.bss.repository.ProductRepository;
 import com.hcl.bss.repository.SubscriptionRepository;
 import com.hcl.bss.repository.specification.SubscriptionSpecification;
 
@@ -44,6 +55,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private SubscriptionRepository subscriptionRepository;
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private AddressRepository addressRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    private BigDecimal remainingCycle=BigDecimal.ZERO;
+    private Double totalAmount = (double) 0;
     
 	DateFormat dateFormat = new SimpleDateFormat(DD_MM_YYYY);
 	//DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY);
@@ -172,6 +189,127 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		return subscriptionDtoList;
 	}
 
-	
-	
+	@Override
+	public CustomerDto findSubscriptionDetail(String subId) {
+		// TODO Auto-generated method stub
+		
+			    CustomerDto response = new CustomerDto();
+				Subscription subscription = subscriptionRepository.findBySubscriptionId(subId);
+				if(subscription==null) {
+					throw new CustomSubscriptionException(100);
+				}
+				Customer customer = customerRepository.findById(subscription.getCustomerId()).get();
+				if(customer==null) {
+					throw new CustomSubscriptionException(101);
+				}
+				if(customer.getFirstName()!=null)
+					response.setFirstName(customer.getFirstName());
+				else
+					response.setFirstName(HYPHEN);
+				if(customer.getLastName()!=null)
+					response.setLastName(customer.getLastName());
+				else
+					response.setLastName(HYPHEN);
+				if(customer.getEmail()!=null)
+					response.setEmailAddress(customer.getEmail());
+				else
+					response.setEmailAddress(HYPHEN);
+				response.setBillingAdress(covertAddressEntityToDto(addressRepository.findById(customer.getBillTo()).get()));
+				response.setShippingAdress(covertAddressEntityToDto(addressRepository.findById(customer.getSoldTo()).get()));
+				response.setSubscriptionDto(convertSubscriptioEntityToDto(subscription));
+				return response;
+	}
+
+	private AddressDto covertAddressEntityToDto(Address adress) {
+		// TODO Auto-generated method stub
+		AddressDto addressDto = new AddressDto();
+		if(adress.getLine1()!=null)
+			addressDto.setLine1(adress.getLine1());
+		else
+			addressDto.setLine1(HYPHEN);
+		if(adress.getLine2()!=null)
+			addressDto.setLine2(adress.getLine2());
+		else
+			addressDto.setLine2(HYPHEN);
+		if(adress.getCity()!=null)
+			addressDto.setCity(adress.getCity());
+		else
+			addressDto.setCity(HYPHEN);
+		if(adress.getState()!=null)
+			addressDto.setState(adress.getState());
+		else
+			addressDto.setState(HYPHEN);
+		if(adress.getZipcode()!=null)
+			addressDto.setZipcode(adress.getZipcode());
+		else
+			addressDto.setZipcode(HYPHEN);
+		addressDto.setCountry(adress.getCountry().getCountryName());
+		return addressDto;
+	}
+// This is used for subscription detail service
+	private SubscriptionDetailDto convertSubscriptioEntityToDto(Subscription subscription) {
+		// TODO Auto-generated method stub
+		SubscriptionDetailDto subscriptionDto = new SubscriptionDetailDto();
+		subscriptionDto.setSubscriptionId(subscription.getSubscriptionId());
+		subscriptionDto.setStatus(subscription.getStatus());
+		if(subscription.getNextBillingDate()!=null)
+			subscriptionDto.setNextBillDate(this.getStringDate(new Date(subscription.getNextBillingDate().getTime())));
+		else
+			subscriptionDto.setNextBillDate(NOT_APPLICABLE);
+		if(subscription.getLastBillingDate()!=null)
+			subscriptionDto.setLastBillDate(this.getStringDate(new Date(subscription.getLastBillingDate().getTime())));
+		else
+			subscriptionDto.setNextBillDate(NOT_APPLICABLE);
+		if(subscription.getSubscriptionRatePlans()!=null && !subscription.getSubscriptionRatePlans().isEmpty())
+			subscriptionDto.setProductPlanList(covertProductRatePlanListEntityToDto(subscription.getSubscriptionRatePlans()));
+		else
+			throw new CustomSubscriptionException(103);
+		if(subscription.getAutorenew()==1)
+			subscriptionDto.setRenewsForever(true);
+		else {
+			subscriptionDto.setRenewsForever(false);
+			if(this.remainingCycle!=BigDecimal.ZERO)
+				subscriptionDto.setRemainingCycles(this.remainingCycle);
+			subscriptionDto.setExpireOn(this.getStringDate(new Date(subscription.getSubscriptionEndDate().getTime())));
+		}
+		subscriptionDto.setTotalAmount(this.totalAmount);
+		return subscriptionDto;
+	}
+
+	private List<SubscriptionRatePlanDto> covertProductRatePlanListEntityToDto(Set<SubscriptionRatePlan> subRateplanList){
+		// TODO Auto-generated method stub
+		try{
+			List<SubscriptionRatePlanDto> subProductRatePlanDtoList = new ArrayList<SubscriptionRatePlanDto>();
+			for(SubscriptionRatePlan subRatePlan: subRateplanList) {
+				SubscriptionRatePlanDto subscriptionRatePlanDto = new SubscriptionRatePlanDto();
+				if(subRatePlan.getRatePlan()!=null) {
+					subscriptionRatePlanDto.setRateplan(subRatePlan.getRatePlan().getRatePlanId());
+					subscriptionRatePlanDto.setRateplanDesc(subRatePlan.getRatePlan().getRatePlanDescription());
+					if(subRatePlan.getPricingScheme().getPricingSchemeCode().equals(VOLUME))
+						subscriptionRatePlanDto.setRate(subRatePlan.getRatePlanVolume().getPrice());
+					else if(subRatePlan.getPricingScheme().getPricingSchemeCode().equals(UNIT))
+						subscriptionRatePlanDto.setRate(subRatePlan.getRatePlan().getPrice());
+				}
+				Product product = productRepository.findById(subRatePlan.getProduct()).get(); 
+				subscriptionRatePlanDto.setProductName(product.getProductDispName());
+				if(product.getParent()==null)
+					this.remainingCycle=subRatePlan.getRatePlan().getExpireAfter();
+				subscriptionRatePlanDto.setAmount(subRatePlan.getPrice());
+				subscriptionRatePlanDto.setQuantity(subRatePlan.getQuantity());
+//				subscriptionRatePlanDto.setTax(subRatePlan.gett); //tax is not handled rightnow
+				subProductRatePlanDtoList.add(subscriptionRatePlanDto);
+				this.totalAmount = this.totalAmount + subRatePlan.getPrice();
+			}
+			return subProductRatePlanDtoList;
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			throw new CustomSubscriptionException(404);
+		}
+		
+	}
+	private String getStringDate(Date dateToFormat) {
+		String formatedDate = dateFormat.format(dateToFormat);
+		return formatedDate;
+	}
 }
