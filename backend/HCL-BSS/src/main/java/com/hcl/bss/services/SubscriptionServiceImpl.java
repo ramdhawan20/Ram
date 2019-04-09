@@ -285,9 +285,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 				if(subRatePlan.getRatePlan()!=null) {
 					subscriptionRatePlanDto.setRateplan(subRatePlan.getRatePlan().getRatePlanId());
 					subscriptionRatePlanDto.setRateplanDesc(subRatePlan.getRatePlan().getRatePlanDescription());
-					if(subRatePlan.getPricingScheme().getPricingSchemeCode().equals(VOLUME))
+					if(subRatePlan.getRatePlan().getPricingScheme().equals(VOLUME))
 						subscriptionRatePlanDto.setRate(subRatePlan.getRatePlanVolume().getPrice());
-					else if(subRatePlan.getPricingScheme().getPricingSchemeCode().equals(UNIT))
+					else if(subRatePlan.getRatePlan().getPricingScheme().equals(UNIT))
 						subscriptionRatePlanDto.setRate(subRatePlan.getRatePlan().getPrice());
 				}
 				Product product = productRepository.findById(subRatePlan.getProduct()).get(); 
