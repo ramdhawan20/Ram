@@ -309,6 +309,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		}
 		
 	}
+	
 	private String getStringDate(Date dateToFormat) {
 		String formatedDate = dateFormat.format(dateToFormat);
 		return formatedDate;
