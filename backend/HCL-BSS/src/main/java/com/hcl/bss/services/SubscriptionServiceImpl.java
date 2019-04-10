@@ -307,7 +307,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			// TODO: handle exception
 			throw new CustomSubscriptionException(404);
 		}
-		
 	}
 	
 	private String getStringDate(Date dateToFormat) {
