@@ -101,7 +101,7 @@ public class BatchLogServiceImpl implements BatchLogService {
 	@Override
 	public long findTotalCountByDate(Date startDate, Date endDate, String status) {
 		// TODO Auto-generated method stub
-			return batchLogRepository.count(Specification.where(BatchLogSpecification.hasStartDate(startDate)).and(BatchLogSpecification.hasStartDate(startDate)).and(BatchLogSpecification.hasStatus(status)));
+			return batchLogRepository.count(Specification.where(BatchLogSpecification.hasStartDate(startDate)).and(BatchLogSpecification.hasEndDate(endDate)).and(BatchLogSpecification.hasStatus(status)));
 	}
 	
 	private String getStringDate(Date dateToFormat) {

@@ -27,7 +27,41 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
 
     }
-
+    
+    
+    //... Exception for subscriptions
+    @ExceptionHandler(CustomSubscriptionException.class)
+	public ResponseEntity<CustomErrorResponse> subExceptionHandler(CustomSubscriptionException ex) {
+    	CustomErrorResponse error = new CustomErrorResponse();
+             if(ex.getCode().equals(100)) {
+             	error.setTimestamp(LocalDateTime.now());   
+            	error.setStatus(HttpStatus.NOT_FOUND.value()); 	 
+             	error.setError("No Subscription Found");
+             } 
+             else if(ex.getCode().equals(101)) {
+            	 error.setTimestamp(LocalDateTime.now());
+            	 error.setStatus(HttpStatus.NOT_FOUND.value());
+            	 error.setError("Customer not found");
+             }
+             else if(ex.getCode().equals(103)) {
+            	 error.setTimestamp(LocalDateTime.now());
+            	 error.setStatus(HttpStatus.NOT_FOUND.value());
+            	 error.setError("No Product/RatePlan associated with subscription");
+             }
+             else if(ex.getCode().equals(104)) {
+            	 error.setTimestamp(LocalDateTime.now());
+            	 error.setStatus(HttpStatus.NOT_FOUND.value());
+            	 error.setError("RatePlan not found for one of the product");
+             }
+             else {
+            	 error.setTimestamp(LocalDateTime.now());
+            	 error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            	 error.setError("Internal Server Error Occurred");
+            	 return new ResponseEntity<CustomErrorResponse>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+             }
+		return new ResponseEntity<CustomErrorResponse>(error, HttpStatus.NOT_FOUND);
+	}
+    
     //...
 }
 
