@@ -157,8 +157,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 				
 				multipleRatePlanDto.setPlanName(susRatePlan.getRatePlan().getRatePlanDescription());
 				multipleRatePlanDto.setPrice(susRatePlan.getPrice());
-				
+				if(null != ratePlanList) {
 				ratePlanList.add(multipleRatePlanDto);
+				}
 				multipleRatePlanDto = null;
 			}
 			
@@ -285,9 +286,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 				if(subRatePlan.getRatePlan()!=null) {
 					subscriptionRatePlanDto.setRateplan(subRatePlan.getRatePlan().getRatePlanId());
 					subscriptionRatePlanDto.setRateplanDesc(subRatePlan.getRatePlan().getRatePlanDescription());
-					if(subRatePlan.getRatePlan().getPricingScheme().equals(VOLUME))
+					if(subRatePlan.getPricingScheme().getPricingSchemeCode().equals(VOLUME))
 						subscriptionRatePlanDto.setRate(subRatePlan.getRatePlanVolume().getPrice());
-					else if(subRatePlan.getRatePlan().getPricingScheme().equals(UNIT))
+					else if(subRatePlan.getPricingScheme().getPricingSchemeCode().equals(UNIT))
 						subscriptionRatePlanDto.setRate(subRatePlan.getRatePlan().getPrice());
 				}
 				Product product = productRepository.findById(subRatePlan.getProduct()).get(); 
