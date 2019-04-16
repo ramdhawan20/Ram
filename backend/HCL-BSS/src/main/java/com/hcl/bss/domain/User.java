@@ -3,6 +3,7 @@ package com.hcl.bss.domain;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Table(name="tb_user_details")
@@ -38,7 +39,19 @@ public class User implements Serializable {
     @Column(name="cre_by")private String createdBy;
     @Column(name="cre_dt")private Timestamp createdDate;
 
-    public int getId() {
+    @OneToMany(fetch=FetchType.LAZY,cascade={CascadeType.PERSIST,CascadeType.REMOVE})
+    @JoinTable(name = "TB_USER_ROLE_MAPPING", joinColumns = { @JoinColumn(name = "USER_ID",referencedColumnName = "USER_ID")}, inverseJoinColumns = { @JoinColumn(name = "ROLE_UID",referencedColumnName = "UIDPK") })
+    private List<Role> roleList;
+  
+    public List<Role> getRoleList() {
+		return roleList;
+	}
+
+	public void setRoleList(List<Role> roleList) {
+		this.roleList = roleList;
+	}
+
+	public int getId() {
         return id;
     }
 
@@ -157,4 +170,20 @@ public class User implements Serializable {
 		this.userMiddleName = userMiddleName;
 	}
 
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", userId=" + userId + ", password=" + password + ", roleId=" + roleId
+				+ ", userFirstName=" + userFirstName + ", userMiddleName=" + userMiddleName + ", userLastName="
+				+ userLastName + ", lastLogin=" + lastLogin + ", isLocked=" + isLocked + ", updatedBy=" + updatedBy
+				+ ", uupdatedDate=" + uupdatedDate + ", createdBy=" + createdBy + ", createdDate=" + createdDate
+				+ ", roleList=" + roleList + ", getRoleList()=" + getRoleList() + ", getId()=" + getId()
+				+ ", getUserId()=" + getUserId() + ", getPassword()=" + getPassword() + ", getRoleId()=" + getRoleId()
+				+ ", getUserFirstName()=" + getUserFirstName() + ", getUserLastName()=" + getUserLastName()
+				+ ", getLastLogin()=" + getLastLogin() + ", getIsLocked()=" + getIsLocked() + ", getUpdatedBy()="
+				+ getUpdatedBy() + ", getUupdatedDate()=" + getUupdatedDate() + ", getCreatedBy()=" + getCreatedBy()
+				+ ", getCreatedDate()=" + getCreatedDate() + ", getUserMiddleName()=" + getUserMiddleName()
+				+ ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString()
+				+ "]";
+	}
+	
 }

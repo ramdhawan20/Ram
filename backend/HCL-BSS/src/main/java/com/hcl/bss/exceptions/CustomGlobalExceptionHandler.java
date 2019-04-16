@@ -62,6 +62,34 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 		return new ResponseEntity<CustomErrorResponse>(error, HttpStatus.NOT_FOUND);
 	}
     
+    //... Exception for User Management
+    @ExceptionHandler(CustomUserMgmtException.class)
+	public ResponseEntity<CustomErrorResponse> subExceptionHandler(CustomUserMgmtException ex) {
+    	CustomErrorResponse error = new CustomErrorResponse();
+             if(ex.getCode().equals(100)) {
+             	error.setTimestamp(LocalDateTime.now());   
+            	error.setStatus(HttpStatus.NOT_FOUND.value()); 	 
+             	error.setError("No User Found");
+             } 
+             else if(ex.getCode().equals(101)) {
+            	 error.setTimestamp(LocalDateTime.now());
+            	 error.setStatus(HttpStatus.NOT_FOUND.value());
+            	 error.setError("Menu not found for this user");
+             }
+             else if(ex.getCode().equals(103)) {
+            	 error.setTimestamp(LocalDateTime.now());
+            	 error.setStatus(HttpStatus.NOT_FOUND.value());
+            	 error.setError("Role is not associated with this user");
+             }
+             else {
+            	 error.setTimestamp(LocalDateTime.now());
+            	 error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            	 error.setError("Internal Server Error Occurred");
+            	 return new ResponseEntity<CustomErrorResponse>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+             }
+		return new ResponseEntity<CustomErrorResponse>(error, HttpStatus.NOT_FOUND);
+	}
+
     //...
 }
 
