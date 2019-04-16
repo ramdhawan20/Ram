@@ -454,10 +454,11 @@ public class UserManagementController {
 			
 			return new ResponseEntity<>(userAuthDto, HttpStatus.OK);
 			
-		} catch (CustomUserMgmtException e) {
+		} catch (Exception e) {
 			LOGGER.info("Error Description: " + e.getMessage());		
-			LOGGER.info("<-----------------------End getAuthorizationDetail() method in UserManagementController-------------------------------->");		
 			throw new CustomUserMgmtException(500);
+		}finally {
+			LOGGER.info("<-----------------------End getAuthorizationDetail() method in UserManagementController-------------------------------->");		
 		}
 		
 	}

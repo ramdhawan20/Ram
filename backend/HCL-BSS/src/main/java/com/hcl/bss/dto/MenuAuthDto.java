@@ -1,13 +1,14 @@
 package com.hcl.bss.dto;
 
 import java.util.List;
+import java.util.Map;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
+import org.json.JSONObject;
 
 public class MenuAuthDto {
 	private String menuName;
-	private List<SubMenuAuthDto> subManuList;
+	//private List<SubMenuAuthDto> subManuList;
+	private List<String> subManuList;
 	
 	public String getMenuName() {
 		return menuName;
@@ -15,11 +16,11 @@ public class MenuAuthDto {
 	public void setMenuName(String menuName) {
 		this.menuName = menuName;
 	}
-	public List<SubMenuAuthDto> getSubManuList() {
+	public List<String> getSubManuList() {
 		return subManuList;
 	}
-	public void setSubManuList(List<SubMenuAuthDto> subManuList) {
+	public void setSubManuList(List<String> subManuList) {
 		this.subManuList = subManuList;
 	}
-
+	
 }
