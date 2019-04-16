@@ -3,7 +3,10 @@ package com.hcl.bss.services;
 import static com.hcl.bss.constants.ApplicationConstants.ACTIVE;
 import static com.hcl.bss.constants.ApplicationConstants.ADMIN;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -15,8 +18,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.hcl.bss.domain.Menu;
+import com.hcl.bss.domain.Role;
+import com.hcl.bss.domain.SubMenu;
 import com.hcl.bss.domain.User;
+import com.hcl.bss.dto.MenuAuthDto;
+import com.hcl.bss.dto.SubMenuAuthDto;
+import com.hcl.bss.dto.UserAuthDto;
 import com.hcl.bss.dto.UserInDto;
+import com.hcl.bss.exceptions.CustomUserMgmtException;
 import com.hcl.bss.repository.AppConstantRepository;
 import com.hcl.bss.repository.UserRepository;
 import com.hcl.bss.repository.specification.UserManagementSpecification;;
@@ -213,6 +223,75 @@ public class UserServicesImpl implements UserServices {
 		} finally {
 			LOGGER.info("<-----------------------End getDropDownData() method in UserServicesImpl-------------------------------->");		
 		}
+	}
+	
+	@Override
+	public UserAuthDto getAuthorizationDetail(String userId) {
+		LOGGER.info("<-----------------------Start getAuthorizationDetail() method in UserServicesImpl-------------------------------->");		
+		User user = null;
+		user = userRepository.findByUserId(userId);
+		
+		if(user == null) {
+			throw new CustomUserMgmtException(100);
+		}
+		
+		LOGGER.info("<-----------------------End getAuthorizationDetail() method in UserServicesImpl-------------------------------->");		
+		
+		return convertUserToDto(user);
+	}
+
+	private UserAuthDto convertUserToDto(User user){
+		LOGGER.info("<-----------------------Start convertUserToDto() method in UserServicesImpl-------------------------------->");		
+		UserAuthDto userAuthDto = new UserAuthDto();
+		List<MenuAuthDto> tempManuList = new ArrayList();
+		List<SubMenuAuthDto> tempSubManuList = null;
+		MenuAuthDto menuAuthDto = null;
+		SubMenuAuthDto subMenuAuthDto = null;
+		
+		userAuthDto.setUserId(user.getUserId());
+		userAuthDto.setUserFirstName(user.getUserFirstName());
+		
+		List<Role> roleList = user.getRoleList();		
+		if(roleList == null) {
+			throw new CustomUserMgmtException(103);
+		}
+		
+		for(Role role : roleList) {
+			Set<Menu> menuSet = role.getMenuSet();			
+			if(menuSet == null) {
+				throw new CustomUserMgmtException(101);
+			}
+			
+			Iterator<Menu> menuItr = menuSet.iterator();
+			while(menuItr.hasNext()) {
+				Menu menu = menuItr.next();
+
+				menuAuthDto = new MenuAuthDto();
+				menuAuthDto.setMenuName(menu.getMenuName());
+				
+				List<SubMenu> subMenuList = menu.getSubMenu();
+				tempSubManuList = new ArrayList();
+				
+				for(SubMenu subMenu : subMenuList) {
+					subMenuAuthDto = new SubMenuAuthDto();
+					
+					subMenuAuthDto.setSubMenuName(subMenu.getSubMenuName());
+					
+					tempSubManuList.add(subMenuAuthDto);
+					subMenuAuthDto = null;
+				}
+				menuAuthDto.setSubManuList(tempSubManuList);
+				tempSubManuList = null;
+				
+				tempManuList.add(menuAuthDto);
+				menuAuthDto = null;
+			}
+			
+		}
+		userAuthDto.setMenuList(tempManuList);
+		
+		LOGGER.info("<-----------------------End convertUserToDto() method in UserServicesImpl-------------------------------->");		
+		return userAuthDto;
 	}
 
 }

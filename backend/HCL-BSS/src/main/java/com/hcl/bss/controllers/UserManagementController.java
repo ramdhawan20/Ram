@@ -1,11 +1,11 @@
 package com.hcl.bss.controllers;
 
+import static com.hcl.bss.constants.ApplicationConstants.ACTIVE;
 import static com.hcl.bss.constants.ApplicationConstants.ADMIN;
+import static com.hcl.bss.constants.ApplicationConstants.INACTIVE;
 import static com.hcl.bss.constants.ApplicationConstants.NORMAL;
 import static com.hcl.bss.constants.ApplicationConstants.ROLE_ADMIN;
 import static com.hcl.bss.constants.ApplicationConstants.ROLE_NORMAL;
-import static com.hcl.bss.constants.ApplicationConstants.ACTIVE;
-import static com.hcl.bss.constants.ApplicationConstants.INACTIVE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,16 +25,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hcl.bss.domain.User;
 import com.hcl.bss.dto.DropDownOutDto;
+import com.hcl.bss.dto.UserAuthDto;
 import com.hcl.bss.dto.UserDto;
 import com.hcl.bss.dto.UserInDto;
 import com.hcl.bss.dto.UserOutDto;
+import com.hcl.bss.exceptions.CustomUserMgmtException;
 import com.hcl.bss.repository.UserRepository;
 import com.hcl.bss.services.UserServices;
 
@@ -444,5 +444,22 @@ public class UserManagementController {
 		}
 	}
 
+
+	@ApiOperation(value = "To get user authorization details", response = UserAuthDto.class)
+	@GetMapping(value = "/user/authorize")
+	public ResponseEntity<?> getAuthorizationDetail(@RequestParam(value="userId", required = true) String userId){
+		LOGGER.info("<-----------------------Start getAuthorizationDetail() method in UserManagementController-------------------------------->");		
+		try {
+			UserAuthDto userAuthDto = userServices.getAuthorizationDetail(userId);
+			
+			return new ResponseEntity<>(userAuthDto, HttpStatus.OK);
+			
+		} catch (CustomUserMgmtException e) {
+			LOGGER.info("Error Description: " + e.getMessage());		
+			LOGGER.info("<-----------------------End getAuthorizationDetail() method in UserManagementController-------------------------------->");		
+			throw new CustomUserMgmtException(500);
+		}
+		
+	}
 
 }

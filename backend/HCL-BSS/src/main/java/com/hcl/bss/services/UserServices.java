@@ -1,11 +1,12 @@
 package com.hcl.bss.services;
 
-import com.hcl.bss.domain.User;
-import com.hcl.bss.dto.UserInDto;
-
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+
+import com.hcl.bss.domain.User;
+import com.hcl.bss.dto.UserAuthDto;
+import com.hcl.bss.dto.UserInDto;
 /**
  * This is interface to UserServicesImpl
  *
@@ -29,4 +30,5 @@ public interface UserServices {
     
 	List<String> getDropDownList(String dropDownCode);
 
+	UserAuthDto getAuthorizationDetail(String userId);
 }
