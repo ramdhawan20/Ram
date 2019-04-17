@@ -4,8 +4,10 @@ import static com.hcl.bss.constants.ApplicationConstants.ACTIVE;
 import static com.hcl.bss.constants.ApplicationConstants.ADMIN;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.transaction.Transactional;
@@ -23,7 +25,6 @@ import com.hcl.bss.domain.Role;
 import com.hcl.bss.domain.SubMenu;
 import com.hcl.bss.domain.User;
 import com.hcl.bss.dto.MenuAuthDto;
-import com.hcl.bss.dto.SubMenuAuthDto;
 import com.hcl.bss.dto.UserAuthDto;
 import com.hcl.bss.dto.UserInDto;
 import com.hcl.bss.exceptions.CustomUserMgmtException;
@@ -240,13 +241,13 @@ public class UserServicesImpl implements UserServices {
 		return convertUserToDto(user);
 	}
 
-	private UserAuthDto convertUserToDto(User user){
+	private UserAuthDto convertUserToDto(User user) {
 		LOGGER.info("<-----------------------Start convertUserToDto() method in UserServicesImpl-------------------------------->");		
 		UserAuthDto userAuthDto = new UserAuthDto();
 		List<MenuAuthDto> tempManuList = new ArrayList();
-		List<SubMenuAuthDto> tempSubManuList = null;
+		List<String> tempSubManuList = null;
+
 		MenuAuthDto menuAuthDto = null;
-		SubMenuAuthDto subMenuAuthDto = null;
 		
 		userAuthDto.setUserId(user.getUserId());
 		userAuthDto.setUserFirstName(user.getUserFirstName());
@@ -273,16 +274,10 @@ public class UserServicesImpl implements UserServices {
 				tempSubManuList = new ArrayList();
 				
 				for(SubMenu subMenu : subMenuList) {
-					subMenuAuthDto = new SubMenuAuthDto();
-					
-					subMenuAuthDto.setSubMenuName(subMenu.getSubMenuName());
-					
-					tempSubManuList.add(subMenuAuthDto);
-					subMenuAuthDto = null;
+					tempSubManuList.add(subMenu.getSubMenuName());
 				}
 				menuAuthDto.setSubManuList(tempSubManuList);
 				tempSubManuList = null;
-				
 				tempManuList.add(menuAuthDto);
 				menuAuthDto = null;
 			}
