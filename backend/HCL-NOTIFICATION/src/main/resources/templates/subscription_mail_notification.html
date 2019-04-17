@@ -1,0 +1,71 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-type" content="text/html; charset=UTF-8">
+</head>
+<body>
+	<div th:fragment="subscription_mail_notification"></div>
+	<span th:text="| Customer First Name : ${customer.firstName} |"></span>
+	<br>
+	<span th:text="| Customer Last Name : ${customer.lastName} |"></span>
+	<br>
+	<span th:text="| Customer Email Address : ${customer.emailAddress} |"></span>
+	<br>
+	<br>
+	<div>
+		<span th:text="| Billing Address |"></span><br> <span
+			th:text="| Line 1 : ${customer.billingAdress.line1} |"></span><br>
+		<span th:text="| Line 2 : ${customer.billingAdress.line2} |"></span><br>
+		<span th:text="| ZIP Code : ${customer.billingAdress.zipcode} |"></span><br>
+		<span th:text="| City : ${customer.billingAdress.city} |"></span><br>
+		<span th:text="| State : ${customer.billingAdress.state} |"></span><br>
+		<span th:text="| Country : ${customer.billingAdress.country} |"></span><br>
+	</div>
+	<br>
+	<br>
+	<div>
+		<span th:text="| Shippling Address |"></span><br> <span
+			th:text="| Line 1 : ${customer.shippingAdress.line1} |"></span><br>
+		<span th:text="| Line 2 : ${customer.shippingAdress.line2} |"></span><br>
+		<span th:text="| ZIP Code : ${customer.shippingAdress.zipcode} |"></span><br>
+		<span th:text="| City : ${customer.shippingAdress.city} |"></span><br>
+		<span th:text="| State : ${customer.shippingAdress.state} |"></span><br>
+		<span th:text="| Country : ${customer.shippingAdress.country} |"></span><br>
+	</div>
+	<br>
+	<br>
+	<div>
+		<span th:text="| Shubscription Details |"></span><br> <span
+			th:text="| Subscription No : ${customer.subscriptionDto.subscriptionId} |"></span><br>
+		<span
+			th:text="| Subscription Ampount : ${customer.subscriptionDto.totalAmount} |"></span><br>
+		<span
+			th:text="| Renewal Cycle : ${customer.subscriptionDto.remainingCycles} |"></span><br>
+		<span
+			th:text="| Next Billing Date : ${customer.subscriptionDto.nextBillDate} |"></span><br>
+	</div>
+	<br>
+	<br>
+	<div>
+		<td><span
+			th:each="Plan : ${customer.subscriptionDto.productPlanList}">
+				<th:block th:text="| Plan and AddOn : ${Plan.rateplan} |"></th:block>
+				<br>
+			</th:block> <th:block th:text="| Description : ${Plan.rateplanDesc} |"></th:block>
+				<br>
+			</th:block> <th:block th:text="| Product Name : ${Plan.productName} |"></th:block>
+				<br>
+			</th:block> <th:block th:text="| Quantity : ${Plan.quantity} |"></th:block> <br>
+			</th:block> <th:block th:text="| Rate : ${Plan.rate} |"></th:block> <br>
+			</th:block> <th:block th:text="| Amount : ${Plan.amount} |"></th:block> <br>
+			</th:block>
+
+		</span></td>
+	</div>
+	<br>
+	<br>
+
+
+</body>
+</html>
