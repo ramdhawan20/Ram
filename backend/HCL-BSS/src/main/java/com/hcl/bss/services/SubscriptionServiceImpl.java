@@ -264,19 +264,22 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		if(subscription.getLastBillingDate()!=null)
 			subscriptionDto.setLastBillDate(this.getStringDate(new Date(subscription.getLastBillingDate().getTime())));
 		else
-			subscriptionDto.setNextBillDate(NOT_APPLICABLE);
+			subscriptionDto.setLastBillDate(NOT_APPLICABLE);
 		if(subscription.getSubscriptionRatePlans()!=null && !subscription.getSubscriptionRatePlans().isEmpty())
 			subscriptionDto.setProductPlanList(covertProductRatePlanListEntityToDto(subscription.getSubscriptionRatePlans()));
 		else
 			throw new CustomSubscriptionException(103);
-		if(subscription.getAutorenew()==1)
+		if(subscription.getAutorenew()==1){
 			subscriptionDto.setRenewsForever(true);
+			if(subscription.getStatus().equalsIgnoreCase("CANCELLED"))
+				subscriptionDto.setCancelDate(this.getStringDate(new Date(subscription.getCancelDate().getTime())));
+		}
 		else {
 			subscriptionDto.setRenewsForever(false);
 			if(this.remainingCycle!=BigDecimal.ZERO)
 				subscriptionDto.setRemainingCycles(this.remainingCycle);
 			subscriptionDto.setExpireOn(this.getStringDate(new Date(subscription.getSubscriptionEndDate().getTime())));
-			if(subscription.getStatus()=="CANCELLED")
+			if(subscription.getStatus().equalsIgnoreCase("CANCELLED"))
 				subscriptionDto.setCancelDate(this.getStringDate(new Date(subscription.getCancelDate().getTime())));
 		}
 		subscriptionDto.setTotalAmount(this.totalAmount);
