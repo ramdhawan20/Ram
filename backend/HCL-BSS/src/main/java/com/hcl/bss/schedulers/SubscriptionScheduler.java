@@ -64,6 +64,8 @@ public class SubscriptionScheduler {
     private Long companyId;
 
     private Product product;
+    private RatePlan ratePlan;
+    private Boolean validOrder;
     public void setCompanyId(Long companyId) {
         this.companyId = companyId;
     }
@@ -93,6 +95,7 @@ public class SubscriptionScheduler {
         runDownBatch = new Timestamp(System.currentTimeMillis());
         List<Order> orders = orderRepository.findAll();
         for(Order order: orders){
+        	validOrder = true;
             if(STATUS_SUCCESS.equals(order.getStatus()) || FAIL_STATUS.equals(order.getStatus())){
                 continue;
             }
@@ -104,9 +107,11 @@ public class SubscriptionScheduler {
                 if(!isAddOnProduct)
                     createCustomerAccount(order, subscription);
                 else{
-                    subscriptionRepository.save(subscription);
-                    order.setStatus(STATUS_SUCCESS);
-                    orderRepository.save(order);
+                	if(!FAIL_STATUS.equals(order.getStatus())) {
+                		subscriptionRepository.save(subscription);
+                    	order.setStatus(STATUS_SUCCESS);
+                    	orderRepository.save(order);
+                	}
                 }
 
                 reset();
@@ -127,40 +132,47 @@ public class SubscriptionScheduler {
 
             if(batchLogs!=null && batchLogs.size()>0){
                 for(BatchLog log : batchLogs) {
-                    if (log.getSubscriptionId() == null)
+                    if (log.getSubscriptionId() == null && validOrder==false)
                         continue;
-                    Subscription sub = subscriptionRepository.findBySubscriptionId(log.getSubscriptionId());
-                    if (sub != null && subscription!=null) {
-                        customer = customerRepository.findBySubscriptions(sub);
-                        Set<Subscription> subscriptions = new HashSet<>();
-                        subscriptions.add(subscription);
-                        customer.setSubscriptions(subscriptions);
-                        //subscription.setCustomer(customer);
-                        break;
+                    else if(log.getSubscriptionId() == null && validOrder!=false) {
+                    	customer = createCustomerObject(order, subscription, customer);
+                    }
+//                    Subscription sub = subscriptionRepository.findBySubscriptionId(log.getSubscriptionId());
+                    else {
+                    	Subscription sub = subscriptionRepository.findBySubscriptionId(log.getSubscriptionId());
+                    	if (sub != null && subscription!=null) {	
+                    		customer = customerRepository.findBySubscriptions(sub);
+                        	Set<Subscription> subscriptions = new HashSet<>();
+                        	subscriptions.add(subscription);
+                        	customer.setSubscriptions(subscriptions);
+                        	//subscription.setCustomer(customer);
+                        	break;
+                    	}
                     }
                 }
             }
             else{
-                customer = new Customer();
-                if(order.getIsCorporate()==1){
-                    createCompany(order);
-                    customer.setCompanyId(companyId);
-                }
-                else{
-                    //individual customer
-                    persistAddress(order);
-                }
-                customer.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-                customer.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
-                customer.setFirstName(order.getBillToFirstName());
-                customer.setLastName(order.getBillToLastName());
-                customer.setEmail(order.getBillToEmail());
-                customer.setPhone(order.getBillToPhone());
-                customer.setBillTo(billToId);
-                customer.setSoldTo(soldToId);
-                Set<Subscription> subscriptions = new HashSet<>();
-                subscriptions.add(subscription);
-                customer.setSubscriptions(subscriptions);
+            	customer = createCustomerObject(order, subscription, customer);
+//                customer = new Customer();
+//                if(order.getIsCorporate()==1){
+//                    createCompany(order);
+//                    customer.setCompanyId(companyId);
+//                }
+//                else{
+//                    //individual customer
+//                    persistAddress(order);
+//                }
+//                customer.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+//                customer.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
+//                customer.setFirstName(order.getBillToFirstName());
+//                customer.setLastName(order.getBillToLastName());
+//                customer.setEmail(order.getBillToEmail());
+//                customer.setPhone(order.getBillToPhone());
+//                customer.setBillTo(billToId);
+//                customer.setSoldTo(soldToId);
+//                Set<Subscription> subscriptions = new HashSet<>();
+//                subscriptions.add(subscription);
+//                customer.setSubscriptions(subscriptions);
             }
             if(!FAIL_STATUS.equals(order.getStatus())){
                 customerRepository.save(customer);
@@ -238,6 +250,7 @@ public class SubscriptionScheduler {
         validateProduct(order);
         validateRatePlan(order);
         validatePriceQuantity(order);
+        validatePrdctRateplanMapping(order);
     }
 
     /**
@@ -273,6 +286,7 @@ public class SubscriptionScheduler {
                             continue;
                         Subscription sub = subscriptionRepository.findBySubscriptionId(log.getSubscriptionId());
                         SubscriptionRatePlan subscriptionRatePlan = createSubscriptionRatePlan(order);
+                        sub.setAmount(sub.getAmount()+ subscriptionRatePlan.getPrice());
                         Set<SubscriptionRatePlan> subRatePlans = new HashSet<>();
                         subRatePlans.add(subscriptionRatePlan);
                         sub.setSubscriptionRatePlans(subRatePlans);
@@ -301,7 +315,9 @@ public class SubscriptionScheduler {
         if (orderSource != null)
             subscription.setOrderSourceCode(orderSource.getOrderSourceCode());
         else {
-            updateOrder(order,"Order Source: "+order.getOrderSourceCode() + " is not configured");
+        	if(validOrder==true)
+        		validOrder = false;
+        	updateOrder(order,"Order Source: "+order.getOrderSourceCode() + " is not configured");
         }
 
         boolean isBundledProduct = verifyBundleProduct(order.getProductId());
@@ -318,7 +334,7 @@ public class SubscriptionScheduler {
         subscriptionRatePlans.add(subRatePlan);
         subscription.setSubscriptionRatePlans(subscriptionRatePlans);
 
-
+        subscription.setAmount(subscription.getAmount()+subRatePlan.getPrice());
         subscription.setAutorenew(order.getAutoRenew());
         subscription.setIsActive(1);
         // to be discussed --where to get this info from
@@ -329,8 +345,8 @@ public class SubscriptionScheduler {
         subscription.setStatus("ACTIVE");
         Calendar cal = Calendar.getInstance();
         //Date today = cal.getTime();
-        Integer billCycle = order.getBillingCycle();
-        String billFrequency = order.getBillingFrequency();
+//        Integer billCycle = order.getBillingCycle();
+//        String billFrequency = order.getBillingFrequency();
 
 
         BigDecimal expireAfter = subRatePlan.getRatePlan().getExpireAfter();
@@ -342,7 +358,7 @@ public class SubscriptionScheduler {
         int subEndTerm = expireAfter.intValue()*billingCycleTerm.intValue();
 
         // check for evergreen subscription
-        if(billCycle==null || billFrequency == null || "".equals(billFrequency)){
+        if(billingCycleTerm==null || frequencyCode == null || "".equals(frequencyCode)){
             //cal.set(9999,11,31);
             //subscription.setSubscriptionEndDate(new Timestamp(cal.getTimeInMillis()));
         }
@@ -350,22 +366,22 @@ public class SubscriptionScheduler {
             LocalDate subscriptionEndDate = null;
             LocalDate currentDate = LocalDate.now();
             LocalDate nextBillingDate = null;
-            switch(billFrequency){
-                case "WEEK":
+            switch(frequencyCode){
+                case "WEEKLY":
                     //cal.add(Calendar.WEEK_OF_YEAR, billCycle);
                     //nextBillingDate = currentDate.plusWeeks(billingCycleTerm.longValue());
                     nextBillingDate = currentDate.plusWeeks(1);
                     //nextBillingDate = currentDate.plusWeeks(billingCycleTerm);
                     subscriptionEndDate = currentDate.plusWeeks(subEndTerm);
                     break;
-                case "MONTH":
+                case "MONTHLY":
                     //cal.add(Calendar.MONTH, billCycle);
                     //nextBillingDate = currentDate.plusMonths(billingCycleTerm.longValue());
                     nextBillingDate = currentDate.plusMonths(1);
                     //nextBillingDate = currentDate.plusMonths(billingCycleTerm);
                     subscriptionEndDate = currentDate.plusMonths(subEndTerm);
                     break;
-                case "YEAR":
+                case "ANNUAL":
                     //cal.add(Calendar.YEAR, billCycle);
                     //nextBillingDate = currentDate.plusYears(billingCycleTerm.longValue());
                     nextBillingDate = currentDate.plusYears(1);
@@ -401,33 +417,39 @@ public class SubscriptionScheduler {
      */
     private SubscriptionRatePlan createSubscriptionRatePlan(Order order){
         SubscriptionRatePlan subRatePlan = new SubscriptionRatePlan();
-        subRatePlan.setBillingCycle(order.getBillingCycle());
+        subRatePlan.setBillingCycle(ratePlan.getBillingCycleTerm().intValue());
         subRatePlan.setQuantity(order.getQuantity());
-        PricingScheme pricingScheme = entityManager.find(PricingScheme.class, order.getPricingSchemeCode());
-        if(pricingScheme== null){
-            updateOrder(order, "Pricing Scheme Code: "+order.getPricingSchemeCode()+ " is not configured");
+//        PricingScheme pricingScheme = entityManager.find(PricingScheme.class, order.getPricingSchemeCode());
+        if(ratePlan.getPricingScheme()== null){
+        	if(validOrder==true)
+        		validOrder = false;
+        	updateOrder(order, "Pricing Scheme Code: "+ratePlan.getPricingScheme()+ " is not configured");
         }
         else{
-            subRatePlan.setBillingCycle(order.getBillingCycle());
-            subRatePlan.setBillingFrequency(order.getBillingFrequency());
-            RatePlan ratePlan = entityManager.find(RatePlan.class, order.getRatePlanId());
+            subRatePlan.setBillingCycle(ratePlan.getBillingCycleTerm().intValue());
+            subRatePlan.setBillingFrequency(ratePlan.getBillingFrequency());
+//            RatePlan ratePlan = entityManager.find(RatePlan.class, order.getRatePlanId());
             //subRatePlan.setRatePlan(ratePlan.getId()); ////Commented By: Vinay
             subRatePlan.setRatePlan(ratePlan); //Added By: Vinay
             subRatePlan.setProduct(order.getProductId());
-            subRatePlan.setPricingScheme(pricingScheme);
+//            subRatePlan.setPricingScheme(pricingScheme);
             subRatePlan.setCreatedDate(new Timestamp(System.currentTimeMillis()));
             subRatePlan.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
             int quantity = order.getQuantity();
             Long ratePlanUid = ratePlan.getId();
-            if(VOLUME.equals(pricingScheme.getPricingSchemeCode())){
+            if(VOLUME.equals(ratePlan.getPricingScheme())){
                 if(quantity<0){
-                    updateOrder(order, order.getQuantity()+ " is less than zero");
+                	if(validOrder==true)
+                		validOrder = false;
+                	updateOrder(order, order.getQuantity()+ " is less than zero");
                     return subRatePlan;
                 }
 
                 List<RatePlanVolume> ratePlanVolumes = ratePlanVolumeRepository.findByRatePlan(ratePlanUid);
                 if(ratePlanVolumes == null || ratePlanVolumes.size()==0){
-                    updateOrder(order, "Rate Plan Volume is not configured for the Rate Plan:"+ratePlan.getRatePlanId());
+                	if(validOrder==true)
+                		validOrder = false;
+                	updateOrder(order, "Rate Plan Volume is not configured for the Rate Plan:"+ratePlan.getRatePlanId());
                     return subRatePlan;
                 }
                 RatePlanVolume ratePlanVolume = null;
@@ -445,9 +467,11 @@ public class SubscriptionScheduler {
                 subRatePlan.setPrice(quantity * ratePlanVolume.getPrice());
                 subRatePlan.setRatePlanVolume(ratePlanVolume);
             }
-            else if(UNIT.equals(pricingScheme.getPricingSchemeCode())){
+            else if(UNIT.equals(ratePlan.getPricingScheme())){
                 if(quantity<0){
-                    updateOrder(order, order.getQuantity()+ " is less than zero");
+                	if(validOrder==true)
+                		validOrder = false;
+                	updateOrder(order, order.getQuantity()+ " is less than zero");
                     return subRatePlan;
                 }
                 double price = ratePlan.getPrice()* quantity;
@@ -463,10 +487,11 @@ public class SubscriptionScheduler {
      * @param order
      */
     private boolean validateProduct(Order order){
-        Optional<Product> productOptional = productRepository.findById(order.getProductId());
+    	Optional<Product> productOptional = productRepository.findById(order.getProductId());
         if(!productOptional.isPresent()){
-
-            return updateOrder(order, "Product:"+ order.getProductId()+ " is not configured");
+        	if(validOrder==true)
+            	validOrder = false;
+        	return updateOrder(order, "Product:"+ order.getProductId()+ " is not configured");
             //return updateOrder(order, "Product:", order.getProductId());
         }
         System.out.println("Product "+ productOptional.get().getProductDispName()+" is present");
@@ -527,12 +552,16 @@ public class SubscriptionScheduler {
      * @return
      */
     private boolean validateRatePlan(Order order){
-        RatePlan ratePlan = entityManager.find (RatePlan.class,order.getRatePlanId());
+    	ratePlan = entityManager.find (RatePlan.class,order.getRatePlanId());
         if(ratePlan==null){
-            return updateOrder(order, "Rate plan:"+ order.getRatePlanId()+ " is not configured");
+            if(validOrder==true)
+            	validOrder = false;
+        	return updateOrder(order, "Rate plan:"+ order.getRatePlanId()+ " is not configured");
         }
         else if(ratePlan.getIsActive()== 0){
-            return updateOrder(order, "Rate plan:"+ order.getRatePlanId()+ " is inactive");
+        	if(validOrder==true)
+        		validOrder = false;
+        	return updateOrder(order, "Rate plan:"+ order.getRatePlanId()+ " is inactive");
         }
         //System.out.println("Rateplan "+ ratePlan.getRatePlanId()+" is present");
         return true;
@@ -544,17 +573,23 @@ public class SubscriptionScheduler {
      * @return
      */
     private boolean validatePriceQuantity(Order order){
-        PricingScheme pricingScheme = entityManager.find(PricingScheme.class, order.getPricingSchemeCode());
-        int qty = order.getQuantity();
-        if(qty<0){
-            BatchLog error = updateBatchLog(order,"Qty:"+qty + " should be greater than zeo");
-            batchLogRepository.save(error);
-        }
-
-        if(pricingScheme==null){
-            return updateOrder(order,"Pricing Scheme:"+ order.getPricingSchemeCode()+" is not configured" );
-        }
-        return true;
+//      PricingScheme pricingScheme = entityManager.find(PricingScheme.class, order.getPricingSchemeCode());
+  	 if(ratePlan!=null) {
+  		 int qty = order.getQuantity();
+  	     if(qty<0){
+  	    	 BatchLog error = updateBatchLog(order,"Qty:"+qty + " should be greater than zeo");
+  	    	 batchLogRepository.save(error);
+  	    	 if(validOrder==true)
+  	    		 validOrder = false;
+  	     }
+  	     if(ratePlan.getPricingScheme()==null){
+  	    	 if(validOrder==true)
+  	    		 validOrder = false;
+  	    	 return updateOrder(order,"Pricing Scheme:"+ ratePlan.getPricingScheme()+" is not configured" );
+  	     }
+  	     return true;
+  	 }
+      return false;
     }
 
     /**
@@ -568,5 +603,44 @@ public class SubscriptionScheduler {
 
     private boolean verifyBundleProduct(Long productId){
         return product.getIsBundleProduct()==1? true:false;
+    }
+    
+ // To validate product rateplan mapping
+    private boolean validatePrdctRateplanMapping(Order order) {
+		// TODO Auto-generated method stub
+    	Set<RatePlan> ratePlanSetAstdWthProduct = new HashSet<RatePlan>();
+    	ratePlanSetAstdWthProduct = product.getRatePlans();
+		for(RatePlan ratePlan : ratePlanSetAstdWthProduct) {
+			if(ratePlan.getId().equals(order.getRatePlanId()))
+				return true;
+		}
+		if(validOrder==true)
+			validOrder = false;
+		return updateOrder(order, "Rate plan:"+order.getRatePlanId()+" is not associated with product:"+order.getProductId());
+	}
+    
+    private Customer createCustomerObject(Order order, Subscription subscription, Customer customer) {
+    	
+    	customer = new Customer();
+        if(order.getIsCorporate()==1){
+            createCompany(order);
+            customer.setCompanyId(companyId);
+        }
+        else{
+            //individual customer
+            persistAddress(order);
+        }
+        customer.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+        customer.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
+        customer.setFirstName(order.getBillToFirstName());
+        customer.setLastName(order.getBillToLastName());
+        customer.setEmail(order.getBillToEmail());
+        customer.setPhone(order.getBillToPhone());
+        customer.setBillTo(billToId);
+        customer.setSoldTo(soldToId);
+        Set<Subscription> subscriptions = new HashSet<>();
+        subscriptions.add(subscription);
+        customer.setSubscriptions(subscriptions);
+        return customer;
     }
 }

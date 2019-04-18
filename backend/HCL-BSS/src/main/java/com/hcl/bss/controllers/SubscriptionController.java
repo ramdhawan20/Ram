@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hcl.bss.dto.CustomerDto;
+import com.hcl.bss.dto.ResponseDto;
 import com.hcl.bss.dto.SubscriptionDto;
 import com.hcl.bss.dto.SubscriptionInOut;
 import com.hcl.bss.services.SubscriptionService;
@@ -102,6 +103,15 @@ public class SubscriptionController {
 	public ResponseEntity<CustomerDto> findSubscriptionDetail(@RequestParam(value = "subscriptionId", required = true) String subId){
 		
 		return new ResponseEntity<>(subscriptionService.findSubscriptionDetail(subId), HttpStatus.OK);
+		
+	}
+	
+	@ApiOperation(value="Cancel Subscription",response = ResponseDto.class)
+	@RequestMapping(value="/cancelSubscription", produces= {"application/json"},method=RequestMethod.PUT)
+	public ResponseEntity<ResponseDto> cancelSubscription(@RequestParam(value = "subscriptionId", required = true) String subId){
+		
+		ResponseDto responseDto = subscriptionService.cancelSubscription(subId);
+		return new ResponseEntity<>(responseDto,HttpStatus.OK);
 		
 	}
 }

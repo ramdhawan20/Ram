@@ -86,13 +86,14 @@ public class Order implements Serializable {
     private Integer isCorporate;
     @Column(name="AUTORENEW")
     private Integer autoRenew;
-    @Column(name="BILLING_CYCLE")
-    private Integer billingCycle;
-
-    @Column(name="BILLING_FREQUENCY")
-    private String billingFrequency;
-    @Column(name="PRICING_SCHEME_CODE")
-    private String pricingSchemeCode;
+//	No need of these attribute to be present in Order(Tb_temporder) it will handeled using rateplan
+//    @Column(name="BILLING_CYCLE")
+//    private Integer billingCycle;
+//
+//    @Column(name="BILLING_FREQUENCY")
+//    private String billingFrequency;
+//    @Column(name="PRICING_SCHEME_CODE")
+//    private String pricingSchemeCode;
     @Column(name="RATE_PLAN_ID")
     private Long ratePlanId;
     /*@Column(name="RATEPLAN_VOLUME_UID")
@@ -347,29 +348,29 @@ public class Order implements Serializable {
         this.autoRenew = autoRenew;
     }
 
-    public Integer getBillingCycle() {
-        return billingCycle;
-    }
-
-    public void setBillingCycle(Integer billingCycle) {
-        this.billingCycle = billingCycle;
-    }
-
-    public String getBillingFrequency() {
-        return billingFrequency;
-    }
-
-    public void setBillingFrequency(String billingFrequency) {
-        this.billingFrequency = billingFrequency;
-    }
-
-    public String getPricingSchemeCode() {
-        return pricingSchemeCode;
-    }
-
-    public void setPricingSchemeCode(String pricingSchemeCode) {
-        this.pricingSchemeCode = pricingSchemeCode;
-    }
+//    public Integer getBillingCycle() {
+//        return billingCycle;
+//    }
+//
+//    public void setBillingCycle(Integer billingCycle) {
+//        this.billingCycle = billingCycle;
+//    }
+//
+//    public String getBillingFrequency() {
+//        return billingFrequency;
+//    }
+//
+//    public void setBillingFrequency(String billingFrequency) {
+//        this.billingFrequency = billingFrequency;
+//    }
+//
+//    public String getPricingSchemeCode() {
+//        return pricingSchemeCode;
+//    }
+//
+//    public void setPricingSchemeCode(String pricingSchemeCode) {
+//        this.pricingSchemeCode = pricingSchemeCode;
+//    }
 
     public Long getRatePlanId() {
         return ratePlanId;
