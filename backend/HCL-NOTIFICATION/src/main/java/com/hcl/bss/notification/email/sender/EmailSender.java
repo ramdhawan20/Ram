@@ -1,8 +1,12 @@
 package com.hcl.bss.notification.email.sender;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import java.util.regex.*;
 
 import javax.mail.Message;
+import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -28,32 +32,49 @@ public class EmailSender implements EmailNotificationProducer {
 	@Override
 	public void createMail(CustomerDto customer) {
 		String htmlContent = emailContentBuilder.buildEmailContent(customer);
+		String subscriptionId = customer.getSubscriptionDto().getSubscriptionId();
 		System.out.println("<------------------------------------------------------------->");
 		System.out.println(htmlContent);
 		System.out.println("<------------------------------------------------------------->");
-		sendMail(htmlContent);
+		sendMail(htmlContent,subscriptionId);
 	}
 
 	@Override
-	public void sendMail(String htmlContent) {
+	public void sendMail(String htmlContent, String subscriptionId) {
+		String to = "";
+	        Matcher m = Pattern.compile("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+").matcher(htmlContent);
+	        while (m.find()) {
+	            System.out.println(m.group());
+	            to = m.group();
+	        }
+	    
+		
+		
+		
 		Properties properties = System.getProperties();
 		properties.put("mail.smtp.host", "localhost");
 		properties.put("mail.smtp.port", "25");
 
-		String to = "ranjankumar.y@hcl.com";
-		String from = "orders_hclbss@mail.hcl.com";
+		
+		String from = "subscriptions_hclbss@mail.hcl.com";
 		Session session = Session.getDefaultInstance(properties);
 		System.out.println("Preparing to send email....");
 		try {
 			MimeMessage message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(from));
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-			message.setSubject("Subscription Detail");
+			message.setSubject("Subscription Detail for "+subscriptionId);
 			String htmlBody = htmlContent;
 			message.setContent(htmlBody, "text/html; charset=utf-8");
 			Transport.send(message);
 			System.out.println("Sent message successfully....");
-		} catch (Exception ex) {
+		} 
+		catch(SendFailedException sfe) {
+			System.out.println("Mail not send");
+			sfe.printStackTrace();
+		}
+		catch (Exception ex) {
+			System.out.println("Mail not send");
 			ex.printStackTrace();
 		}
 

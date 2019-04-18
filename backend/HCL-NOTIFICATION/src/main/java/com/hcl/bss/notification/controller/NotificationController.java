@@ -21,6 +21,7 @@ public class NotificationController {
 	@RequestMapping(value="/emailSubscriptionDetail", produces = { "application/json" }, method = RequestMethod.GET)
 	
 	public void emailSubscriptionDetail(@RequestParam(value = "subscriptionId", required = true) String subId) throws Exception{
+	
 		
 		emailService.emailSubscriptionDetail(subId);
 		
