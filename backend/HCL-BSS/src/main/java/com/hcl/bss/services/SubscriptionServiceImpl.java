@@ -342,4 +342,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		else
 			throw new CustomSubscriptionException(105);
 	}
+
+	@Override
+	public List<String> getLastSubscriptionIds() {
+		return subscriptionRepository.getLastSubscriptionIds();
+	}
 }

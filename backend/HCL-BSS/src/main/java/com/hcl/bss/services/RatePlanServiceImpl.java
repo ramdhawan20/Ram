@@ -21,6 +21,7 @@ import com.hcl.bss.dto.ResponseDto;
 import com.hcl.bss.repository.AppConstantRepository;
 import com.hcl.bss.repository.CurrencyMasterRepository;
 import com.hcl.bss.repository.RatePlanRepository;
+import com.hcl.bss.repository.RatePlanVolumeRepository;
 import com.hcl.bss.repository.UOMRepository;
 @Service
 @Transactional
@@ -34,6 +35,8 @@ public class RatePlanServiceImpl implements RatePlanService {
 	UOMRepository uomRepository;
 	@Autowired
 	AppConstantRepository appConstantRepository;
+	@Autowired
+	RatePlanVolumeRepository ratePlanVolumeRepository;
 	
 	@Override
 	public ResponseDto addRatePlan(RatePlanDto ratePlanDto) {
@@ -67,15 +70,24 @@ public class RatePlanServiceImpl implements RatePlanService {
 	
 	private List<RatePlanDto> convertRatePlanEntityToDto(List<RatePlan> ratePlanList) {
 		List<RatePlanDto> ratePlanDtoList = new ArrayList<RatePlanDto>();
+		List<RatePlanVolume> ratePlanVolumeList = new ArrayList<RatePlanVolume>();
 		for(RatePlan rplan : ratePlanList) {
 
 			RatePlanDto rpDto = new RatePlanDto();
 			rpDto.setRatePlanId(rplan.getRatePlanId());
 			rpDto.setName(rplan.getRatePlanDescription());
-			rpDto.setBillEvery(rplan.getBillingCycleTerm().toString()+rplan.getBillingFrequency());
+			rpDto.setBillEvery(rplan.getBillingCycleTerm().toString()+" "+rplan.getBillingFrequency());
 			rpDto.setPricingScheme(rplan.getPricingScheme());
+			if("VOLUME".equalsIgnoreCase(rplan.getPricingScheme())) {
+				
+				ratePlanVolumeList = ratePlanVolumeRepository.findByRatePlan(rplan.getId());
+				rpDto.setRatePlanVolumeDtoList(convertRatePlanVolumeEntityToDto(ratePlanVolumeList));
+			}
 			rpDto.setUnitOfMesureId(rplan.getUom().getUnitOfMeasure());
 			rpDto.setPrice(rplan.getPrice());
+			rpDto.setBillingCycleTerm(rplan.getBillingCycleTerm());
+			rpDto.setSetUpFee(rplan.getSetUpFee());
+			rpDto.setFreeTrail(rplan.getFreeTrail());
 			if(rplan.getIsActive() == 0) {
 				rpDto.setIsActive("Inactive");
 			}
@@ -88,6 +100,21 @@ public class RatePlanServiceImpl implements RatePlanService {
 		return ratePlanDtoList;
 	}
 	
+private List<RatePlanVolumeDto> convertRatePlanVolumeEntityToDto(List<RatePlanVolume> ratePlanVolumeList) {
+
+	List<RatePlanVolumeDto> ratePlanVolumeDtoList = new ArrayList<RatePlanVolumeDto>();
+	ratePlanVolumeList.forEach(ratePlanVolumeDto->{
+		RatePlanVolumeDto ratePlanVolume = new RatePlanVolumeDto();
+		ratePlanVolume.setStartQty(ratePlanVolumeDto.getStartQty());
+		ratePlanVolume.setEndQty(ratePlanVolumeDto.getEndQty());
+		ratePlanVolume.setPrice(ratePlanVolumeDto.getPrice());
+		ratePlanVolumeDtoList.add(ratePlanVolume);
+	});
+	return ratePlanVolumeDtoList;
+	}
+
+
+
 private RatePlan convertRatePlanDtoToEntity(RatePlanDto ratePlanDto) {
 		
 		RatePlan ratePlan = new RatePlan();
