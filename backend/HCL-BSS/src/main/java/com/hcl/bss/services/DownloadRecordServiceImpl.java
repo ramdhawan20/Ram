@@ -48,6 +48,7 @@ import com.hcl.bss.dto.ProductDto;
 import com.hcl.bss.dto.RatePlanDto;
 import com.hcl.bss.dto.SubscriptionDto;
 import com.hcl.bss.dto.SubscriptionInOut;
+import com.hcl.bss.dto.UserInDto;
 import com.hcl.bss.repository.CustomerRepository;
 import com.hcl.bss.repository.ProductRepository;
 import com.hcl.bss.repository.SubscriptionRepository;
@@ -69,6 +70,8 @@ public class DownloadRecordServiceImpl implements DownloadRecordService {
 	CustomerRepository customerRepository;
 	@Autowired
 	SubscriptionServiceImpl subscriptionServiceImpl;
+	@Autowired
+	UserServices userServices;
 	@Value("${download.csv.product.header}")
 	String downloadProductCsvHeader;
 	@Value("${download.csv.user.header}")
@@ -414,11 +417,11 @@ FileWriter fileWriter = null;
 		return ProductDtoList;
 	}
 	@Override
-	public String downloadSearchRecords(CSVRecordDataDto csvRecordData, Pageable reqCount, HttpServletResponse response) throws IOException {
+	public String downloadSearchRecords(CSVRecordDataDto csvRecordData, Pageable reqCount, HttpServletResponse response) throws Exception {
 		String responseMessage = BLANK;
 		String fileName = null;
 		List<SubscriptionDto> subscriptionDtoList = new ArrayList<SubscriptionDto>();
-		
+		List<User> userList = new ArrayList<User>();
 		ProductDataDto productList = new ProductDataDto();
 		if("PRODUCTSEARCHPAGE".equalsIgnoreCase(csvRecordData.getPageName())) {
 			fileName = "PRODUCT_DATA.CSV";
@@ -430,16 +433,23 @@ FileWriter fileWriter = null;
 			SubscriptionInOut subscription = csvRecordData.getSubscriptionData();
 			subscriptionDtoList = subscriptionServiceImpl.findAllSubscription(subscription, reqCount, response);
 		}
+		else if("USERSEARCHPAGE".equalsIgnoreCase(csvRecordData.getPageName())) {
+			fileName = "USER_DATA.CSV";
+			UserInDto user = csvRecordData.getUserData();
+			userList = userServices.findAllUser(user, reqCount, response);
+		}
 			File file = null;
 			file = new File(EXTERNAL_FILE_PATH + fileName);
 			System.out.println(EXTERNAL_FILE_PATH + fileName);
 			if(null != productList.getProductList() && !productList.getProductList().isEmpty()) {
 			writeToProductCSV(productList.getProductList());
 			}
-			else if(null != subscriptionDtoList) {
-				writeToSubscriptionCSV(subscriptionDtoList);
+			else if(null != subscriptionDtoList && !subscriptionDtoList.isEmpty()) {
+				writeToSubscriptionCSV(subscriptionDtoList );
 				}
-			
+			else if(null != userList && !userList.isEmpty()) {
+				writeToUserCSV(userList);
+			}
 			String mimeType = URLConnection.guessContentTypeFromName(file.getName());
 			if (mimeType == null) {
 				mimeType = "text/csv";

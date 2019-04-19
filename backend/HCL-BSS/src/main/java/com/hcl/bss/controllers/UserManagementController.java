@@ -10,6 +10,7 @@ import static com.hcl.bss.constants.ApplicationConstants.ROLE_NORMAL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -77,7 +78,7 @@ public class UserManagementController {
 	
 	@ApiOperation(value = "Get list of all user", response = UserOutDto.class)
 	@PutMapping(value = "/users")
-	public ResponseEntity<?> findAllUser(@Valid @RequestBody UserInDto userIn) {
+	public ResponseEntity<?> findAllUser(@Valid @RequestBody UserInDto userIn, HttpServletResponse response) {
 	//public ResponseEntity<?> findAllUser() {
 		LOGGER.info("<-----------------------Start findAllUser() method-------------------------------->");
 		LOGGER.info("I/P details: " + userIn.toString());
@@ -89,7 +90,7 @@ public class UserManagementController {
 		Pageable pageable = PageRequest.of(userIn.getPageNo(), Integer.parseInt(pageSize));
 		
 		try {
-			userList = userServices.findAllUser(userIn, pageable);
+			userList = userServices.findAllUser(userIn, pageable, response);
 			
 			if(userList == null && userList.size() == 0) {
 				userOut.setSuccess(false);

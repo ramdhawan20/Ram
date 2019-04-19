@@ -2,6 +2,8 @@ package com.hcl.bss.services;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.data.domain.Pageable;
 
 import com.hcl.bss.domain.User;
@@ -18,7 +20,7 @@ public interface UserServices {
     
 	User findByUserId(String userId) throws Exception;
 	
-	List<User> findAllUser(UserInDto userIn, Pageable pageable) throws Exception;
+	List<User> findAllUser(UserInDto userIn, Pageable pageable, HttpServletResponse response) throws Exception;
     
     User addUser(User user) throws Exception ;
     
