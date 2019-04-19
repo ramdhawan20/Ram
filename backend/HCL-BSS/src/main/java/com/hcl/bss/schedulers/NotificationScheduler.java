@@ -1,5 +1,15 @@
 package com.hcl.bss.schedulers;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+
+import com.hcl.bss.dto.CustomerDto;
+import com.hcl.bss.services.SubscriptionService;
+
 
 /*
 import org.apache.activemq.camel.component.ActiveMQComponent;
@@ -11,7 +21,7 @@ import org.apache.camel.impl.DefaultCamelContext;
 
 /**
  *
- * author dhiraj.s
+ * author ranjankumar.y
  *
  * Description
  * Core responsiblity of this scheduler is to send notificaiton
@@ -20,26 +30,23 @@ import org.apache.camel.impl.DefaultCamelContext;
  * tables.
  *
  */
+@Component
 public class NotificationScheduler {
+	@Autowired
+	private RestTemplate restTemplate;
+	@Autowired
+	SubscriptionService subscriptionService;
+	public static final String SUBSCRIPTION_DETAILS_URL = "http://localhost:8081/emailSubscriptionDetail?subscriptionId=";
 
-   /* public static void main(String[] args) throws Exception {
-        CamelContext context = new DefaultCamelContext();
-        try {
-            context.addComponent("activemq", ActiveMQComponent.activeMQComponent("vm://localhost?broker.persistent=false"));
-            context.addRoutes(new RouteBuilder() {
-                @Override
-                public void configure() throws Exception {
-                    from("activemq:queue:test.queue")
-                            .to("stream:out");
-                }
-            });
-            ProducerTemplate template = context.createProducerTemplate();
-            context.start();
-            template.sendBody("activemq:test.queue", "Hello World");
-            Thread.sleep(2000);
-        } finally {
-            context.stop();
-        }
-    }
-*/
+	 @Scheduled(cron="0 0 0 * * ?")
+	    public void runSubscriptionDetails() throws Exception{
+		 List<String> subIds = subscriptionService.getLastSubscriptionIds();
+		
+	        //1.call controller of notification for subscription details . from controller further flow will happen
+		for(String subId :subIds) {
+		 
+			restTemplate.getForObject(SUBSCRIPTION_DETAILS_URL+subId, CustomerDto.class);
+		}
+	        
+	    }
 }

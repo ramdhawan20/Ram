@@ -24,4 +24,6 @@ public interface SubscriptionService {
 
     CustomerDto findSubscriptionDetail(String subId);
     ResponseDto cancelSubscription(String subId);
+
+	List<String> getLastSubscriptionIds();
 }
