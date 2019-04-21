@@ -19,4 +19,7 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
     public Subscription findBySubscriptionId(String name);
 
     public List<Subscription> findByIsActive(int isActive);
+    
+    @Query(value="select SUBSCRIPTION_ID from tb_subscription where CRE_DT>=DATE_SUB(NOW(), INTERVAL 1 day)",nativeQuery=true)
+	public List<String> getLastSubscriptionIds();
 }

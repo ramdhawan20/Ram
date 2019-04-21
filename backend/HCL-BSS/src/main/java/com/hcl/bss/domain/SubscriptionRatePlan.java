@@ -50,9 +50,10 @@ public class SubscriptionRatePlan implements Serializable {
     @Column(name="BILLING_FREQUENCY")
     private String billingFrequency;
 
-    @ManyToOne
-    @JoinColumn(name="PRICING_SCHEME",nullable = false)
-    private PricingScheme pricingScheme;
+//	Removing PRICING_SCHEME_MASTER TABLE    
+//    @ManyToOne
+//    @JoinColumn(name="PRICING_SCHEME",nullable = false)
+//    private PricingScheme pricingScheme;
 
     @Column(name="CRE_DT")
     @CreatedDate
@@ -127,13 +128,13 @@ public class SubscriptionRatePlan implements Serializable {
         this.billingFrequency = billingFrequency;
     }
 
-    public PricingScheme getPricingScheme() {
-        return pricingScheme;
-    }
-
-    public void setPricingScheme(PricingScheme pricingScheme) {
-        this.pricingScheme = pricingScheme;
-    }
+//    public PricingScheme getPricingScheme() {
+//        return pricingScheme;
+//    }
+//
+//    public void setPricingScheme(PricingScheme pricingScheme) {
+//        this.pricingScheme = pricingScheme;
+//    }
 
     public Timestamp getCreatedDate() {
         return createdDate;

@@ -436,7 +436,7 @@ FileWriter fileWriter = null;
 			if(null != productList.getProductList() && !productList.getProductList().isEmpty()) {
 			writeToProductCSV(productList.getProductList());
 			}
-			else if(!subscriptionDtoList.isEmpty()) {
+			else if(null != subscriptionDtoList) {
 				writeToSubscriptionCSV(subscriptionDtoList);
 				}
 			

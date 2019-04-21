@@ -75,7 +75,7 @@ public class Product implements java.io.Serializable {
 	private Date updatedDate;
 	@Column(name = "UPD_BY", length = 50)
 	private String updatedBy;
-	@ManyToMany(fetch=FetchType.LAZY,cascade={CascadeType.PERSIST,CascadeType.REMOVE})
+	@ManyToMany(fetch=FetchType.EAGER,cascade={CascadeType.PERSIST,CascadeType.REMOVE})
 	@JoinTable(name = "TB_RATEPLAN_PRODUCT_MAPPING", joinColumns = { @JoinColumn(name = "PRODUCT_UID",referencedColumnName = "UIDPK")}, inverseJoinColumns = { @JoinColumn(name = "RATEPLAN_UID",referencedColumnName = "UIDPK") })
 	private Set<RatePlan> ratePlans = new HashSet<RatePlan>();
 	

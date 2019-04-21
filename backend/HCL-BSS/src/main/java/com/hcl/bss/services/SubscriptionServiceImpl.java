@@ -3,9 +3,12 @@ package com.hcl.bss.services;
 import static com.hcl.bss.constants.ApplicationConstants.*;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +34,7 @@ import com.hcl.bss.domain.SubscriptionRatePlan;
 import com.hcl.bss.dto.AddressDto;
 import com.hcl.bss.dto.CustomerDto;
 import com.hcl.bss.dto.MultipleRatePlanDto;
+import com.hcl.bss.dto.ResponseDto;
 import com.hcl.bss.dto.SubscriptionDetailDto;
 import com.hcl.bss.dto.SubscriptionDto;
 import com.hcl.bss.dto.SubscriptionInOut;
@@ -260,18 +264,23 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		if(subscription.getLastBillingDate()!=null)
 			subscriptionDto.setLastBillDate(this.getStringDate(new Date(subscription.getLastBillingDate().getTime())));
 		else
-			subscriptionDto.setNextBillDate(NOT_APPLICABLE);
+			subscriptionDto.setLastBillDate(NOT_APPLICABLE);
 		if(subscription.getSubscriptionRatePlans()!=null && !subscription.getSubscriptionRatePlans().isEmpty())
 			subscriptionDto.setProductPlanList(covertProductRatePlanListEntityToDto(subscription.getSubscriptionRatePlans()));
 		else
 			throw new CustomSubscriptionException(103);
-		if(subscription.getAutorenew()==1)
+		if(subscription.getAutorenew()==1){
 			subscriptionDto.setRenewsForever(true);
+			if(subscription.getStatus().equalsIgnoreCase("CANCELLED"))
+				subscriptionDto.setCancelDate(this.getStringDate(new Date(subscription.getCancelDate().getTime())));
+		}
 		else {
 			subscriptionDto.setRenewsForever(false);
 			if(this.remainingCycle!=BigDecimal.ZERO)
 				subscriptionDto.setRemainingCycles(this.remainingCycle);
 			subscriptionDto.setExpireOn(this.getStringDate(new Date(subscription.getSubscriptionEndDate().getTime())));
+			if(subscription.getStatus().equalsIgnoreCase("CANCELLED"))
+				subscriptionDto.setCancelDate(this.getStringDate(new Date(subscription.getCancelDate().getTime())));
 		}
 		subscriptionDto.setTotalAmount(this.totalAmount);
 		return subscriptionDto;
@@ -286,9 +295,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 				if(subRatePlan.getRatePlan()!=null) {
 					subscriptionRatePlanDto.setRateplan(subRatePlan.getRatePlan().getRatePlanId());
 					subscriptionRatePlanDto.setRateplanDesc(subRatePlan.getRatePlan().getRatePlanDescription());
-					if(subRatePlan.getPricingScheme().getPricingSchemeCode().equals(VOLUME))
+					if(subRatePlan.getRatePlan().getPricingScheme().equals(VOLUME))
 						subscriptionRatePlanDto.setRate(subRatePlan.getRatePlanVolume().getPrice());
-					else if(subRatePlan.getPricingScheme().getPricingSchemeCode().equals(UNIT))
+					else if(subRatePlan.getRatePlan().getPricingScheme().equals(UNIT))
 						subscriptionRatePlanDto.setRate(subRatePlan.getRatePlan().getPrice());
 				}
 				Product product = productRepository.findById(subRatePlan.getProduct()).get(); 
@@ -312,5 +321,30 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	private String getStringDate(Date dateToFormat) {
 		String formatedDate = dateFormat.format(dateToFormat);
 		return formatedDate;
+	}
+	
+	@Override
+	public ResponseDto cancelSubscription(String subId) {
+		
+		Subscription subscription = subscriptionRepository.findBySubscriptionId(subId);
+		ResponseDto responseDto = new ResponseDto();	
+		if(subscription!=null) {
+			subscription.setStatus("CANCELLED");
+			subscription.setIsActive(0);
+//			subscription.setSubscriptionEndDate(Timestamp.valueOf((LocalDateTime.now())));
+			subscription.setCancelDate(Timestamp.valueOf((LocalDate.now().atStartOfDay())));
+			subscriptionRepository.save(subscription);
+			responseDto.setMessage("Subscription Cancelled Successfully");
+			responseDto.setResponseCode(200);
+			responseDto.setResponseStatus("Successfull");
+			return responseDto;
+		}
+		else
+			throw new CustomSubscriptionException(105);
+	}
+
+	@Override
+	public List<String> getLastSubscriptionIds() {
+		return subscriptionRepository.getLastSubscriptionIds();
 	}
 }

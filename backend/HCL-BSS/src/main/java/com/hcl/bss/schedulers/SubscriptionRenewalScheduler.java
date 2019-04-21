@@ -280,19 +280,19 @@ public class SubscriptionRenewalScheduler {
      */
     private SubscriptionRatePlan createSubRatePlan(SubscriptionRatePlan currentSubRatePlan, String subscriptionId){
         SubscriptionRatePlan subRatePlan = new SubscriptionRatePlan();
-        PricingScheme pricingScheme = currentSubRatePlan.getPricingScheme();
+//        PricingScheme pricingScheme = currentSubRatePlan.getPricingScheme();
         subRatePlan.setBillingCycle(currentSubRatePlan.getBillingCycle());
         subRatePlan.setBillingFrequency(currentSubRatePlan.getBillingFrequency());
         RatePlan ratePlan = currentSubRatePlan.getRatePlan();
         subRatePlan.setRatePlan(ratePlan); //Added By: Vinay
 
         subRatePlan.setProduct(currentSubRatePlan.getProduct());
-        subRatePlan.setPricingScheme(pricingScheme);
+//        subRatePlan.setPricingScheme(pricingScheme);
         subRatePlan.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         subRatePlan.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
         int quantity = currentSubRatePlan.getQuantity();
         Long ratePlanUid = ratePlan.getId();
-        if(VOLUME.equals(pricingScheme.getPricingSchemeCode())){
+        if(VOLUME.equals(currentSubRatePlan.getRatePlan().getPricingScheme())){
             if(quantity<0){
                 updateRenewalBatchLog(subscriptionId,"Subscription could not be renewed as quantity is less than 0 ","FAILURE");
                 return subRatePlan;
@@ -317,7 +317,7 @@ public class SubscriptionRenewalScheduler {
             subRatePlan.setPrice(quantity * ratePlanVolume.getPrice());
             subRatePlan.setRatePlanVolume(ratePlanVolume);
         }
-        else if(UNIT.equals(pricingScheme.getPricingSchemeCode())){
+        else if(UNIT.equals(currentSubRatePlan.getRatePlan().getPricingScheme())){
             if(quantity<0){
                 updateRenewalBatchLog(subscriptionId,"Subscription could not be renewed as quantity is less than 0", "FAILURE");
                 //update err

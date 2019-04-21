@@ -69,6 +69,10 @@ public class Subscription implements Serializable {
     private Date lastBillingDate;
     @Column(name="NEXT_BILL_DT")
     private Date nextBillingDate;
+    @Column(name="AMOUNT")
+    private double amount;
+    @Column(name="CANCEL_DATE")
+    private Date cancelDate;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PREVIOUS_SUBSCRIPTION_ID", referencedColumnName = "SUBSCRIPTION_ID", nullable = true)
@@ -245,4 +249,21 @@ public class Subscription implements Serializable {
     public void setNextBillingDate(Date nextBillingDate) {
         this.nextBillingDate = nextBillingDate;
     }
+
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+	public Date getCancelDate() {
+		return cancelDate;
+	}
+
+	public void setCancelDate(Date cancelDate) {
+		this.cancelDate = cancelDate;
+	}
+    
 }
