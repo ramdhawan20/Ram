@@ -13,7 +13,7 @@ public interface DownloadRecordService {
 
 	String downloadRecordCsv(HttpServletResponse response, String tabName) throws IOException;
 
-	String downloadSearchRecords(CSVRecordDataDto csvRecordData, Pageable reqCount, HttpServletResponse response) throws IOException;
+	String downloadSearchRecords(CSVRecordDataDto csvRecordData, Pageable reqCount, HttpServletResponse response) throws IOException, Exception;
 
 
 }
