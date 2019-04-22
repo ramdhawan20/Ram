@@ -196,8 +196,8 @@ public class DashBoardServiceImpl implements DashBoardService {
 				renewValues.add(subscriptionRepository.count(Specification.where(SubscriptionSpecification.transReasonCode("RENEWED").and(SubscriptionSpecification.hasDate(Date.from(date1.atTime(LocalTime.MAX).atZone(ZoneId.systemDefault()).toInstant()))).and(SubscriptionSpecification.hasStrtDate(Date.from(date1.atTime(LocalTime.MIN).atZone(ZoneId.systemDefault()).toInstant()))))));
 				date1 = date1.plusDays(1);
 			}
-			dashboardGraphDto.setActivSubValues(newValues);
-			dashboardGraphDto.setCancelSubValues(renewValues);
+			dashboardGraphDto.setNewSubValues(newValues);
+			dashboardGraphDto.setRenewedSubValues(renewValues);
 			dashboardGraphDto.setTimePeriod(timePeriod);
 			return dashboardGraphDto;
 		}
