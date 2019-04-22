@@ -266,10 +266,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			subscriptionDto.setLastBillDate(this.getStringDate(new Date(subscription.getLastBillingDate().getTime())));
 		else
 			subscriptionDto.setLastBillDate(NOT_APPLICABLE);
-		if(subscription.getSubscriptionRatePlans()!=null && !subscription.getSubscriptionRatePlans().isEmpty())
-			subscriptionDto.setProductPlanList(covertProductRatePlanListEntityToDto(subscription.getSubscriptionRatePlans()));
+		if(subscription.getSubscriptionEndDate()!=null)
+			subscriptionDto.setExpireOn(this.getStringDate(new Date(subscription.getSubscriptionEndDate().getTime())));
 		else
-			throw new CustomSubscriptionException(103);
+			subscriptionDto.setExpireOn(NOT_APPLICABLE);
 		if(subRatePlans!=null && !subRatePlans.isEmpty()) {
 			subscriptionDto.setProductPlanList(covertProductRatePlanListEntityToDto(subRatePlans));
 			for(SubscriptionRatePlan subRatePlan : subRatePlans) {
