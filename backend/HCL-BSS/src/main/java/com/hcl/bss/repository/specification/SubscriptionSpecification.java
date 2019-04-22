@@ -74,5 +74,31 @@ public class SubscriptionSpecification {
 			return "%" + searchTerm.toLowerCase() + "%";
 		}
 	}
-		
+	
+	public static Specification<Subscription> hasStrtDate(Date startDate){
+		if(startDate!=null) {
+			return (filter,cq,cb)->cb.greaterThanOrEqualTo(filter.get("createdDate"), startDate);
+		}
+		return null;
+	}
+	
+	public static Specification<Subscription> isActive(String activ){
+		if(activ!=null) {
+			return (filter,cq,cb)->cb.equal(filter.get("status"), activ);
+		}
+		return null;
+	}
+	
+	public static Specification<Subscription> transReasonCode(String code){
+		if(code!=null) {
+			return (filter,cq,cb)->cb.equal(filter.get("transactionReasonCode"), code);
+		}
+		return null;
+	}
+	public static Specification<Subscription> hasDate(Date startDate){
+		if(startDate!=null) {
+			return (filter,cq,cb)->cb.lessThanOrEqualTo(filter.get("createdDate"), startDate);
+		}
+		return null;
+	}
 }

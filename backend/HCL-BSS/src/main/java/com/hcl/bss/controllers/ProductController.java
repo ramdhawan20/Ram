@@ -1,6 +1,7 @@
 package com.hcl.bss.controllers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -109,11 +110,12 @@ public class ProductController {
 	public ResponseEntity<DropDownOutDto> dropDownData(@RequestParam String statusId) {
 		DropDownOutDto dropDownOutDto = new DropDownOutDto();
 		try {
-			if(productService.getDropDownData(statusId)!=null && !(productService.getDropDownData(statusId).isEmpty())) {
+			List<String> dropDownList = productService.getDropDownData(statusId);
+			if(dropDownList!=null && !dropDownList.isEmpty()) {
 				dropDownOutDto.setMessage("Drop Down Fetched Successfully");
 				dropDownOutDto.setResponseCode(HttpStatus.OK.value());
 				dropDownOutDto.setSuccess(true);
-				dropDownOutDto.setDropDownList(productService.getDropDownData(statusId));
+				dropDownOutDto.setDropDownList(dropDownList);
 				return new ResponseEntity<DropDownOutDto>(dropDownOutDto,HttpStatus.OK);
 			}		
 			else {

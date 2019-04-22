@@ -140,11 +140,12 @@ public class BatchController {
 	public ResponseEntity<DropDownOutDto> dropDownData(@RequestParam String statusId) {
 		DropDownOutDto dropDownOutDto = new DropDownOutDto();
 		try {
-			if(batchLogService.getDropDownData(statusId)!=null && !(batchLogService.getDropDownData(statusId).isEmpty())) {
+			List<String> dropDownList = batchLogService.getDropDownData(statusId);
+			if(dropDownList!=null && !dropDownList.isEmpty()) {
 				dropDownOutDto.setMessage("Drop Down Fetched Successfully");
 				dropDownOutDto.setResponseCode(HttpStatus.OK.value());
 				dropDownOutDto.setSuccess(true);
-				dropDownOutDto.setDropDownList(batchLogService.getDropDownData(statusId));
+				dropDownOutDto.setDropDownList(dropDownList);
 				return new ResponseEntity<DropDownOutDto>(dropDownOutDto,HttpStatus.OK);
 			}		
 			else {

@@ -36,9 +36,8 @@ public class RatePlanController {
 				response = ratePlanService.addRatePlan(product);
 				return new ResponseEntity<ResponseDto>(response,HttpStatus.OK);
 			}
-			catch (DataIntegrityViolationException e) {
-				// TODO: handle exception
-				response.setMessage("Could not add Plan");
+			catch(DataIntegrityViolationException e) {
+				response.setMessage("Could not add Plan "+e.getRootCause().getMessage());
 				return new ResponseEntity<ResponseDto>(response,HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}

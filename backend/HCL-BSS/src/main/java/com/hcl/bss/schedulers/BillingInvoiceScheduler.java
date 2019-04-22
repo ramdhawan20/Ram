@@ -78,13 +78,13 @@ public class BillingInvoiceScheduler {
 
     private Date getNextBillingDate(BigDecimal billingCycleTerm,String billingFrequency, LocalDate nextBillingDate){
         switch (billingFrequency) {
-            case "WEEKLY":
+            case "WEEK":
                 nextBillingDate = nextBillingDate.plusWeeks(billingCycleTerm.intValue());
                 break;
-            case "MONTHLY":
+            case "MONTH":
                 nextBillingDate = nextBillingDate.plusMonths(billingCycleTerm.intValue());
                 break;
-            case "ANNUAL":
+            case "YEAR":
                 nextBillingDate = nextBillingDate.plusYears(billingCycleTerm.intValue());
                 break;
         }
