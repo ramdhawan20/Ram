@@ -1,7 +1,5 @@
 package com.hcl.bss.repository;
 
-import com.hcl.bss.domain.RatePlanVolume;
-import com.hcl.bss.domain.Subscription;
 import com.hcl.bss.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

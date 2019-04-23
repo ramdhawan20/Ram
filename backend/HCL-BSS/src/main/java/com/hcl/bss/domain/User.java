@@ -1,18 +1,24 @@
 package com.hcl.bss.domain;
 
+/*import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;*/
+
 import javax.persistence.*;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name="tb_user_details")
-/*@NamedQueries({
-        @NamedQuery(
-                name = "findUserById",
-                query = "from User a where a.id = :id"
-        ),
-})*/
 public class User implements Serializable {
+	
     @Id
     @Column(name="uidpk")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "uidpk_sequence")
@@ -26,14 +32,21 @@ public class User implements Serializable {
     private int id;
     @Column(name = "user_id") private String userId;
     @Column(name = "password") private String password;
-    @Column(name = "role_id") private int roleId;
+    //@Column(name = "role_id") private int roleId;
     @Column(name = "user_first_name") private String userFirstName;
     @Column(name = "user_middle_name")
 	private String userMiddleName;
 	@Column(name = "user_last_name") private String userLastName;
     @Column(name="last_login") private Timestamp lastLogin;
     @Column(name="is_locked") private  int isLocked;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "TB_USER_ROLE_MAPPING",joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName="USER_ID")}, inverseJoinColumns =  { @JoinColumn(name = "ROLE_UID", referencedColumnName="UIDPK") })
+    private List<Role> roles;
+
     @Column(name="upd_by") private  String updatedBy;
+
+
     @Column(name="upd_dt") private Timestamp uupdatedDate;
     @Column(name="cre_by")private String createdBy;
     @Column(name="cre_dt")private Timestamp createdDate;
@@ -55,24 +68,26 @@ public class User implements Serializable {
         this.userId = userId;
     }
 
+
     public String getPassword() {
 
         return password;
     }
+
 
     public void setPassword(String password) {
 
         this.password = password;
     }
 
-    public int getRoleId() {
+    /*public int getRoleId() {
         return roleId;
     }
 
     public void setRoleId(int roleId) {
 
         this.roleId = roleId;
-    }
+    }*/
 
     public String getUserFirstName() {
 
@@ -157,4 +172,11 @@ public class User implements Serializable {
 		this.userMiddleName = userMiddleName;
 	}
 
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
 }

@@ -102,7 +102,7 @@ public class UserManagementController {
 			
 			for(User usr : userList) {
 				userDto = new UserDto();
-				userDto.setUserProfile(usr.getRoleId()== ROLE_ADMIN ? ADMIN : NORMAL);
+				//userDto.setUserProfile(usr.getRoleId()== ROLE_ADMIN ? ADMIN : NORMAL);
 				userDto.setUserId(usr.getUserId());
 				userDto.setUserFirstName(usr.getUserFirstName());
 				userDto.setUserMiddleName(usr.getUserMiddleName()==null ? "" : usr.getUserMiddleName());
@@ -187,7 +187,7 @@ public class UserManagementController {
 				return new ResponseEntity<>(userOut, HttpStatus.BAD_REQUEST);
 			}
 			
-			user.setRoleId(userIn.getUserProfile().trim().equalsIgnoreCase(ADMIN) ? ROLE_ADMIN : ROLE_NORMAL);			
+			//user.setRoleId(userIn.getUserProfile().trim().equalsIgnoreCase(ADMIN) ? ROLE_ADMIN : ROLE_NORMAL);
 			user.setPassword(userIn.getAttribute());
 			
 			createdUser = this.userServices.addUser(user);
@@ -253,7 +253,7 @@ public class UserManagementController {
 				return new ResponseEntity<>(userOut, HttpStatus.BAD_REQUEST);
 			}
 			
-			user.setRoleId(userIn.getUserProfile().trim().equalsIgnoreCase(ADMIN) ? ROLE_ADMIN : ROLE_NORMAL);			
+			//user.setRoleId(userIn.getUserProfile().trim().equalsIgnoreCase(ADMIN) ? ROLE_ADMIN : ROLE_NORMAL);
 
 			updatedUser = this.userServices.editUser(user);
 
