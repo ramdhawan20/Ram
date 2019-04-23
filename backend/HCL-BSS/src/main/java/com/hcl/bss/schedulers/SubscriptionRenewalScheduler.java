@@ -199,17 +199,17 @@ public class SubscriptionRenewalScheduler {
             //String frequency = subRatePlan.getRatePlan().getBillingFrequency();
             String frequency = subRatePlan.getRatePlan().getBillingFrequency();
             switch(frequency){
-                case "ANNUAL":
+                case "YEAR":
                     //nextBillingDate = subscription.getNextBillingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusYears(billingCycleTerm);
                     nextBillingDate = currentDate.plusYears(1);
                     subscriptionEndDate = subscription.getSubscriptionEndDate().toLocalDateTime().toLocalDate().plusYears(expiresAfter);
                     break;
-                case "MONTHLY":
+                case "MONTH":
                     //nextBillingDate = subscription.getNextBillingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusMonths(billingCycleTerm);
                     nextBillingDate = currentDate.plusMonths(1);
                     subscriptionEndDate = subscription.getSubscriptionEndDate().toLocalDateTime().toLocalDate().plusMonths(expiresAfter);
                     break;
-                case "WEEKLY":
+                case "WEEK":
                     //nextBillingDate = subscription.getNextBillingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusWeeks(billingCycleTerm);
                     nextBillingDate = currentDate.plusWeeks(1);
                     subscriptionEndDate = subscription.getSubscriptionEndDate().toLocalDateTime().toLocalDate().plusWeeks(expiresAfter);

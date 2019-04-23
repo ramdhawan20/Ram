@@ -63,8 +63,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private AddressRepository addressRepository;
     @Autowired
     private ProductRepository productRepository;
-    private BigDecimal remainingCycle=BigDecimal.ZERO;
-    private Double totalAmount = (double) 0;
+//    private BigDecimal remainingCycle=BigDecimal.ZERO;
+//    private Double totalAmount = (double) 0;
     
 	DateFormat dateFormat = new SimpleDateFormat(DD_MM_YYYY);
 	//DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY);
@@ -255,6 +255,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 // This is used for subscription detail service
 	private SubscriptionDetailDto convertSubscriptioEntityToDto(Subscription subscription) {
 		// TODO Auto-generated method stub
+		Set<SubscriptionRatePlan> subRatePlans = subscription.getSubscriptionRatePlans(); 
 		SubscriptionDetailDto subscriptionDto = new SubscriptionDetailDto();
 		subscriptionDto.setSubscriptionId(subscription.getSubscriptionId());
 		subscriptionDto.setStatus(subscription.getStatus());
@@ -266,24 +267,41 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			subscriptionDto.setLastBillDate(this.getStringDate(new Date(subscription.getLastBillingDate().getTime())));
 		else
 			subscriptionDto.setLastBillDate(NOT_APPLICABLE);
-		if(subscription.getSubscriptionRatePlans()!=null && !subscription.getSubscriptionRatePlans().isEmpty())
-			subscriptionDto.setProductPlanList(covertProductRatePlanListEntityToDto(subscription.getSubscriptionRatePlans()));
+		if(subscription.getSubscriptionEndDate()!=null)
+			subscriptionDto.setExpireOn(this.getStringDate(new Date(subscription.getSubscriptionEndDate().getTime())));
+		else
+			subscriptionDto.setExpireOn(NOT_APPLICABLE);
+		if(subRatePlans!=null && !subRatePlans.isEmpty()) {
+			subscriptionDto.setProductPlanList(covertProductRatePlanListEntityToDto(subRatePlans));
+			for(SubscriptionRatePlan subRatePlan : subRatePlans) {
+				if(productRepository.getOne(subRatePlan.getProduct()).getParent()==null) {
+					if(subRatePlan.getRatePlan().getExpireAfter().intValue()==999) {
+						subscriptionDto.setRenewsForever(true);
+//						subscriptionDto.setSubscriptionDuration(Integer.toString((subRatePlan.getRatePlan().getBillingCycleTerm().intValue()*this.remainingCycle.intValue()))+" "+subRatePlan.getRatePlan().getBillingFrequency());
+						subscriptionDto.setSubscriptionDuration(Integer.toString((subRatePlan.getRatePlan().getBillingCycleTerm().intValue()))+" "+subRatePlan.getRatePlan().getBillingFrequency());
+						if(subRatePlan.getRatePlan().getCurrency()!=null)
+							subscriptionDto.setTotalAmount(subRatePlan.getRatePlan().getCurrency().getCurrencyCode()+" "+Double.toString(subscription.getAmount()));
+						else
+							throw new CustomSubscriptionException(107);
+					}
+					else {
+						subscriptionDto.setRenewsForever(false);
+//						if(this.remainingCycle!=BigDecimal.ZERO)
+							subscriptionDto.setRemainingCycles(subRatePlan.getRatePlan().getExpireAfter());
+							subscriptionDto.setSubscriptionDuration(Integer.toString((subRatePlan.getRatePlan().getBillingCycleTerm().intValue()))+" "+subRatePlan.getRatePlan().getBillingFrequency());
+						if(subRatePlan.getRatePlan().getCurrency()!=null)
+							subscriptionDto.setTotalAmount(subRatePlan.getRatePlan().getCurrency().getCurrencyCode()+" "+Double.toString(subscription.getAmount()));
+						else
+							throw new CustomSubscriptionException(107);
+					}
+				}
+			}
+			if(subscription.getStatus().equalsIgnoreCase("CANCELLED"))
+				subscriptionDto.setCancelDate(this.getStringDate(new Date(subscription.getCancelDate().getTime())));
+		}
 		else
 			throw new CustomSubscriptionException(103);
-		if(subscription.getAutorenew()==1){
-			subscriptionDto.setRenewsForever(true);
-			if(subscription.getStatus().equalsIgnoreCase("CANCELLED"))
-				subscriptionDto.setCancelDate(this.getStringDate(new Date(subscription.getCancelDate().getTime())));
-		}
-		else {
-			subscriptionDto.setRenewsForever(false);
-			if(this.remainingCycle!=BigDecimal.ZERO)
-				subscriptionDto.setRemainingCycles(this.remainingCycle);
-			subscriptionDto.setExpireOn(this.getStringDate(new Date(subscription.getSubscriptionEndDate().getTime())));
-			if(subscription.getStatus().equalsIgnoreCase("CANCELLED"))
-				subscriptionDto.setCancelDate(this.getStringDate(new Date(subscription.getCancelDate().getTime())));
-		}
-		subscriptionDto.setTotalAmount(this.totalAmount);
+//		subscriptionDto.setTotalAmount(this.totalAmount);
 		return subscriptionDto;
 	}
 
@@ -303,13 +321,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 				}
 				Product product = productRepository.findById(subRatePlan.getProduct()).get(); 
 				subscriptionRatePlanDto.setProductName(product.getProductDispName());
-				if(product.getParent()==null)
-					this.remainingCycle=subRatePlan.getRatePlan().getExpireAfter();
+//				if(product.getParent()==null)
+//					this.remainingCycle=subRatePlan.getRatePlan().getExpireAfter();
 				subscriptionRatePlanDto.setAmount(subRatePlan.getPrice());
 				subscriptionRatePlanDto.setQuantity(subRatePlan.getQuantity());
 //				subscriptionRatePlanDto.setTax(subRatePlan.gett); //tax is not handled rightnow
 				subProductRatePlanDtoList.add(subscriptionRatePlanDto);
-				this.totalAmount = this.totalAmount + subRatePlan.getPrice();
+//				this.totalAmount = this.totalAmount + subRatePlan.getPrice();
 			}
 			return subProductRatePlanDtoList;
 		}

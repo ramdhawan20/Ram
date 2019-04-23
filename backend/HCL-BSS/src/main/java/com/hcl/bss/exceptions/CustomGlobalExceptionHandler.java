@@ -53,6 +53,16 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
             	 error.setStatus(HttpStatus.NOT_FOUND.value());
             	 error.setError("RatePlan not found for one of the product");
              }
+             else if(ex.getCode().equals(105)) {
+            	 error.setTimestamp(LocalDateTime.now());
+            	 error.setStatus(HttpStatus.NOT_FOUND.value());
+            	 error.setError("No Last Rev Found");
+             }
+             else if(ex.getCode().equals(107)) {
+            	 error.setTimestamp(LocalDateTime.now());
+            	 error.setStatus(HttpStatus.NOT_FOUND.value());
+            	 error.setError("RatePlan not mapped with currency");
+             }
              else {
             	 error.setTimestamp(LocalDateTime.now());
             	 error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());

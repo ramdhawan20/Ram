@@ -22,7 +22,7 @@ import java.util.Set;
 @Entity
 @Table(name="TB_RATEPLAN_MASTER")
 @Proxy(lazy = false)
-public class RatePlan implements Serializable {
+public class RatePlan extends Auditable<String> implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "uidpk_sequence")
     @TableGenerator(
@@ -60,18 +60,18 @@ public class RatePlan implements Serializable {
     @Column(name="IS_ACTIVE")
     private Integer isActive;
 
-    @CreatedBy
-    @Column(name = "CRE_BY")
-    private String createdBy;
-    @CreatedDate
-    @Column(name = "CRE_DT")
-    private Timestamp createdDate;
-    @Column(name = "UPD_BY")
-    @LastModifiedBy
-    private String updatedBy;
-    @LastModifiedDate
-    @Column(name = "UPD_DT")
-    private Timestamp updatedDate;
+//    @CreatedBy
+//    @Column(name = "CRE_BY")
+//    private String createdBy;
+//    @CreatedDate
+//    @Column(name = "CRE_DT")
+//    private Timestamp createdDate;
+//    @Column(name = "UPD_BY")
+//    @LastModifiedBy
+//    private String updatedBy;
+//    @LastModifiedDate
+//    @Column(name = "UPD_DT")
+//    private Timestamp updatedDate;
 
     @ManyToMany(mappedBy="ratePlans", fetch = FetchType.EAGER)
     @Cascade({org.hibernate.annotations.CascadeType.ALL})
@@ -212,37 +212,37 @@ public class RatePlan implements Serializable {
 
 
 
-    public Timestamp getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Timestamp createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Timestamp getUpdatedDate() {
-        return updatedDate;
-    }
-
-    public void setUpdatedDate(Timestamp updatedDate) {
-        this.updatedDate = updatedDate;
-    }
-
-    public String getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
-    }
+//    public Timestamp getCreatedDate() {
+//        return createdDate;
+//    }
+//
+//    public void setCreatedDate(Timestamp createdDate) {
+//        this.createdDate = createdDate;
+//    }
+//
+//    public String getCreatedBy() {
+//        return createdBy;
+//    }
+//
+//    public void setCreatedBy(String createdBy) {
+//        this.createdBy = createdBy;
+//    }
+//
+//    public Timestamp getUpdatedDate() {
+//        return updatedDate;
+//    }
+//
+//    public void setUpdatedDate(Timestamp updatedDate) {
+//        this.updatedDate = updatedDate;
+//    }
+//
+//    public String getUpdatedBy() {
+//        return updatedBy;
+//    }
+//
+//    public void setUpdatedBy(String updatedBy) {
+//        this.updatedBy = updatedBy;
+//    }
 
 	public Set<Product> getProducts() {
 		return products;
@@ -255,9 +255,20 @@ public class RatePlan implements Serializable {
 	@Override
 	public String toString() {
 		return "RatePlan [id=" + id + ", ratePlanId=" + ratePlanId + ", ratePlanDescription=" + ratePlanDescription
-				+ ", price=" + price + ", uom=" + uom + ", isActive=" + isActive + ", createdBy=" + createdBy
-				+ ", createdDate=" + createdDate + ", updatedBy=" + updatedBy + ", updatedDate=" + updatedDate
-				+ ", products=" + products + "]";
+				+ ", billingFrequency=" + billingFrequency + ", billingCycleTerm=" + billingCycleTerm + ", freeTrail="
+				+ freeTrail + ", setUpFee=" + setUpFee + ", expireAfter=" + expireAfter + ", price=" + price + ", uom="
+				+ uom + ", subscriptionRatePlans=" + subscriptionRatePlans + ", isActive=" + isActive + ", products="
+				+ products + ", pricingScheme=" + pricingScheme + ", ratePlanVolume=" + ratePlanVolume + ", currency="
+				+ currency + "]";
 	}
+
+//	@Override
+//	public String toString() {
+//		return "RatePlan [id=" + id + ", ratePlanId=" + ratePlanId + ", ratePlanDescription=" + ratePlanDescription
+//				+ ", price=" + price + ", uom=" + uom + ", isActive=" + isActive + ", createdBy=" + createdBy
+//				+ ", createdDate=" + createdDate + ", updatedBy=" + updatedBy + ", updatedDate=" + updatedDate
+//				+ ", products=" + products + "]";
+//	}
+	
 
 }
