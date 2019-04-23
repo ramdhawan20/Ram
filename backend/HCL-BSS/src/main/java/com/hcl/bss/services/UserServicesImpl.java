@@ -149,9 +149,9 @@ public class UserServicesImpl implements UserServices {
 			if (user.getUserLastName() != null && !"".equalsIgnoreCase(user.getUserLastName())) {
 				fetchUser.setUserLastName(user.getUserLastName());
 			}
-			if (user.getRoleId() != -1) {
-				fetchUser.setRoleId(user.getRoleId());
-			}
+			/*
+			 * if (user.getRoleId() != -1) { fetchUser.setRoleId(user.getRoleId()); }
+			 */
 			
 			return this.userRepository.save(fetchUser);
 			
