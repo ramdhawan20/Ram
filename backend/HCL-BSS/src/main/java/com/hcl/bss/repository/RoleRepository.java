@@ -12,6 +12,9 @@ import com.hcl.bss.domain.Role;
  */
 public interface RoleRepository extends JpaRepository<Role, Long> {
 	
-	 @Query("SELECT DISTINCT role.roleName FROM Role role")
+	@Query("SELECT DISTINCT role.roleName FROM Role role")
 	List<String> getAllRoleName();
+	 
+	Role findByRoleName(String roleName);
+
 }

@@ -15,4 +15,6 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
 /*	 @Query("SELECT menu.menuName, submenu.subMenuName FROM Menu menu left join SubMenu submenu on menu.id =  submenu.menuUid")
 	  Map<String, List<String>> getAllMenuSubMenu();
 */
+	
+	Menu findByMenuName(String menuName);
 }

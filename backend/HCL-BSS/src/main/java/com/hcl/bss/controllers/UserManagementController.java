@@ -32,6 +32,7 @@ import com.hcl.bss.domain.Role;
 import com.hcl.bss.domain.User;
 import com.hcl.bss.dto.DropDownOutDto;
 import com.hcl.bss.dto.MenuDto;
+import com.hcl.bss.dto.ProfileInDto;
 import com.hcl.bss.dto.RoleInDto;
 import com.hcl.bss.dto.RoleOutDto;
 import com.hcl.bss.dto.UserAuthDto;
@@ -531,5 +532,29 @@ public class UserManagementController {
 		
 	}
 
+	@ApiOperation(value = "To map profile with manu and submanu", response = RoleOutDto.class)
+	@PostMapping(value = "/user/profile/mapping")
+	public ResponseEntity<?> roleMenuMapping(@Valid @RequestBody  ProfileInDto profileInDto){
+		LOGGER.info("<-----------------------Start roleMenuMapping() method in UserManagementController-------------------------------->");		
+		LOGGER.info("Input details: " + profileInDto.toString());
+		RoleOutDto roleOutDto = new RoleOutDto();
+		
+		try {
+			userServices.roleMenuMapping(profileInDto);
+			
+			roleOutDto.setSuccess(true);
+			roleOutDto.setResponseCode(HttpStatus.OK.value());
+			roleOutDto.setMessage("Profile mapping done successfully!");
+			
+			return new ResponseEntity<>(roleOutDto, HttpStatus.OK);
+			
+		} catch (Exception e) {
+			LOGGER.info("Error Description: " + e.getMessage());		
+			throw new CustomUserMgmtException(500);
+		}finally {
+			LOGGER.info("<-----------------------End roleMenuMapping() method in UserManagementController-------------------------------->");		
+		}
+		
+	}
 	
 }
