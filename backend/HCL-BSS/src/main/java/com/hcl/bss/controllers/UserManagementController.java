@@ -76,7 +76,7 @@ public class UserManagementController {
 */	
 	
 	@ApiOperation(value = "Get list of all user", response = UserOutDto.class)
-	@PutMapping(value = "/users")
+	@PutMapping(value = "/userm/users")
 	public ResponseEntity<?> findAllUser(@Valid @RequestBody UserInDto userIn) {
 	//public ResponseEntity<?> findAllUser() {
 		LOGGER.info("<-----------------------Start findAllUser() method-------------------------------->");
@@ -140,7 +140,7 @@ public class UserManagementController {
 	}
 	
 	@ApiOperation(value = "To create new user", response = UserOutDto.class)
-	@PostMapping(value = "/user")
+	@PostMapping(value = "/userm/user")
 	public ResponseEntity<?> addUser(@Valid @RequestBody  UserInDto userIn) {
 		LOGGER.info("<-----------------------Start addUser() method-------------------------------->");		
 		LOGGER.info("Input details: " + userIn.toString());
@@ -223,7 +223,7 @@ public class UserManagementController {
 	}
 
 	@ApiOperation(value = "To update existing user", response = UserOutDto.class)
-	@PutMapping(value = "/user")
+	@PutMapping(value = "/userm/user")
 	public ResponseEntity<?> editUser(@Valid @RequestBody  UserInDto userIn) {
 		LOGGER.info("<-----------------------Start editUser() method-------------------------------->");		
 		LOGGER.info("Input details: " + userIn.toString());
@@ -289,7 +289,7 @@ public class UserManagementController {
 	}
 
 	@ApiOperation(value = "To activate/deactivate existing user", response = UserOutDto.class)
-	@PutMapping(value = "/activate")
+	@PutMapping(value = "/userm/activate")
 	public ResponseEntity<?> activateUser(@Valid @RequestBody  UserInDto userIn) {
 		LOGGER.info("<-----------------------Start activateUser() method-------------------------------->");		
 		LOGGER.info("Input details: " + userIn.toString());
@@ -342,7 +342,7 @@ public class UserManagementController {
 	}
 
 	@ApiOperation(value = "To reset user password", response = UserOutDto.class)
-	@PutMapping(value = "/reset")
+	@PutMapping(value = "/userm/reset")
 	public ResponseEntity<?> resetUser(@Valid @RequestBody  UserInDto userIn) {
 		LOGGER.info("<-----------------------Start resetUser() method-------------------------------->");		
 		LOGGER.info("Input details: " + userIn.toString());
@@ -404,7 +404,7 @@ public class UserManagementController {
 	}
 	
 	@ApiOperation(value = "To get dropdown lov", response = DropDownOutDto.class)
-	@GetMapping(value = "/getDropDownList")
+	@GetMapping(value = "/userm/getDropDownList")
 	public ResponseEntity<?> getDropDownList(@RequestParam(value = "dropDownCode", required=true) String dropDownCode) {
 		LOGGER.info("<-----------------------Start getDropDownList() method in UserManagementController-------------------------------->");		
 		List<String> dropDownList = null;

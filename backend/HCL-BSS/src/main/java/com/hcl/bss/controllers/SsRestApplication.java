@@ -25,8 +25,9 @@ import com.hcl.bss.schedulers.SubscriptionScheduler;
 @EnableJpaAuditing
 @EnableScheduling
 @ComponentScan("com.hcl.bss.*")
-public class SsRestApplication extends SpringBootServletInitializer implements CommandLineRunner {
+public class SsRestApplication extends SpringBootServletInitializer  {
 
+	//implements CommandLineRunner
 	@Autowired
 	SubscriptionScheduler subscriptionScheduler;
 
@@ -45,14 +46,15 @@ public class SsRestApplication extends SpringBootServletInitializer implements C
         return builder.sources(SsRestApplication.class);
     }
 	/*TO run SubscriptionBatch*/
-	@Override
-	public void run(String... arg0) throws IOException, URISyntaxException {
-		//BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		//System.out.println(passwordEncoder.encode("admin"));
-		subscriptionScheduler.runSubscriptionBatch();
-		//billingInvoiceScheduler.updateBillingInvoice();
-		subscriptionRenewalScheduler.runAutorenewSubscriptionsScheduler();
-	}
+	/*
+	 * @Override public void run(String... arg0) throws IOException,
+	 * URISyntaxException { //BCryptPasswordEncoder passwordEncoder = new
+	 * BCryptPasswordEncoder();
+	 * //System.out.println(passwordEncoder.encode("admin"));
+	 * subscriptionScheduler.runSubscriptionBatch();
+	 * //billingInvoiceScheduler.updateBillingInvoice();
+	 * subscriptionRenewalScheduler.runAutorenewSubscriptionsScheduler(); }
+	 */
 
 }
 

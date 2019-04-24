@@ -25,7 +25,7 @@ public class RatePlanController {
 		RatePlanService ratePlanService;
 		
 		@ApiOperation(value = "Add RatePlan", response = ResponseDto.class)
-		@RequestMapping(value = "/ratePlan", produces = { "application/json" }, method = RequestMethod.POST)
+		@RequestMapping(value = "/rate/ratePlan", produces = { "application/json" }, method = RequestMethod.POST)
 		public ResponseEntity<ResponseDto> addRatePlan(@RequestBody RatePlanDto product) {
 			ResponseDto response = new ResponseDto();
 			try {
@@ -41,7 +41,7 @@ public class RatePlanController {
 
 		
 		@ApiOperation(value = "Get All RatePlans", response = RatePlanDto.class)
-		@RequestMapping(value = "/getRatePlan", produces = { "application/json" }, method = RequestMethod.GET)
+		@RequestMapping(value = "/rate/getRatePlan", produces = { "application/json" }, method = RequestMethod.GET)
 		public ResponseEntity<List<RatePlanDto>> getAllRatePlan() {
 			
 			List<RatePlanDto> planList = new ArrayList<RatePlanDto>();
@@ -51,7 +51,7 @@ public class RatePlanController {
 		}
 		
 		@ApiOperation(value = "getCurrency", response = String.class)
-		@RequestMapping(value = "/getCurrency", produces = { "application/json" }, method = RequestMethod.GET)
+		@RequestMapping(value = "/rate/getCurrency", produces = { "application/json" }, method = RequestMethod.GET)
 		public ResponseEntity<List<String>> getCurrency() {
 			List<String> currencyList=new ArrayList<String>();
 			currencyList = ratePlanService.getCurrency();
