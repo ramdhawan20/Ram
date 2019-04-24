@@ -13,12 +13,16 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.hcl.bss.controllers.UserManagementController;
+import com.hcl.bss.domain.Role;
 
 @EnableWebSecurity
 @Configuration
@@ -76,11 +80,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private CustomAuthenticationFailureHandler myFailureHandler = new CustomAuthenticationFailureHandler();
 
     
-    @Bean
-  	public PasswordEncoder passwordEncoder(){
-  		PasswordEncoder encoder = new BCryptPasswordEncoder();
-  		return encoder;
-  	}
+	
+	/*
+	 * @Bean public PasswordEncoder passwordEncoder(){ PasswordEncoder encoder = new
+	 * BCryptPasswordEncoder(); return encoder; }
+	 */
+    
+	
+	  @SuppressWarnings("deprecation") public static NoOpPasswordEncoder
+	  passwordEncoder() { return (NoOpPasswordEncoder)
+	  NoOpPasswordEncoder.getInstance(); }
+	 
     
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -94,8 +104,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		web.ignoring().antMatchers("/*.js");
 	}*/
 	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		
+		
 		http.csrf()
 			.disable();
 		
@@ -103,17 +116,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http.authorizeRequests()
 			.antMatchers("/login/**").permitAll()
-			.antMatchers("/getProductType").hasRole("Read")
+			.antMatchers("/product/**").hasAnyRole("Agent","Admin")
+			.antMatchers("/rate/**").hasAnyRole("Agent","Admin")
+			.antMatchers("/upload/**").hasAnyRole("Agent","Admin")
+			.antMatchers("/downloadRecord").hasAnyRole("Admin")			
+			.antMatchers("/batch/**").hasAnyRole("Admin")
+			.antMatchers("/subscriptions").hasAnyRole("Agent","Business","Admin")
+			.antMatchers("/dashboard/**").hasAnyRole("Business","Admin")
+			.antMatchers("/userm/**").hasAnyRole("Admin")									 
 			.anyRequest().authenticated()
-			.and()
-			.exceptionHandling()
+			.and().exceptionHandling()
 			.accessDeniedHandler(accessDeniedHandler).authenticationEntryPoint(restAuthenticationEntryPoint)
-			.and()
-			.addFilterAt(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+			.and().addFilterAt(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 		
 		http.sessionManagement()
-			.maximumSessions(2);
-		
+			.maximumSessions(2);		
 		http.logout()
 			.invalidateHttpSession(true)
 			.deleteCookies("JSESSIONID");
