@@ -3,8 +3,6 @@ package com.hcl.bss.dto;
 import java.util.List;
 import java.util.Map;
 
-//import org.json.JSONObject;
-
 public class MenuAuthDto {
 	private String menuName;
 	//private List<SubMenuAuthDto> subManuList;

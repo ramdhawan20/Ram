@@ -25,10 +25,13 @@ import com.hcl.bss.domain.Role;
 import com.hcl.bss.domain.SubMenu;
 import com.hcl.bss.domain.User;
 import com.hcl.bss.dto.MenuAuthDto;
+import com.hcl.bss.dto.MenuDto;
 import com.hcl.bss.dto.UserAuthDto;
 import com.hcl.bss.dto.UserInDto;
 import com.hcl.bss.exceptions.CustomUserMgmtException;
 import com.hcl.bss.repository.AppConstantRepository;
+import com.hcl.bss.repository.MenuRepository;
+import com.hcl.bss.repository.RoleRepository;
 import com.hcl.bss.repository.UserRepository;
 import com.hcl.bss.repository.specification.UserManagementSpecification;;
 /**
@@ -44,7 +47,10 @@ public class UserServicesImpl implements UserServices {
     private UserRepository userRepository;
 	@Autowired
 	AppConstantRepository appConstantRepository;
-
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private MenuRepository menuRepository;
 
     @Override
     public User findById(int id) {
@@ -288,5 +294,85 @@ public class UserServicesImpl implements UserServices {
 		LOGGER.info("<-----------------------End convertUserToDto() method in UserServicesImpl-------------------------------->");		
 		return userAuthDto;
 	}
+	
+	@Override
+	public List<String> getAllRoleName(){
+		LOGGER.info("<-----------------------Start getAllRoleName() method in UserServicesImpl-------------------------------->");	
+		List<String> roleNameList = null;
+		
+		roleNameList = roleRepository.getAllRoleName();
+		
+		if(roleNameList == null) {
+			throw new CustomUserMgmtException(104);			
+		}
 
+		LOGGER.info("<-----------------------End getAllRoleName() method in UserServicesImpl-------------------------------->");		
+		
+		return roleNameList;
+	}
+
+	@Override
+	public Role addRole(Role role) {
+		LOGGER.info("<-----------------------Start addRole() method in UserServicesImpl-------------------------------->");		
+		
+		Role createdRole = roleRepository.save(role);
+		if(createdRole == null) {
+			throw new CustomUserMgmtException(105);			
+		}
+		LOGGER.info("<-----------------------End addRole() method in UserServicesImpl-------------------------------->");		
+		
+		return createdRole;
+	}
+
+	@Override
+	public MenuDto getAllMenu(){
+		LOGGER.info("<-----------------------Start getAllMenu() method in UserServicesImpl-------------------------------->");	
+		MenuDto menuDto = new MenuDto();
+		List<Menu> menuList = null;
+		
+		menuList = menuRepository.findAll();
+		
+		if(menuList == null) {
+			throw new CustomUserMgmtException(104);			
+		}
+
+		LOGGER.info("<-----------------------End getAllMenu() method in UserServicesImpl-------------------------------->");		
+		
+		return convertToMenuDto(menuList);
+	}
+	
+    private MenuDto convertToMenuDto(List<Menu> menuList) {
+		LOGGER.info("<-----------------------Start convertUserToDto() method in UserServicesImpl-------------------------------->");		
+    	MenuDto menuDto = new MenuDto();
+    	List<MenuAuthDto> tempManuList = new ArrayList();
+		List<String> tempSubManuList = null;
+
+		MenuAuthDto menuAuthDto = null;
+    	
+		Iterator<Menu> menuItr = menuList.iterator();
+		while(menuItr.hasNext()) {
+			Menu menu = menuItr.next();
+
+			menuAuthDto = new MenuAuthDto();
+			menuAuthDto.setMenuName(menu.getMenuName());
+			
+			List<SubMenu> subMenuList = menu.getSubMenu();
+			tempSubManuList = new ArrayList();
+			
+			for(SubMenu subMenu : subMenuList) {
+				tempSubManuList.add(subMenu.getSubMenuName());
+			}
+			menuAuthDto.setSubManuList(tempSubManuList);
+			tempSubManuList = null;
+			tempManuList.add(menuAuthDto);
+			menuAuthDto = null;
+		}
+		menuDto.setMenuList(tempManuList);    	
+
+		LOGGER.info("<-----------------------Start convertUserToDto() method in UserServicesImpl-------------------------------->");		
+
+		return menuDto;
+	}
+	
+	
 }
