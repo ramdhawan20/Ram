@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hcl.bss.dto.BatchRenewalDto;
 import com.hcl.bss.dto.DashboardGraphDto;
 import com.hcl.bss.dto.DropDownOutDto;
 import com.hcl.bss.dto.GraphRequestDto;
+import com.hcl.bss.dto.RevenueDto;
 import com.hcl.bss.exceptions.AuthenticationException;
 import com.hcl.bss.services.DashBoardService;
 
@@ -29,10 +31,17 @@ public class DashboardController {
 	
 	@ApiOperation(value="Get revenue of last subscription batch run")
 	@RequestMapping(value="/lastSubBatchRev",produces = {"application/json"}, method = RequestMethod.GET)
-	public double getLastSubBatchRev() {
-		return dashBoardService.getLastSubBatchRev();
+	public ResponseEntity<RevenueDto> getRevenue() {
+		RevenueDto revenueDto = new RevenueDto();
+		return new ResponseEntity<>(dashBoardService.getRevenue(revenueDto),HttpStatus.OK);
 	}
-
+	
+	@ApiOperation(value="Get count for renewal of last batch")
+	@RequestMapping(value="/getLastBatchRenewalCount", produces= {"application/json"},method = RequestMethod.GET)
+	public ResponseEntity<BatchRenewalDto> getLastBatchRenewCount(){
+		return new ResponseEntity<>(dashBoardService.getLastBatchRenewalCount(),HttpStatus.OK);
+	} 
+	
 	@ApiOperation(value="Get active customer's number based on time period")
 	@RequestMapping(value="/getValuesForGraph",produces = {"application/json"}, method = RequestMethod.POST)
 	public ResponseEntity<DashboardGraphDto> getGraphValues(@RequestBody GraphRequestDto graphRequest) {

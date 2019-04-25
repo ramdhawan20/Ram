@@ -202,11 +202,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			    CustomerDto response = new CustomerDto();
 				Subscription subscription = subscriptionRepository.findBySubscriptionId(subId);
 				if(subscription==null) {
-					throw new CustomSubscriptionException(100);
+					throw new CustomSubscriptionException("No Subscription Found");
 				}
 				Customer customer = customerRepository.findById(subscription.getCustomerId()).get();
 				if(customer==null) {
-					throw new CustomSubscriptionException(101);
+					throw new CustomSubscriptionException("Customer not found");
 				}
 				if(customer.getFirstName()!=null)
 					response.setFirstName(customer.getFirstName());
@@ -282,7 +282,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 						if(subRatePlan.getRatePlan().getCurrency()!=null)
 							subscriptionDto.setTotalAmount(subRatePlan.getRatePlan().getCurrency().getCurrencyCode()+" "+Double.toString(subscription.getAmount()));
 						else
-							throw new CustomSubscriptionException(107);
+							throw new CustomSubscriptionException("RatePlan not mapped with currency");
 					}
 					else {
 						subscriptionDto.setRenewsForever(false);
@@ -292,7 +292,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 						if(subRatePlan.getRatePlan().getCurrency()!=null)
 							subscriptionDto.setTotalAmount(subRatePlan.getRatePlan().getCurrency().getCurrencyCode()+" "+Double.toString(subscription.getAmount()));
 						else
-							throw new CustomSubscriptionException(107);
+							throw new CustomSubscriptionException("RatePlan not mapped with currency");
 					}
 				}
 			}
@@ -300,7 +300,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 				subscriptionDto.setCancelDate(this.getStringDate(new Date(subscription.getCancelDate().getTime())));
 		}
 		else
-			throw new CustomSubscriptionException(103);
+			throw new CustomSubscriptionException("No Product/RatePlan associated with subscription");
 //		subscriptionDto.setTotalAmount(this.totalAmount);
 		return subscriptionDto;
 	}
@@ -315,15 +315,17 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 					subscriptionRatePlanDto.setRateplan(subRatePlan.getRatePlan().getRatePlanId());
 					subscriptionRatePlanDto.setRateplanDesc(subRatePlan.getRatePlan().getRatePlanDescription());
 					if(subRatePlan.getRatePlan().getPricingScheme().equals(VOLUME))
-						subscriptionRatePlanDto.setRate(subRatePlan.getRatePlanVolume().getPrice());
+						subscriptionRatePlanDto.setRate(subRatePlan.getRatePlan().getCurrency().getCurrencyCode()+" "+Double.toString(subRatePlan.getRatePlanVolume().getPrice()));
 					else if(subRatePlan.getRatePlan().getPricingScheme().equals(UNIT))
-						subscriptionRatePlanDto.setRate(subRatePlan.getRatePlan().getPrice());
+						subscriptionRatePlanDto.setRate(subRatePlan.getRatePlan().getCurrency().getCurrencyCode()+" "+Double.toString(subRatePlan.getRatePlan().getPrice()));
 				}
 				Product product = productRepository.findById(subRatePlan.getProduct()).get(); 
 				subscriptionRatePlanDto.setProductName(product.getProductDispName());
-//				if(product.getParent()==null)
-//					this.remainingCycle=subRatePlan.getRatePlan().getExpireAfter();
-				subscriptionRatePlanDto.setAmount(subRatePlan.getPrice());
+				if(product.getParent()==null)
+					subscriptionRatePlanDto.setIsParent(true);
+				else
+					subscriptionRatePlanDto.setIsParent(false);
+				subscriptionRatePlanDto.setAmount(subRatePlan.getRatePlan().getCurrency().getCurrencyCode()+" "+Double.toString(subRatePlan.getPrice()));
 				subscriptionRatePlanDto.setQuantity(subRatePlan.getQuantity());
 //				subscriptionRatePlanDto.setTax(subRatePlan.gett); //tax is not handled rightnow
 				subProductRatePlanDtoList.add(subscriptionRatePlanDto);
@@ -333,7 +335,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		}
 		catch (Exception e) {
 			// TODO: handle exception
-			throw new CustomSubscriptionException(404);
+			throw new CustomSubscriptionException("Internal Server Error");
 		}
 	}
 	
@@ -359,7 +361,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			return responseDto;
 		}
 		else
-			throw new CustomSubscriptionException(105);
+			throw new CustomSubscriptionException("Subscription not found");
 	}
 
 	@Override

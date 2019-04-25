@@ -106,6 +106,7 @@ public final class ApplicationConstants {
         CHANGE_IN_PRICE,
         CHANGE_IN_QUANTITY,
         EXPIRED_WITH_RENEWAL,
+        RENEWED,
         EXPIRED;
     }
 }
