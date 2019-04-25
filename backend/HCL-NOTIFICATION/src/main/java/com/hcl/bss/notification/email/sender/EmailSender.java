@@ -33,24 +33,17 @@ public class EmailSender implements EmailNotificationProducer {
 	public void createMail(CustomerDto customer) {
 		String htmlContent = emailContentBuilder.buildEmailContent(customer);
 		String subscriptionId = customer.getSubscriptionDto().getSubscriptionId();
+		String toEmail = customer.getEmailAddress();
 		System.out.println("<------------------------------------------------------------->");
 		System.out.println(htmlContent);
 		System.out.println("<------------------------------------------------------------->");
-		sendMail(htmlContent,subscriptionId);
+		sendMail(htmlContent,subscriptionId,toEmail);
 	}
 
 	@Override
-	public void sendMail(String htmlContent, String subscriptionId) {
-		String to = "";
-	        Matcher m = Pattern.compile("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+").matcher(htmlContent);
-	        while (m.find()) {
-	            System.out.println(m.group());
-	            to = m.group();
-	        }
-	    
-		
-		
-		
+	public void sendMail(String htmlContent, String subscriptionId, String toEmail) {
+		String to = toEmail;
+	  
 		Properties properties = System.getProperties();
 		properties.put("mail.smtp.host", "localhost");
 		properties.put("mail.smtp.port", "25");
