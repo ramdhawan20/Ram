@@ -29,8 +29,8 @@ public class DashboardController {
 	@Autowired
 	DashBoardService dashBoardService;
 	
-	@ApiOperation(value="Get revenue of last subscription batch run")
-	@RequestMapping(value="/lastSubBatchRev",produces = {"application/json"}, method = RequestMethod.GET)
+	@ApiOperation(value="Get revenue data for widgets")
+	@RequestMapping(value="/getRevenueData",produces = {"application/json"}, method = RequestMethod.GET)
 	public ResponseEntity<RevenueDto> getRevenue() {
 		RevenueDto revenueDto = new RevenueDto();
 		return new ResponseEntity<>(dashBoardService.getRevenue(revenueDto),HttpStatus.OK);
@@ -42,7 +42,7 @@ public class DashboardController {
 		return new ResponseEntity<>(dashBoardService.getLastBatchRenewalCount(),HttpStatus.OK);
 	} 
 	
-	@ApiOperation(value="Get active customer's number based on time period")
+	@ApiOperation(value="Get values to plot graph")
 	@RequestMapping(value="/getValuesForGraph",produces = {"application/json"}, method = RequestMethod.POST)
 	public ResponseEntity<DashboardGraphDto> getGraphValues(@RequestBody GraphRequestDto graphRequest) {
 		
