@@ -13,31 +13,28 @@
 		<tbody>
 			<tr>
 				<td align="center">
-					<table width="700px" cellspacing="0" cellpadding="0" border="1">
+					<table width="1024px" cellspacing="0" cellpadding="0" border="1">
 						<tbody>
 
 							<tr>
 								<td colspan="3">
 									<table cellspacing="0" cellpadding="0" bgcolor="#d9e9f7"
 										border="0 ">
-										<tbody>
+										<tbody >
 											<tr>
-												<td width="100" height="10"
-													style="border-right: 1px solid #000000;"></td>
+												<td width="100" height="10"	style="border-right: 1px solid #000000;"></td>
 												<td width="500" height="10"></td>
-												<td width="100" height="10"></td>
+												<td width="424" height="10"></td>
 											</tr>
 											<tr>
-												<td width="100" align="center"
-													style="border-right: 1px solid #000000;">LOGO</td>
-												<td width="400"></td>
-												<td width="200" align="left">Subscription Created</td>
+												<td width="100" align="center" style="border-right: 1px solid #000000;">LOGO</td>
+												<td width="800"></td>
+												<td width="100" align="left">Subscription Created</td>
 											</tr>
 											<tr>
-												<td width="100" height="10"
-													style="border-right: 1px solid #000000;"></td>
-												<td width="500" height="10"></td>
-												<td width="100" height="10"></td>
+												<td width="100" height="10"	style="border-right: 1px solid #000000;" bgcolor="#d9e9f7"></td>
+												<td width="500" height="10" bgcolor="#d9e9f7"></td>
+												<td width="424" height="10" bgcolor="#d9e9f7"></td>
 											</tr>
 
 										</tbody>
@@ -118,6 +115,8 @@
 									</table>
 								</td>
 							</tr>
+
+
 							<tr>
 								<td colspan="3">
 									<table cellspacing="0" cellpadding="0" width="100%" border='0'>
@@ -284,16 +283,34 @@
 
 											<tr>
 												<td width="5%" height="7"></td>
-												<td width="19%" style="font-weight: bold;"><b>Subscription
-														Number</b></td>
-												<td width="12%"><span
-													th:text="| ${customer.subscriptionDto.subscriptionId} |"></span></td>
-												<td width="15%" style="font-weight: bold;">Bill
-													Frequency</td>
-												<td width="16%"></td>
-												<td width="15%" style="font-weight: bold;">payment</td>
-												<td width="13%"></td>
+												<td width="19%" style="font-weight: bold;"><b>Subscription Number</b></td>
+												<td width="12%"><span th:text="| ${customer.subscriptionDto.subscriptionId} |"></span></td>
+												<td width="33%"></td>
+												<td width="15%" style="font-weight: bold;"><b>Created On</b></td>
+												<td width="16%"><span th:text="| ${customer.subscriptionDto.createdOn} |"></span></td>
+												
+											</tr>
+											<tr>
+											
+											
 												<td width="5%" height="7"></td>
+												<td width="15%" style="font-weight: bold;"><b>Subscription Amount</b></td>
+												<td width="12%"><span th:text="| ${customer.subscriptionDto.totalAmount} |"></span></td>
+												<td width="33%"></td>
+												<td width="15%" style="font-weight: bold;"><b>Activation Date</b></td>
+												<td width="16%"><span th:text="| ${customer.subscriptionDto.activatedOn} |"></span></td>
+											
+											</tr>
+											<tr>
+											
+											
+												<td width="5%" height="7"></td>
+												<td width="15%" style="font-weight: bold;"><b>Next Billing Date</b></td>
+												<td width="12%"><span th:text="| ${customer.subscriptionDto.nextBillDate} |"></span></td>
+												<td width="33%"></td>
+												<td width="15%" style="font-weight: bold;"><b>Renewal Cycle</b></td>
+												<td width="16%"><span th:text=" ${customer.subscriptionDto.remainingCycles} "></span></td>
+											
 											</tr>
 											<!-- <tr>
 												<td width="5%" height="7"></td>
@@ -360,10 +377,11 @@
 												<td width="5%"></td>
 												<td width="10%"></td>
 												<td width="5%"></td>
-												<td width="10%"></td>
 												<td width="5%"></td>
-												<td width="20%"></td>
-
+												<td width="5%"></td>
+												<td width="5%"></td>
+												<td width="10%"></td>
+												<td width="10%"></td>	
 											</tr>
 											<tr>
 												<td></td>
@@ -376,10 +394,14 @@
 												<td><b>Tax</b></td>
 												<td></td>
 												<td><b>Amount</b></td>
+												<td></td>
+												<td><b>Bill Frequency</b></td>
 
 											</tr>
 											<tr>
 												<td height="7"></td>
+												<td></td>
+												<td></td>
 												<td></td>
 												<td></td>
 												<td></td>
@@ -399,9 +421,9 @@
 							<tr>
 								<td colspan="3">
 									<table cellspacing="0" cellpadding="0" width="100%">
-										<tbody>
+										<tbody th:each="Plan : ${customer.subscriptionDto.productPlanList}">
 											<tr>
-												<td width="5%" height="10"></td>
+											<!-- 	<td width="5%" height="10"></td>
 												<td width="20%"></td>
 												<td width="5%"></td>
 												<td width="15%"></td>
@@ -411,42 +433,43 @@
 												<td width="10%"></td>
 												<td width="5%"></td>
 												<td width="20%"></td>
+												<td></td>
+												<td></td>-->
+												
+												<td width="5%" height="10"></td>
+												<td width="20%"></td>
+												<td width="5%"></td>
+												<td width="15%"></td>
+												<td width="5%"></td>
+												<td width="10%"></td>
+												<td width="5%"></td>
+												<td width="5%"></td>
+												<td width="5%"></td>
+												<td width="5%"></td>
+												<td width="10%"></td>
+												<td width="10%"></td>	
 											</tr>
 
 											<tr>
 												<td><div>
-														<td><span
-															th:each="Plan : ${customer.subscriptionDto.productPlanList}">
-																<th:block
-																	th:text="| Plan and AddOn : ${Plan.rateplan} |"></th:block>
-																<br> </th:block> <th:block
-																	th:text="| Description : ${Plan.rateplanDesc} |"></th:block>
-																<br> </th:block> <th:block
-																	th:text="| Product Name : ${Plan.productName} |"></th:block>
-																<br> </th:block> <th:block
-																	th:text="| Quantity : ${Plan.quantity} |"></th:block> <br>
-																</th:block> <th:block th:text="| Rate : ${Plan.rate} |"></th:block>
-																<br> </th:block> <th:block
-																	th:text="| Amount : ${Plan.amount} |"></th:block> <br>
-																</th:block> <th:block th:text="| Tax : ${Plan.tax} |"></th:block> <br>
-																<!-- </th:block> <th:block th:text="| Bill Frequency : ${Plan.billFrequency} |"></th:block> <br> -->
-																</th:block>
-
-														</span></td>
+														<td>   <th:block th:text="| ${Plan.productName} |"></th:block>
+																<th:block th:text="| ${Plan.rateplanDesc} |"></th:block>
 													</div></td>
-												<!-- <td>Plan-Product2-monthly</td>
+															<td></td>
+                                                            <td><th:block th:text="| ${Plan.quantity} |"></th:block></td>
                                                             <td></td>
-                                                            <td>1</td>
+                                                            <td><th:block th:text="| ${Plan.rate} |"></th:block></td>
                                                             <td></td>
-                                                            <td>Rs.10</td>
+                                                            <td><th:block th:text="| ${Plan.tax} |"></th:block></td>
                                                             <td></td>
+                                                            <td><th:block th:text="| ${Plan.amount} |"></th:block></td>
                                                             <td></td>
-                                                            <td></td>
-                                                            <td>Rs.10</td> -->
+                                                            <td><th:block th:text="| ${Plan.billFrequency} |"></th:block> </td>
+															<td></td>
 											</tr>
 
 											<tr>
-												<td width="5%" height="10"></td>
+												<!-- <td width="5%" height="10"></td>
 												<td width="20%"></td>
 												<td width="5%"></td>
 												<td width="15%"></td>
@@ -456,6 +479,21 @@
 												<td width="10%"></td>
 												<td width="5%"></td>
 												<td width="20%"></td>
+												<td></td>
+												<td></td>-->
+												
+												<td width="5%" height="10"></td>
+												<td width="20%"></td>
+												<td width="5%"></td>
+												<td width="15%"></td>
+												<td width="5%"></td>
+												<td width="10%"></td>
+												<td width="5%"></td>
+												<td width="5%"></td>
+												<td width="5%"></td>
+												<td width="5%"></td>
+												<td width="10%"></td>
+												<td width="10%"></td>	
 											</tr>
 
 										</tbody>
@@ -486,10 +524,11 @@
 												<td width="15%"></td>
 												<td width="5%"></td>
 												<td width="10%"></td>
-												<td width="5%"></td>
+												<td width="15%"></td>
 												<td align="left">TOTAL</td>
 												<td width="5%"></td>
-												<td>RS 20:00</td>
+												<td><span
+													th:text="| ${customer.subscriptionDto.totalAmount} |"></span></td>
 											</tr>
 
 											<tr>

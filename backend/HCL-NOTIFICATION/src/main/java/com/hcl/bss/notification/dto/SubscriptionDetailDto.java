@@ -16,6 +16,8 @@ public class SubscriptionDetailDto implements Serializable{
 	private String expireOn;
 	private Double totalAmount; // it will be used after total amount will be incorporated in subscription table
 	private List<SubscriptionRatePlanDto> productPlanList;
+	private String activatedOn;
+	private String createdOn;
 	public Boolean getRenewsForever() {
 		return renewsForever;
 	}
@@ -76,6 +78,18 @@ public class SubscriptionDetailDto implements Serializable{
 	}
 	public void setCancelDate(String cancelDate) {
 		this.cancelDate = cancelDate;
+	}
+	public String getActivatedOn() {
+		return activatedOn;
+	}
+	public void setActivatedOn(String activatedOn) {
+		this.activatedOn = activatedOn;
+	}
+	public String getCreatedOn() {
+		return createdOn;
+	}
+	public void setCreatedOn(String createdOn) {
+		this.createdOn = createdOn;
 	}
 }
 

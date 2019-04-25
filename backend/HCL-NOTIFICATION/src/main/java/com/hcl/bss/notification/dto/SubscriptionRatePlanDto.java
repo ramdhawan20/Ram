@@ -11,6 +11,7 @@ public class SubscriptionRatePlanDto implements Serializable{
 	private double rate;
 	private int tax;
 	private double amount;
+	private String billFrequency;
 	public String getRateplan() {
 		return rateplan;
 	}
@@ -53,5 +54,12 @@ public class SubscriptionRatePlanDto implements Serializable{
 	public void setAmount(double amount) {
 		this.amount = amount;
 	}
+	public String getBillFrequency() {
+		return billFrequency;
+	}
+	public void setBillFrequency(String billFrequency) {
+		this.billFrequency = billFrequency;
+	}
+	
 }
 
