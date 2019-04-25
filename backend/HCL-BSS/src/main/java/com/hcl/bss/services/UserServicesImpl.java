@@ -4,10 +4,8 @@ import static com.hcl.bss.constants.ApplicationConstants.ACTIVE;
 import static com.hcl.bss.constants.ApplicationConstants.ADMIN;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
@@ -23,13 +21,21 @@ import org.springframework.stereotype.Service;
 
 import com.hcl.bss.domain.Menu;
 import com.hcl.bss.domain.Role;
+import com.hcl.bss.domain.RoleMenuMapping;
 import com.hcl.bss.domain.SubMenu;
 import com.hcl.bss.domain.User;
 import com.hcl.bss.dto.MenuAuthDto;
+import com.hcl.bss.dto.MenuDto;
+import com.hcl.bss.dto.ProfileInDto;
+import com.hcl.bss.dto.RoleMenuDto;
 import com.hcl.bss.dto.UserAuthDto;
 import com.hcl.bss.dto.UserInDto;
 import com.hcl.bss.exceptions.CustomUserMgmtException;
 import com.hcl.bss.repository.AppConstantRepository;
+import com.hcl.bss.repository.MenuRepository;
+import com.hcl.bss.repository.RoleMenuMappingRepository;
+import com.hcl.bss.repository.RoleRepository;
+import com.hcl.bss.repository.SubMenuRepository;
 import com.hcl.bss.repository.UserRepository;
 import com.hcl.bss.repository.specification.UserManagementSpecification;;
 /**
@@ -45,7 +51,14 @@ public class UserServicesImpl implements UserServices {
     private UserRepository userRepository;
 	@Autowired
 	AppConstantRepository appConstantRepository;
-
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private MenuRepository menuRepository;
+    @Autowired
+    private SubMenuRepository subMenuRepository;
+    @Autowired
+    RoleMenuMappingRepository roleMenuMappingRepository;
 
     @Override
     public User findById(int id) {
@@ -295,5 +308,154 @@ public class UserServicesImpl implements UserServices {
 		LOGGER.info("<-----------------------End convertUserToDto() method in UserServicesImpl-------------------------------->");		
 		return userAuthDto;
 	}
+	
+	@Override
+	public List<String> getAllRoleName(){
+		LOGGER.info("<-----------------------Start getAllRoleName() method in UserServicesImpl-------------------------------->");	
+		List<String> roleNameList = null;
+		
+		roleNameList = roleRepository.getAllRoleName();
+		
+		if(roleNameList == null) {
+			throw new CustomUserMgmtException(104);			
+		}
 
+		LOGGER.info("<-----------------------End getAllRoleName() method in UserServicesImpl-------------------------------->");		
+		
+		return roleNameList;
+	}
+
+	@Override
+	public Role addRole(Role role) {
+		LOGGER.info("<-----------------------Start addRole() method in UserServicesImpl-------------------------------->");		
+		
+		Role createdRole = roleRepository.save(role);
+		if(createdRole == null) {
+			throw new CustomUserMgmtException(105);			
+		}
+		LOGGER.info("<-----------------------End addRole() method in UserServicesImpl-------------------------------->");		
+		
+		return createdRole;
+	}
+
+	@Override
+	public MenuDto getAllMenu(){
+		LOGGER.info("<-----------------------Start getAllMenu() method in UserServicesImpl-------------------------------->");	
+		MenuDto menuDto = new MenuDto();
+		List<Menu> menuList = null;
+		
+		menuList = menuRepository.findAll();
+		
+		if(menuList == null) {
+			throw new CustomUserMgmtException(104);			
+		}
+
+		LOGGER.info("<-----------------------End getAllMenu() method in UserServicesImpl-------------------------------->");		
+		
+		return convertToMenuDto(menuList);
+	}
+	
+    private MenuDto convertToMenuDto(List<Menu> menuList) {
+		LOGGER.info("<-----------------------Start convertUserToDto() method in UserServicesImpl-------------------------------->");		
+    	MenuDto menuDto = new MenuDto();
+    	List<MenuAuthDto> tempManuList = new ArrayList();
+		List<String> tempSubManuList = null;
+
+		MenuAuthDto menuAuthDto = null;
+    	
+		Iterator<Menu> menuItr = menuList.iterator();
+		while(menuItr.hasNext()) {
+			Menu menu = menuItr.next();
+
+			menuAuthDto = new MenuAuthDto();
+			menuAuthDto.setMenuName(menu.getMenuName());
+			
+			List<SubMenu> subMenuList = menu.getSubMenu();
+			tempSubManuList = new ArrayList();
+			
+			for(SubMenu subMenu : subMenuList) {
+				tempSubManuList.add(subMenu.getSubMenuName());
+			}
+			menuAuthDto.setSubManuList(tempSubManuList);
+			tempSubManuList = null;
+			tempManuList.add(menuAuthDto);
+			menuAuthDto = null;
+		}
+		menuDto.setMenuList(tempManuList);    	
+
+		LOGGER.info("<-----------------------End convertUserToDto() method in UserServicesImpl-------------------------------->");		
+
+		return menuDto;
+	}
+	
+	@Override
+	public RoleMenuMapping roleMenuMapping(ProfileInDto profileInDto) {
+		LOGGER.info("<-----------------------Start roleMenuMapping() method in UserServicesImpl-------------------------------->");		
+		long roleId = roleRepository.findByRoleName(profileInDto.getRoleName()).getId();
+		if(roleId == 0) {
+			throw new CustomUserMgmtException(107);	
+		}
+		
+		List<RoleMenuDto> roleMenuDtoList = profileInDto.getMenuList();
+		
+		for(RoleMenuDto roleMenuDto : roleMenuDtoList) {
+			String menuName = roleMenuDto.getMenuName();
+			long menuId = menuRepository.findByMenuName(roleMenuDto.getMenuName()).getId();
+			if(menuId == 0) {
+				throw new CustomUserMgmtException(108);	
+			}
+			
+			List<String> subMenuNameList = roleMenuDto.getSubManuList();
+			RoleMenuMapping roleMenuMapping = null;
+			
+			if(subMenuNameList != null) {
+				if(subMenuNameList.size() > 0) {
+					for(String subMenuName : subMenuNameList) {
+						long subMenuId = subMenuRepository.findBySubMenuName(subMenuName).getId();
+						if(subMenuId == 0) {
+							throw new CustomUserMgmtException(109);	
+						}
+						roleMenuMapping = new RoleMenuMapping();
+						roleMenuMapping.setRoleUid(roleId);
+						roleMenuMapping.setMenuUid(menuId);
+						roleMenuMapping.setSubMenuUid(subMenuId);
+						
+						RoleMenuMapping roleMenuMap = roleMenuMappingRepository.save(roleMenuMapping);
+						if(roleMenuMap == null) {
+							throw new CustomUserMgmtException(106);	
+						}
+						roleMenuMapping = null;
+					}
+					
+				}else {
+					roleMenuMapping = new RoleMenuMapping();
+					roleMenuMapping.setRoleUid(roleId);
+					roleMenuMapping.setMenuUid(menuId);
+					
+					RoleMenuMapping roleMenuMap = roleMenuMappingRepository.save(roleMenuMapping);
+					if(roleMenuMap == null) {
+						throw new CustomUserMgmtException(106);	
+					}
+					roleMenuMapping = null;
+				}
+			}else {
+				roleMenuMapping = new RoleMenuMapping();
+				roleMenuMapping.setRoleUid(roleId);
+				roleMenuMapping.setMenuUid(menuId);
+				
+				RoleMenuMapping roleMenuMap = roleMenuMappingRepository.save(roleMenuMapping);
+				if(roleMenuMap == null) {
+					throw new CustomUserMgmtException(106);	
+				}
+				roleMenuMapping = null;
+			}
+			
+		}
+		
+		LOGGER.info("<-----------------------End roleMenuMapping() method in UserServicesImpl-------------------------------->");		
+
+		return null;
+	}
+
+	
 }

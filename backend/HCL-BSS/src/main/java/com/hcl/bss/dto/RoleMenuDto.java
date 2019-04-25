@@ -1,11 +1,16 @@
 package com.hcl.bss.dto;
 
 import java.util.List;
-import java.util.Map;
 
-public class MenuAuthDto {
+import javax.validation.constraints.NotEmpty;
+/**
+*
+* @author- Vinay Panwar
+*/
+
+public class RoleMenuDto {
+	@NotEmpty
 	private String menuName;
-	//private List<SubMenuAuthDto> subManuList;
 	private List<String> subManuList;
 	
 	public String getMenuName() {

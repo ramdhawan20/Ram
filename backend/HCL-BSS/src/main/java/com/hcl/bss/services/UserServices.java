@@ -6,7 +6,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.data.domain.Pageable;
 
+import com.hcl.bss.domain.Role;
+import com.hcl.bss.domain.RoleMenuMapping;
 import com.hcl.bss.domain.User;
+import com.hcl.bss.dto.MenuDto;
+import com.hcl.bss.dto.ProfileInDto;
 import com.hcl.bss.dto.UserAuthDto;
 import com.hcl.bss.dto.UserInDto;
 /**
@@ -33,4 +37,12 @@ public interface UserServices {
 	List<String> getDropDownList(String dropDownCode);
 
 	UserAuthDto getAuthorizationDetail(String userId);
+	
+	List<String> getAllRoleName();
+	
+	Role addRole(Role role);
+	
+	MenuDto getAllMenu();
+	
+	RoleMenuMapping roleMenuMapping(ProfileInDto profileInDto);
 }

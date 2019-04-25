@@ -91,6 +91,36 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
             	 error.setStatus(HttpStatus.NOT_FOUND.value());
             	 error.setError("Role is not associated with this user");
              }
+             else if(ex.getCode().equals(104)) {
+            	 error.setTimestamp(LocalDateTime.now());
+            	 error.setStatus(HttpStatus.NOT_FOUND.value());
+            	 error.setError("No profile found");
+             }
+             else if(ex.getCode().equals(105)) {
+            	 error.setTimestamp(LocalDateTime.now());
+            	 error.setStatus(HttpStatus.NOT_FOUND.value());
+            	 error.setError("Profile creation failed");
+             }
+             else if(ex.getCode().equals(106)) {
+            	 error.setTimestamp(LocalDateTime.now());
+            	 error.setStatus(HttpStatus.BAD_REQUEST.value());
+            	 error.setError("Profile mapping failed");
+             }
+             else if(ex.getCode().equals(107)) {
+            	 error.setTimestamp(LocalDateTime.now());
+            	 error.setStatus(HttpStatus.BAD_REQUEST.value());
+            	 error.setError("Role Name not found");
+             }
+             else if(ex.getCode().equals(108)) {
+            	 error.setTimestamp(LocalDateTime.now());
+            	 error.setStatus(HttpStatus.BAD_REQUEST.value());
+            	 error.setError("Menu Name not found");
+             }
+             else if(ex.getCode().equals(109)) {
+            	 error.setTimestamp(LocalDateTime.now());
+            	 error.setStatus(HttpStatus.BAD_REQUEST.value());
+            	 error.setError("Sub Menu Name not found");
+             }
              else {
             	 error.setTimestamp(LocalDateTime.now());
             	 error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());

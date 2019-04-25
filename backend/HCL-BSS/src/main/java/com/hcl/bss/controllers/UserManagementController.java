@@ -29,8 +29,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hcl.bss.domain.Role;
 import com.hcl.bss.domain.User;
 import com.hcl.bss.dto.DropDownOutDto;
+import com.hcl.bss.dto.MenuDto;
+import com.hcl.bss.dto.ProfileInDto;
+import com.hcl.bss.dto.RoleInDto;
+import com.hcl.bss.dto.RoleOutDto;
 import com.hcl.bss.dto.UserAuthDto;
 import com.hcl.bss.dto.UserDto;
 import com.hcl.bss.dto.UserInDto;
@@ -464,4 +469,93 @@ public class UserManagementController {
 		
 	}
 
+	@ApiOperation(value = "To get all profile name list", response = String.class)
+	@GetMapping(value = "/user/profile")
+	public ResponseEntity<?> getAllRoleName(){
+		LOGGER.info("<-----------------------Start getAllRoleName() method in UserManagementController-------------------------------->");		
+		try {
+			List<String> profileNameList = userServices.getAllRoleName();
+			
+			return new ResponseEntity<>(profileNameList, HttpStatus.OK);
+			
+		} catch (Exception e) {
+			LOGGER.info("Error Description: " + e.getMessage());		
+			throw new CustomUserMgmtException(500);
+		}finally {
+			LOGGER.info("<-----------------------End getAllRoleName() method in UserManagementController-------------------------------->");		
+		}
+		
+	}
+
+	@ApiOperation(value = "To create new profile", response = RoleOutDto.class)
+	@PostMapping(value = "/user/profile")
+	public ResponseEntity<?> addRole(@Valid @RequestBody  RoleInDto roleIn){
+		LOGGER.info("<-----------------------Start addRole() method in UserManagementController-------------------------------->");		
+		LOGGER.info("Input details: " + roleIn.toString());
+		Role role = new Role();
+		role.setRoleName(roleIn.getRoleName());
+		role.setDescription(roleIn.getDescription());
+		RoleOutDto roleOut = new RoleOutDto();
+		
+		try {
+			Role createdRole = userServices.addRole(role);
+			
+			roleOut.setSuccess(true);
+			roleOut.setResponseCode(HttpStatus.OK.value());
+			roleOut.setMessage("Profile created successfully!");
+			
+			return new ResponseEntity<>(roleOut, HttpStatus.OK);
+			
+		} catch (Exception e) {
+			LOGGER.info("Error Description: " + e.getMessage());		
+			throw new CustomUserMgmtException(500);
+		}finally {
+			LOGGER.info("<-----------------------End addRole() method in UserManagementController-------------------------------->");		
+		}
+		
+	}
+
+	@ApiOperation(value = "To get all menu's list", response = MenuDto.class)
+	@PutMapping(value = "/user/profile")
+	public ResponseEntity<?> getAllMenu(){
+		LOGGER.info("<-----------------------Start getAllMenuSubmenu() method in UserManagementController-------------------------------->");		
+		try {
+			MenuDto menuDto = userServices.getAllMenu();
+			
+			return new ResponseEntity<>(menuDto, HttpStatus.OK);
+			
+		} catch (Exception e) {
+			LOGGER.info("Error Description: " + e.getMessage());		
+			throw new CustomUserMgmtException(500);
+		}finally {
+			LOGGER.info("<-----------------------End getAllMenuSubmenu() method in UserManagementController-------------------------------->");		
+		}
+		
+	}
+
+	@ApiOperation(value = "To map profile with manu and submanu", response = RoleOutDto.class)
+	@PostMapping(value = "/user/profile/mapping")
+	public ResponseEntity<?> roleMenuMapping(@Valid @RequestBody  ProfileInDto profileInDto){
+		LOGGER.info("<-----------------------Start roleMenuMapping() method in UserManagementController-------------------------------->");		
+		LOGGER.info("Input details: " + profileInDto.toString());
+		RoleOutDto roleOutDto = new RoleOutDto();
+		
+		try {
+			userServices.roleMenuMapping(profileInDto);
+			
+			roleOutDto.setSuccess(true);
+			roleOutDto.setResponseCode(HttpStatus.OK.value());
+			roleOutDto.setMessage("Profile mapping done successfully!");
+			
+			return new ResponseEntity<>(roleOutDto, HttpStatus.OK);
+			
+		} catch (Exception e) {
+			LOGGER.info("Error Description: " + e.getMessage());		
+			throw new CustomUserMgmtException(500);
+		}finally {
+			LOGGER.info("<-----------------------End roleMenuMapping() method in UserManagementController-------------------------------->");		
+		}
+		
+	}
+	
 }
