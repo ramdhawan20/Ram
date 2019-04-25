@@ -1,4 +1,5 @@
 package com.hcl.bss.repository.specification;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
@@ -75,14 +76,57 @@ public class SubscriptionSpecification {
 		}
 	}
 	
-	public static Specification<Subscription> hasStrtDate(Date startDate){
-		if(startDate!=null) {
-			return (filter,cq,cb)->cb.greaterThanOrEqualTo(filter.get("createdDate"), startDate);
+	public static Specification<Subscription> isActive(String activ){
+		if(activ!=null) {
+			return (filter,cq,cb)->cb.equal(filter.get("status"), activ);
 		}
 		return null;
 	}
 	
-	public static Specification<Subscription> isActive(String activ){
+	
+	public static Specification<Subscription> hasDate(Date startDate){
+		if(startDate!=null) {
+			return (filter,cq,cb)->cb.lessThanOrEqualTo(filter.get("createdDate"), startDate);
+		}
+		return null;
+	}
+	
+	public static Specification<Subscription> hasActivDateStrt(Date startDate){
+		if(startDate!=null) {
+			return (filter,cq,cb)->cb.greaterThanOrEqualTo(filter.get("activationDate"), startDate);
+		}
+		return null;
+	}
+	
+	public static Specification<Subscription> hasActivDateEnd(Date endDate){
+		if(endDate!=null) {
+			return (filter,cq,cb)->cb.lessThanOrEqualTo(filter.get("activationDate"), endDate);
+		}
+		return null;
+	}
+	
+	public static Specification<Subscription> hasCancelDate(LocalDate cancelDate){
+		if(cancelDate!=null) {
+			return (filter,cq,cb)->cb.equal(filter.get("cancelDate"), cancelDate);
+		}
+		return null;
+	}
+	
+	public static Specification<Subscription> hasCancelStrtDate(LocalDate cancelDate){
+		if(cancelDate!=null) {
+			return (filter,cq,cb)->cb.greaterThanOrEqualTo(filter.get("cancelDate"), cancelDate);
+		}
+		return null;
+	}
+	
+	public static Specification<Subscription> hasCancelEndDate(LocalDate cancelDate){
+		if(cancelDate!=null) {
+			return (filter,cq,cb)->cb.lessThanOrEqualTo(filter.get("cancelDate"), cancelDate);
+		}
+		return null;
+	}
+	
+	public static Specification<Subscription> isStatus(String activ){
 		if(activ!=null) {
 			return (filter,cq,cb)->cb.equal(filter.get("status"), activ);
 		}
@@ -95,9 +139,11 @@ public class SubscriptionSpecification {
 		}
 		return null;
 	}
-	public static Specification<Subscription> hasDate(Date startDate){
+	
+	
+	public static Specification<Subscription> hasStrtDate(Date startDate){
 		if(startDate!=null) {
-			return (filter,cq,cb)->cb.lessThanOrEqualTo(filter.get("createdDate"), startDate);
+			return (filter,cq,cb)->cb.greaterThanOrEqualTo(filter.get("createdDate"), startDate);
 		}
 		return null;
 	}
