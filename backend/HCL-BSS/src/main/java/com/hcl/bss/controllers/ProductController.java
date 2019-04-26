@@ -38,7 +38,7 @@ public class ProductController {
 	 Integer recordPerPage;
 
 	@ApiOperation(value = "Add product", response = ProductDto.class)
-	@RequestMapping(value = "/product", produces = { "application/json" }, method = RequestMethod.POST)
+	@RequestMapping(value = "/product/add", produces = { "application/json" }, method = RequestMethod.POST)
 	public ResponseEntity<Product> addProduct(@RequestBody ProductDto product) {
 		Product prod = productService.addProduct(product);
 		return new ResponseEntity<>(prod, HttpStatus.OK);
@@ -61,7 +61,7 @@ public class ProductController {
 	}
 
 	@ApiOperation(value = "Get All Product", response = ProductDto.class)
-	@RequestMapping(value = "/getProducts/{pageNo}", produces = { "application/json" }, method = RequestMethod.GET)
+	@RequestMapping(value = "/product/getProducts/{pageNo}", produces = { "application/json" }, method = RequestMethod.GET)
 	public ResponseEntity<ProductDataDto> getAllProduct(@PathVariable("pageNo") String pageNo) {
 		Integer pageNumber = Integer.valueOf(pageNo);
 		
@@ -73,14 +73,14 @@ public class ProductController {
 	}
 
 	@ApiOperation(value = "Get Product Type", response = ProductDto.class)
-	@RequestMapping(value = "/getProductType", produces = { "application/json" }, method = RequestMethod.GET)
+	@RequestMapping(value = "/product/getProductType", produces = { "application/json" }, method = RequestMethod.GET)
 	public ResponseEntity<Iterable<ProductTypeMaster>> getProductType() {
 		Iterable<ProductTypeMaster> productList = new ArrayList<>();
 		productList = productService.getProductType();
 		return new ResponseEntity<>(productList, HttpStatus.OK);
 	}
 	@ApiOperation(value = "Get list of Product Based on Search Criteria", response = Product.class)
-	@PostMapping(value = "/searchProducts")
+	@PostMapping(value = "/product/searchProducts")
 	public ResponseEntity<ProductDataDto> searchProducts(@RequestBody ProductDto product,HttpServletResponse response) {
 		ProductDataDto productData = new  ProductDataDto();
 		Integer pageNumber = Integer.valueOf(product.getPageNo());
@@ -96,7 +96,7 @@ public class ProductController {
 		}
 	}	
 	@ApiOperation(value = "Associate Product with Plan", response = String.class)
-	@RequestMapping(value = "/associatePlan",produces = { "application/json" },method = RequestMethod.POST)
+	@RequestMapping(value = "/product/associatePlan",produces = { "application/json" },method = RequestMethod.POST)
 	public ResponseEntity<StatusDto> accociatePlan(@RequestBody ProductPlanAssociationDto productPlan) {
 		StatusDto status = new StatusDto();
 		 String msg = productService.associatePlan(productPlan);
@@ -106,7 +106,7 @@ public class ProductController {
 
 
 	@ApiOperation(value = "Get Dropdown Data", response = String.class)
-	@RequestMapping(value = "/getProductDropDown",method = RequestMethod.POST)
+	@RequestMapping(value = "/product/getProductDropDown",method = RequestMethod.POST)
 	public ResponseEntity<DropDownOutDto> dropDownData(@RequestParam String statusId) {
 		DropDownOutDto dropDownOutDto = new DropDownOutDto();
 		try {
@@ -135,7 +135,7 @@ public class ProductController {
 	}
 	
 	@ApiOperation(value="Update Product",response = ResponseDto.class)
-	@RequestMapping(value="/updateProduct", produces= {"application/json"},method=RequestMethod.POST)
+	@RequestMapping(value="/product/updateProduct", produces= {"application/json"},method=RequestMethod.POST)
 	public ResponseEntity<ResponseDto> updateProduct(@RequestBody ProductDto product){
 		ResponseDto responseDto = new ResponseDto();
 		try{

@@ -45,7 +45,7 @@ public class SubscriptionController {
 	@Value("${app.page.size}") String pageSize;
 	
 	@ApiOperation(value = "Get list of all subscription", response = SubscriptionInOut.class)
-	@PutMapping(value = "/subscriptions")
+	@PutMapping(value = "/subscription/subscriptions")
 	public ResponseEntity<?> findAllSubscription(@Valid @RequestBody SubscriptionInOut subscriptionIn, HttpServletResponse response) {
 	//public ResponseEntity<?> findAllSubscription(@Valid @RequestBody SubscriptionInOut subscriptionIn, Pageable pageable1) {
 		LOGGER.info("<-----------------------Start findAllSubscription() method-------------------------------->");
@@ -99,7 +99,7 @@ public class SubscriptionController {
 	}
 	
 	@ApiOperation(value="Get Details of a Subscription", response= CustomerDto.class)
-	@RequestMapping(value="/subscriptionDetail", produces = { "application/json" }, method = RequestMethod.GET)
+	@RequestMapping(value="/subscription/subscriptionDetail", produces = { "application/json" }, method = RequestMethod.GET)
 	public ResponseEntity<CustomerDto> findSubscriptionDetail(@RequestParam(value = "subscriptionId", required = true) String subId){
 		
 		return new ResponseEntity<>(subscriptionService.findSubscriptionDetail(subId), HttpStatus.OK);
@@ -107,7 +107,7 @@ public class SubscriptionController {
 	}
 	
 	@ApiOperation(value="Cancel Subscription",response = ResponseDto.class)
-	@RequestMapping(value="/cancelSubscription", produces= {"application/json"},method=RequestMethod.PUT)
+	@RequestMapping(value="/subscription/cancelSubscription", produces= {"application/json"},method=RequestMethod.PUT)
 	public ResponseEntity<ResponseDto> cancelSubscription(@RequestParam(value = "subscriptionId", required = true) String subId){
 		
 		ResponseDto responseDto = subscriptionService.cancelSubscription(subId);
