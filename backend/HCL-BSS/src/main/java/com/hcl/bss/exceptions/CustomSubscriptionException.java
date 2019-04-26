@@ -1,8 +1,8 @@
 package com.hcl.bss.exceptions;
 
-public class CustomSubscriptionException extends RuntimeException{
+public class CustomSubscriptionException extends CustomGlobalException{
 
-	  public CustomSubscriptionException (String message){
-	        super(message);
+	  public CustomSubscriptionException (int code,String message){
+	        super(code,message);
 	    }	
 }

@@ -30,15 +30,15 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     
     
     //... Exception for subscriptions
-    @ExceptionHandler(CustomSubscriptionException.class)
-	public ResponseEntity<CustomErrorResponse> subExceptionHandler(CustomSubscriptionException ex) {
-    	CustomErrorResponse errors = new CustomErrorResponse();
-         errors.setTimestamp(LocalDateTime.now());
-         errors.setError(ex.getMessage());
-         errors.setStatus(HttpStatus.NOT_FOUND.value());
-
-         return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
-    }
+//    @ExceptionHandler(CustomSubscriptionException.class)
+//	public ResponseEntity<CustomErrorResponse> subExceptionHandler(CustomSubscriptionException ex) {
+//    	CustomErrorResponse errors = new CustomErrorResponse();
+//         errors.setTimestamp(LocalDateTime.now());
+//         errors.setError(ex.getMessage());
+//         errors.setStatus(HttpStatus.NOT_FOUND.value());
+//
+//         return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
+//    }
     
     //... Exception for User Management
     @ExceptionHandler(CustomUserMgmtException.class)
@@ -98,6 +98,24 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 		return new ResponseEntity<CustomErrorResponse>(error, HttpStatus.NOT_FOUND);
 	}
 
-    //...
+  //...
+    @ExceptionHandler(CustomGlobalException.class)
+    public ResponseEntity<CustomErrorResponse> customGlobalException(CustomGlobalException ex){
+    	CustomErrorResponse error = new CustomErrorResponse();
+    	if(ex.getCode()==100)
+    	{
+    		error.setTimestamp(LocalDateTime.now());
+    		error.setError(ex.getMessage());
+    		error.setStatus(HttpStatus.NOT_FOUND.value());
+    		return new ResponseEntity<CustomErrorResponse>(error, HttpStatus.NOT_FOUND);
+    	}
+    	else {
+    		error.setTimestamp(LocalDateTime.now());
+    		error.setError(ex.getMessage());
+    		error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+    		return new ResponseEntity<CustomErrorResponse>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    	}
+    	    		
+    }
 }
 
