@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+	<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-type" content="text/html; charset=UTF-8">
+</head>
+<body
+	style="margin: 0px; padding: 0; font-size: 12px; font-family: Arial, Helvetica, sans-serif; word-break: break-all;">
+	<div th:fragment="subscription_mail_notification"></div>
+	<table width="100%" cellspacing="0" cellpadding="0">
+
+		<tbody>
+			<tr>
+				<td align="center">
+					<table width="1024px" cellspacing="0" cellpadding="0" border="1">
+						<tbody>
+
+							<tr>
+								<td colspan="3">
+									<table cellspacing="0" cellpadding="0" bgcolor="#d9e9f7"
+										border="0 ">
+										<tbody >
+											<tr>
+												<td width="100" height="10"	style="border-right: 1px solid #000000;"></td>
+												<td width="500" height="10"></td>
+												<td width="424" height="10"></td>
+											</tr>
+											<tr>
+												<td width="100" align="center" style="border-right: 1px solid #000000;">LOGO</td>
+												<td width="800"></td>
+												<td width="100" align="left">Subscription Created</td>
+											</tr>
+											<tr>
+												<td width="100" height="10"	style="border-right: 1px solid #000000;" bgcolor="#d9e9f7"></td>
+												<td width="500" height="10" bgcolor="#d9e9f7"></td>
+												<td width="424" height="10" bgcolor="#d9e9f7"></td>
+											</tr>
+
+										</tbody>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3">
+									<table cellspacing="0" cellpadding="0" border="0 ">
+										<tbody>
+											<tr>
+												<td width="5" height="5"></td>
+												<td height="5"></td>
+												<td width="5" height="5"></td>
+											</tr>
+											<tr>
+												<td width="5"></td>
+												<td><span th:text="| Dear ${customer.firstName} |"></span>
+													<span th:text="|${customer.lastName} ,|"></span></td>
+												<td width="5"></td>
+											</tr>
+											<tr>
+												<td width="5" height="5"></td>
+												<td height="5"><span
+													th:text="| Customer First Name : ${customer.firstName} |"></span>
+													<br> <span
+													th:text="| Customer Last Name : ${customer.lastName} |"></span>
+													<br> <span
+													th:text="| Customer Email Address : ${customer.emailAddress} |"></span></td>
+												<td width="5" height="5"></td>
+											</tr>
+											<tr>
+												<td width="5" height="5"></td>
+												<td height="5"><span
+													th:text="| This is sample content |"></span></td>
+												<td width="5" height="5"></td>
+											</tr>
+											<tr>
+												<td width="5" height="5"></td>
+												<td height="5"></td>
+												<td width="5" height="5"></td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3" bgcolor="#d9e9f7">
+									<table cellspacing="0" cellpadding="0" width="100%" border="0">
+										<tbody>
+											<tr>
+												<td width="7%" height="7"></td>
+												<td width="25%"></td>
+												<td width="7%" style="border-left: 1px solid #000000;"></td>
+												<td width="25%" style="border-right: 1px solid #000000;"></td>
+												<td width="6%"></td>
+												<td width="30%"></td>
+											</tr>
+											<tr>
+												<td></td>
+												<td>Billing Address</td>
+												<td style="border-left: 1px solid #000000;"></td>
+												<td style="border-right: 1px solid #000000;">Shipping
+													Address</td>
+												<td></td>
+												<td>Payment Details</td>
+											</tr>
+											<tr>
+												<td height="7"></td>
+												<td></td>
+												<td style="border-left: 1px solid #000000;"></td>
+												<td style="border-right: 1px solid #000000;"></td>
+												<td></td>
+												<td></td>
+											</tr>
+
+										</tbody>
+									</table>
+								</td>
+							</tr>
+
+
+							<tr>
+								<td colspan="3">
+									<table cellspacing="0" cellpadding="0" width="100%" border='0'>
+										<tbody>
+											<tr>
+												<td width="7%" height="7"></td>
+												<td width="25%"></td>
+												<td width="7%" style="border-left: 1px solid #000000;"></td>
+												<td width="25%" style="border-right: 1px solid #000000;"></td>
+												<td width="6%"></td>
+												<td width="30%"></td>
+											</tr>
+											<tr>
+												<td></td>
+												<td><span
+													th:text="| Address Line 1 : ${customer.billingAdress.line1} |"></span></td>
+												<td style="border-left: 1px solid #000000;"></td>
+												<td style="border-right: 1px solid #000000;"><span
+													th:text="| Address Line 1 : ${customer.shippingAdress.line1} |"></span></td>
+												<td></td>
+												<td>
+													<table cellspacing="0" cellpadding="0" width="100%">
+														<tbody>
+															<tr>
+																<td width="60%">Card Number:</td>
+																<td width="40%">----</td>
+															</tr>
+														</tbody>
+													</table>
+
+												</td>
+											</tr>
+											<tr>
+												<td></td>
+												<td><span
+													th:text="|Address Line 2 : ${customer.billingAdress.line2} |"></span></td>
+												<td style="border-left: 1px solid #000000;"></td>
+												<td style="border-right: 1px solid #000000;"><span
+													th:text="|Address Line 2 : ${customer.shippingAdress.line2} |"></span></td>
+												<td></td>
+												<td>
+													<table cellspacing="0" cellpadding="0" width="100%">
+														<tbody>
+															<tr>
+																<td width="60%">Bank:</td>
+																<td width="40%">----</td>
+															</tr>
+														</tbody>
+													</table>
+
+												</td>
+											</tr>
+											<tr>
+												<td></td>
+												<td><span
+													th:text="| ZIP Code : ${customer.billingAdress.zipcode} |"></span></td>
+												<td style="border-left: 1px solid #000000;"></td>
+												<td style="border-right: 1px solid #000000;"><span
+													th:text="| ZIP Code : ${customer.shippingAdress.zipcode} |"></span></td>
+												<td></td>
+												<td>
+													<table cellspacing="0" cellpadding="0" width="100%">
+														<tbody>
+															<tr>
+																<td width="60%">Payment Mode:</td>
+																<td width="40%">-----</td>
+															</tr>
+														</tbody>
+													</table>
+
+												</td>
+											</tr>
+											<tr>
+												<td></td>
+												<td><span
+													th:text="| City : ${customer.billingAdress.city} |"></span></td>
+												<td style="border-left: 1px solid #000000;"></td>
+												<td style="border-right: 1px solid #000000;"><span
+													th:text="| City : ${customer.shippingAdress.city} |"></span></td>
+												<td></td>
+												<td>
+													<table cellspacing="0" cellpadding="0" width="100%">
+														<tbody>
+															<tr>
+																<td width="60%">Transaction No :</td>
+																<td width="40%">----</td>
+															</tr>
+														</tbody>
+													</table>
+
+												</td>
+											</tr>
+											<tr>
+												<td></td>
+												<td><span
+													th:text="| State : ${customer.billingAdress.state} |"></span></td>
+												<td style="border-left: 1px solid #000000;"></td>
+												<td style="border-right: 1px solid #000000;"><span
+													th:text="| State : ${customer.shippingAdress.state} |"></span></td>
+												<td></td>
+												<td>
+													<table cellspacing="0" cellpadding="0" width="100%">
+														<tbody>
+															<tr>
+																<td width="60%"></td>
+																<td width="40%"></td>
+															</tr>
+														</tbody>
+													</table>
+
+												</td>
+											</tr>
+											<tr>
+												<td></td>
+												<td><span th:text="| Country : ${customer.billingAdress.country} |"></span></td>
+												<td style="border-left: 1px solid #000000;"></td>
+												<td style="border-right: 1px solid #000000;"><span
+													th:text="| Country : ${customer.shippingAdress.country} |"></span></td>
+												<td></td>
+												<td>
+													<table cellspacing="0" cellpadding="0" width="100%">
+														<tbody>
+															<tr>
+																<td width="60%"></td>
+																<td width="40%"></td>
+															</tr>
+														</tbody>
+													</table>
+
+												</td>
+											</tr>
+
+											<tr>
+												<td width="7%" height="7"></td>
+												<td width="25%"></td>
+												<td width="7%" style="border-left: 1px solid #000000;"></td>
+												<td width="25%" style="border-right: 1px solid #000000;"></td>
+												<td width="6%"></td>
+												<td width="30%"></td>
+											</tr>
+
+										</tbody>
+									</table>
+								</td>
+							</tr>
+
+
+							<tr>
+								<td colspan="3">
+									<table cellspacing="0" cellpadding="0" width="100%" border='0'
+										style="line-height: 24px;">
+										<tbody>
+
+											<tr>
+												<td width="5%" height="15"></td>
+												<td width="19%"></td>
+												<td width="12%"></td>
+												<td width="15%"></td>
+												<td width="16%"></td>
+												<td width="15%"></td>
+												<td width="13%"></td>
+												<td width="5%"></td>
+											</tr>
+
+											<tr>
+												<td width="5%" height="7"></td>
+												<td width="19%" style="font-weight: bold;"><b>Subscription Number</b></td>
+												<td width="12%"><span th:text="| ${customer.subscriptionDto.subscriptionId} |"></span></td>
+												<td width="33%"></td>
+												<td width="15%" style="font-weight: bold;"><b>Created On</b></td>
+												<td width="16%"><span th:text=" ${customer.subscriptionDto.createdOn} "></span></td>
+												
+											</tr>
+											<tr>
+											
+											
+												<td width="5%" height="7"></td>
+												<td width="15%" style="font-weight: bold;"><b>Subscription Amount</b></td>
+												<td width="12%"><span th:text="| ${customer.subscriptionDto.totalAmount} |"></span></td>
+												<td width="33%"></td>
+												<td width="15%" style="font-weight: bold;"><b>Activation Date</b></td>
+												<td width="16%"><span th:text=" ${customer.subscriptionDto.activationDate} "></span></td>
+											
+											</tr>
+											<tr>
+											
+											
+												<td width="5%" height="7"></td>
+												<td width="15%" style="font-weight: bold;"><b>Next Billing Date</b></td>
+												<td width="12%"><span th:text="| ${customer.subscriptionDto.nextBillDate} |"></span></td>
+												<td width="33%"></td>
+												<td width="15%" style="font-weight: bold;"><b>Renewal Cycle</b></td>
+												<td width="16%"><span th:text=" ${customer.subscriptionDto.remainingCycles} "></span></td>
+											
+											</tr>
+											<!-- <tr>
+												<td width="5%" height="7"></td>
+												<td width="19%" style="font-weight: bold;"><b>Creation
+														Date</b></td>
+												<td width="12%">29-03-2019</td>
+												<td width="15%" style="font-weight: bold;">4</td>
+												<td width="16%">5</td>
+												<td width="15%" style="font-weight: bold;">6</td>
+												<td width="13%">7</td>
+												<td width="5%" height="7"></td>
+											</tr> -->
+
+											<!-- <tr>
+												<td width="5%" height="7"></td>
+												<td width="19%" style="font-weight: bold;"><b>Subscription
+														Number</b></td>
+												<td width="12%">SUBS001</td>
+												<td width="15%" style="font-weight: bold;">Bill
+													Frequency</td>
+												<td width="16%">Monthly</td>
+												<td width="15%" style="font-weight: bold;">payment</td>
+												<td width="13%">credit card</td>
+												<td width="5%" height="7"></td>
+											</tr> -->
+											<!-- <tr>
+												<td width="5%" height="7"></td>
+												<td width="19%" style="font-weight: bold;"><b>Subscription
+														Number</b></td>
+												<td width="12%">SUBS001</td>
+												<td width="15%" style="font-weight: bold;">Bill
+													Frequency</td>
+												<td width="16%">Monthly</td>
+												<td width="15%" style="font-weight: bold;">payment</td>
+												<td width="13%">credit card</td>
+												<td width="5%" height="7"></td>
+											</tr> -->
+											<tr>
+												<td width="5%" height="15"></td>
+												<td width="19%"></td>
+												<td width="12%"></td>
+												<td width="15%"></td>
+												<td width="16%"></td>
+												<td width="15%"></td>
+												<td width="13%"></td>
+												<td width="5%"></td>
+											</tr>
+
+
+										</tbody>
+									</table>
+								</td>
+							</tr>
+
+							<tr>
+								<td colspan="5" bgcolor="#d9e9f7">
+									<table cellspacing="0" cellpadding="0" width="100%">
+										<tbody>
+											<tr>
+												<td width="5%" height="7"></td>
+												<td width="20%"></td>
+												<td width="5%"></td>
+												<td width="15%"></td>
+												<td width="5%"></td>
+												<td width="10%"></td>
+												<td width="5%"></td>
+												<td width="5%"></td>
+												<td width="5%"></td>
+												<td width="5%"></td>
+												<td width="10%"></td>
+												<td width="10%"></td>	
+											</tr>
+											<tr>
+												<td></td>
+												<td><b>Plan & Add On Details</b></td>
+												<td></td>
+												<td><b>Qty</b></td>
+												<td></td>
+												<td><b>Rate</b></td>
+												<td></td>
+												<td><b>Tax</b></td>
+												<td></td>
+												<td><b>Amount</b></td>
+												<td></td>
+												<td><b>Bill Frequency</b></td>
+
+											</tr>
+											<tr>
+												<td height="7"></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+											</tr>
+
+										</tbody>
+									</table>
+								</td>
+							</tr>
+
+							<tr>
+								<td colspan="3">
+									<table cellspacing="0" cellpadding="0" width="100%">
+										<tbody th:each="Plan : ${customer.subscriptionDto.productPlanList}">
+											<tr>
+											<!-- 	<td width="5%" height="10"></td>
+												<td width="20%"></td>
+												<td width="5%"></td>
+												<td width="15%"></td>
+												<td width="5%"></td>
+												<td width="10%"></td>
+												<td width="5%"></td>
+												<td width="10%"></td>
+												<td width="5%"></td>
+												<td width="20%"></td>
+												<td></td>
+												<td></td>-->
+												
+												<td width="5%" height="10"></td>
+												<td width="20%"></td>
+												<td width="5%"></td>
+												<td width="15%"></td>
+												<td width="5%"></td>
+												<td width="10%"></td>
+												<td width="5%"></td>
+												<td width="5%"></td>
+												<td width="5%"></td>
+												<td width="5%"></td>
+												<td width="10%"></td>
+												<td width="10%"></td>	
+											</tr>
+
+											<tr>
+												<td><div>
+														<td>   <th:block th:text="| ${Plan.productName} |"></th:block>
+																<th:block th:text="| ${Plan.rateplanDesc} |"></th:block>
+													</div></td>
+															<td></td>
+                                                            <td><th:block th:text=" ${Plan.quantity} "></th:block></td>
+                                                            <td></td>
+                                                            <td><th:block th:text=" ${Plan.rate} "></th:block></td>
+                                                            <td></td>
+                                                            <td><th:block th:text=" ${Plan.tax} "></th:block></td>
+                                                            <td></td>
+                                                            <td><th:block th:text=" ${Plan.amount} "></th:block></td>
+                                                            <td></td>
+                                                            <td><th:block th:text=" ${Plan.billFrequency} "></th:block></td>
+															<td></td>
+											</tr>
+
+											<tr>
+												<!-- <td width="5%" height="10"></td>
+												<td width="20%"></td>
+												<td width="5%"></td>
+												<td width="15%"></td>
+												<td width="5%"></td>
+												<td width="10%"></td>
+												<td width="5%"></td>
+												<td width="10%"></td>
+												<td width="5%"></td>
+												<td width="20%"></td>
+												<td></td>
+												<td></td>-->
+												
+												<td width="5%" height="10"></td>
+												<td width="20%"></td>
+												<td width="5%"></td>
+												<td width="15%"></td>
+												<td width="5%"></td>
+												<td width="10%"></td>
+												<td width="5%"></td>
+												<td width="5%"></td>
+												<td width="5%"></td>
+												<td width="5%"></td>
+												<td width="10%"></td>
+												<td width="10%"></td>	
+											</tr>
+
+										</tbody>
+									</table>
+								</td>
+							</tr>
+
+							<tr>
+								<td colspan="3">
+									<table cellspacing="0" cellpadding="0" width="100%" border="0">
+										<tbody>
+											<tr>
+												<td width="5%" height="10"></td>
+												<td width="20%"></td>
+												<td width="5%"></td>
+												<td width="15%"></td>
+												<td width="5%"></td>
+												<td width="10%"></td>
+												<td width="5%"></td>
+												<td width="10%"></td>
+												<td width="5%"></td>
+												<td width="20%"></td>
+											</tr>
+											<tr>
+												<td width="5%"></td>
+												<td width="20%"></td>
+												<td width="5%"></td>
+												<td width="15%"></td>
+												<td width="5%"></td>
+												<td width="10%"></td>
+												<td width="15%"></td>
+												<td align="left">TOTAL</td>
+												<td width="5%"></td>
+												<td><span
+													th:text="| ${customer.subscriptionDto.totalAmount} |"></span></td>
+											</tr>
+
+											<tr>
+												<td width="5%" height="10"></td>
+												<td width="20%"></td>
+												<td width="5%"></td>
+												<td width="15%"></td>
+												<td width="5%"></td>
+												<td width="10%"></td>
+												<td width="5%"></td>
+												<td width="10%"></td>
+												<td width="5%"></td>
+												<td width="20%"></td>
+											</tr>
+
+
+
+										</tbody>
+									</table>
+								</td>
+							</tr>
+
+							<tr>
+								<td colspan="3">
+									<table cellspacing="0" cellpadding="0" border="0 ">
+										<tbody>
+											<tr>
+												<td width="5" height="5"></td>
+												<td height="5"></td>
+												<td width="5" height="5"></td>
+											</tr>
+											<tr>
+												<td width="5"></td>
+												<td><b>Disclaimer</b></td>
+												<td width="5"></td>
+											</tr>
+											<tr>
+												<td width="5" height="5"></td>
+												<td height="5"></td>
+												<td width="5" height="5"></td>
+											</tr>
+											<tr>
+												<td width="5" height="5"></td>
+												<td height="5">This is dummy content.This is a
+													placeholder.This is dummy content.This is a
+													placeholder.This is dummy content.This is a
+													placeholder.This is dummy content.This is a
+													placeholder.This is dummy content.This is a
+													placeholder.This is dummy content.This is a
+													placeholder.This is dummy content.This is a
+													placeholder.This is dummy content.This is a
+													placeholder.This is dummy content.This is a
+													placeholder.This is dummy content.This is a
+													placeholder.This is dummy content.This is a placeholder.</td>
+												<td width="5" height="5"></td>
+											</tr>
+											<tr>
+												<td width="5" height="5"></td>
+												<td height="5"></td>
+												<td width="5" height="5"></td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+
+
+							<tr>
+								<td colspan="3" bgcolor="#d9e9f7" align="center"
+									style="line-height: 40px;">wweqweqwewe</td>
+							</tr>
+
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</tbody>
+</body>
+</html>
