@@ -287,7 +287,7 @@
 												<td width="12%"><span th:text="| ${customer.subscriptionDto.subscriptionId} |"></span></td>
 												<td width="33%"></td>
 												<td width="15%" style="font-weight: bold;"><b>Created On</b></td>
-												<td width="16%"><span th:text="| ${customer.subscriptionDto.createdOn} |"></span></td>
+												<td width="16%"><span th:text=" ${customer.subscriptionDto.createdOn} "></span></td>
 												
 											</tr>
 											<tr>
@@ -298,7 +298,7 @@
 												<td width="12%"><span th:text="| ${customer.subscriptionDto.totalAmount} |"></span></td>
 												<td width="33%"></td>
 												<td width="15%" style="font-weight: bold;"><b>Activation Date</b></td>
-												<td width="16%"><span th:text="| ${customer.subscriptionDto.activatedOn} |"></span></td>
+												<td width="16%"><span th:text=" ${customer.subscriptionDto.activationDate} "></span></td>
 											
 											</tr>
 											<tr>
@@ -456,15 +456,15 @@
 																<th:block th:text="| ${Plan.rateplanDesc} |"></th:block>
 													</div></td>
 															<td></td>
-                                                            <td><th:block th:text="| ${Plan.quantity} |"></th:block></td>
+                                                            <td><th:block th:text=" ${Plan.quantity} "></th:block></td>
                                                             <td></td>
-                                                            <td><th:block th:text="| ${Plan.rate} |"></th:block></td>
+                                                            <td><th:block th:text=" ${Plan.rate} "></th:block></td>
                                                             <td></td>
-                                                            <td><th:block th:text="| ${Plan.tax} |"></th:block></td>
+                                                            <td><th:block th:text=" ${Plan.tax} "></th:block></td>
                                                             <td></td>
-                                                            <td><th:block th:text="| ${Plan.amount} |"></th:block></td>
+                                                            <td><th:block th:text=" ${Plan.amount} "></th:block></td>
                                                             <td></td>
-                                                            <td><th:block th:text="| ${Plan.billFrequency} |"></th:block></td>
+                                                            <td><th:block th:text=" ${Plan.billFrequency} "></th:block></td>
 															<td></td>
 											</tr>
 

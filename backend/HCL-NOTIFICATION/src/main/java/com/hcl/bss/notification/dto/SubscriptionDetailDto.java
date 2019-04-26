@@ -14,9 +14,10 @@ public class SubscriptionDetailDto implements Serializable{
 	private Boolean renewsForever;
 	private BigDecimal remainingCycles;
 	private String expireOn;
-	private Double totalAmount; // it will be used after total amount will be incorporated in subscription table
+	private String totalAmount; // it will be used after total amount will be incorporated in subscription table
 	private List<SubscriptionRatePlanDto> productPlanList;
-	private String activatedOn;
+	private String subscriptionDuration;
+	private String activationDate;
 	private String createdOn;
 	public Boolean getRenewsForever() {
 		return renewsForever;
@@ -67,10 +68,10 @@ public class SubscriptionDetailDto implements Serializable{
 		this.nextBillDate = nextBillDate;
 	}
 	
-	public Double getTotalAmount() {
+	public String getTotalAmount() {
 		return totalAmount;
 	}
-	public void setTotalAmount(Double totalAmount) {
+	public void setTotalAmount(String totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 	public String getCancelDate() {
@@ -79,11 +80,18 @@ public class SubscriptionDetailDto implements Serializable{
 	public void setCancelDate(String cancelDate) {
 		this.cancelDate = cancelDate;
 	}
-	public String getActivatedOn() {
-		return activatedOn;
+	public String getSubscriptionDuration() {
+		return subscriptionDuration;
 	}
-	public void setActivatedOn(String activatedOn) {
-		this.activatedOn = activatedOn;
+	public void setSubscriptionDuration(String subscriptionDuration) {
+		this.subscriptionDuration = subscriptionDuration;
+	}
+	
+	public String getActivationDate() {
+		return activationDate;
+	}
+	public void setActivationDate(String activationDate) {
+		this.activationDate = activationDate;
 	}
 	public String getCreatedOn() {
 		return createdOn;
