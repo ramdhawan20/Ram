@@ -39,7 +39,7 @@ public class User implements Serializable {
     @Column(name="cre_by")private String createdBy;
     @Column(name="cre_dt")private Timestamp createdDate;
 
-    @OneToMany(fetch=FetchType.LAZY,cascade={CascadeType.PERSIST,CascadeType.REMOVE})
+    @OneToMany(fetch=FetchType.EAGER,cascade={CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinTable(name = "TB_USER_ROLE_MAPPING", joinColumns = { @JoinColumn(name = "USER_ID",referencedColumnName = "USER_ID")}, inverseJoinColumns = { @JoinColumn(name = "ROLE_UID",referencedColumnName = "UIDPK") })
     private List<Role> roleList;
   

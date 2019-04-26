@@ -39,7 +39,7 @@ public class FileUploadDownloadRestController {
 	@Autowired
 	UploadService uploadService;
 
-	@RequestMapping(value = "/uploadProductData", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@RequestMapping(value = "/upload/uploadProductData", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 
 	public ResponseEntity<FileUploadResponse> uploadProductData(@RequestParam("file") MultipartFile file)
 			throws IOException, ParseException {
@@ -85,7 +85,7 @@ public class FileUploadDownloadRestController {
 		return new ResponseEntity<ErrorResponseDTO>(error, HttpStatus.CONFLICT);
 	}
 
-	@GetMapping(path = "/downloadFile/{fileName}", produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE })
+	@GetMapping(path = "/upload/downloadFile/{fileName}", produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE })
 	public ResponseEntity<String> downloadErrorFile(HttpServletResponse response,
 			@PathVariable("fileName") String fileName) throws IOException {
 		String responseMessage = BLANK;
