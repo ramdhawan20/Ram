@@ -16,6 +16,8 @@ public class SubscriptionDetailDto {
 	private String totalAmount; // it will be used after total amount will be incorporated in subscription table
 	private List<SubscriptionRatePlanDto> productPlanList;
 	private String subscriptionDuration;
+	private String createdOn;
+	private String activationDate;
 	public Boolean getRenewsForever() {
 		return renewsForever;
 	}
@@ -83,5 +85,18 @@ public class SubscriptionDetailDto {
 	public void setSubscriptionDuration(String subscriptionDuration) {
 		this.subscriptionDuration = subscriptionDuration;
 	}
+	public String getCreatedOn() {
+		return createdOn;
+	}
+	public void setCreatedOn(String createdOn) {
+		this.createdOn = createdOn;
+	}
+	public String getActivationDate() {
+		return activationDate;
+	}
+	public void setActivationDate(String activationDate) {
+		this.activationDate = activationDate;
+	}
+	
 	
 }

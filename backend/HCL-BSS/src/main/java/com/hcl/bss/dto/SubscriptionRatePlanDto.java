@@ -10,6 +10,7 @@ public class SubscriptionRatePlanDto {
 	private int tax;
 	private String amount;
 	private Boolean isParent;
+	private String billFrequency;
 	public String getRateplan() {
 		return rateplan;
 	}
@@ -57,6 +58,12 @@ public class SubscriptionRatePlanDto {
 	}
 	public void setIsParent(Boolean isParent) {
 		this.isParent = isParent;
+	}
+	public String getBillFrequency() {
+		return billFrequency;
+	}
+	public void setBillFrequency(String billFrequency) {
+		this.billFrequency = billFrequency;
 	}
 	
 }
