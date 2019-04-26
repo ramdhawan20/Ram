@@ -202,11 +202,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			    CustomerDto response = new CustomerDto();
 				Subscription subscription = subscriptionRepository.findBySubscriptionId(subId);
 				if(subscription==null) {
-					throw new CustomSubscriptionException("No Subscription Found");
+					throw new CustomSubscriptionException(100,"No Subscription Found");
 				}
 				Customer customer = customerRepository.findById(subscription.getCustomerId()).get();
 				if(customer==null) {
-					throw new CustomSubscriptionException("Customer not found");
+					throw new CustomSubscriptionException(100,"Customer not found");
 				}
 				if(customer.getFirstName()!=null)
 					response.setFirstName(customer.getFirstName());
@@ -282,7 +282,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 						if(subRatePlan.getRatePlan().getCurrency()!=null)
 							subscriptionDto.setTotalAmount(subRatePlan.getRatePlan().getCurrency().getCurrencyCode()+" "+Double.toString(subscription.getAmount()));
 						else
-							throw new CustomSubscriptionException("RatePlan not mapped with currency");
+							throw new CustomSubscriptionException(100,"RatePlan not mapped with currency");
 					}
 					else {
 						subscriptionDto.setRenewsForever(false);
@@ -292,7 +292,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 						if(subRatePlan.getRatePlan().getCurrency()!=null)
 							subscriptionDto.setTotalAmount(subRatePlan.getRatePlan().getCurrency().getCurrencyCode()+" "+Double.toString(subscription.getAmount()));
 						else
-							throw new CustomSubscriptionException("RatePlan not mapped with currency");
+							throw new CustomSubscriptionException(100,"RatePlan not mapped with currency");
 					}
 				}
 			}
@@ -300,7 +300,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 				subscriptionDto.setCancelDate(this.getStringDate(new Date(subscription.getCancelDate().getTime())));
 		}
 		else
-			throw new CustomSubscriptionException("No Product/RatePlan associated with subscription");
+			throw new CustomSubscriptionException(100,"No Product/RatePlan associated with subscription");
 //		subscriptionDto.setTotalAmount(this.totalAmount);
 		return subscriptionDto;
 	}
@@ -328,14 +328,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 				subscriptionRatePlanDto.setAmount(subRatePlan.getRatePlan().getCurrency().getCurrencyCode()+" "+Double.toString(subRatePlan.getPrice()));
 				subscriptionRatePlanDto.setQuantity(subRatePlan.getQuantity());
 //				subscriptionRatePlanDto.setTax(subRatePlan.gett); //tax is not handled rightnow
+				subscriptionRatePlanDto.setBillFrequency(subRatePlan.getBillingFrequency());
 				subProductRatePlanDtoList.add(subscriptionRatePlanDto);
-//				this.totalAmount = this.totalAmount + subRatePlan.getPrice();
+//				this.totalAmount = this.totalAmount + subRatePlan.getPrice();			
 			}
 			return subProductRatePlanDtoList;
 		}
 		catch (Exception e) {
 			// TODO: handle exception
-			throw new CustomSubscriptionException("Internal Server Error");
+			throw new CustomSubscriptionException(200,"Internal Server Error");
 		}
 	}
 	
@@ -361,7 +362,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			return responseDto;
 		}
 		else
-			throw new CustomSubscriptionException("Subscription not found");
+			throw new CustomSubscriptionException(100,"Subscription not found");
 	}
 
 	@Override

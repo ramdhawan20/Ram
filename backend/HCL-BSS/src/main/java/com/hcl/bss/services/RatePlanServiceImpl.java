@@ -8,6 +8,9 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,7 @@ import com.hcl.bss.domain.RatePlanVolume;
 import com.hcl.bss.domain.UOM;
 import com.hcl.bss.dto.ProductDto;
 import com.hcl.bss.dto.RatePlanDto;
+import com.hcl.bss.dto.RatePlanFilterReqDto;
 import com.hcl.bss.dto.RatePlanVolumeDto;
 import com.hcl.bss.dto.ResponseDto;
 import com.hcl.bss.repository.AppConstantRepository;
@@ -23,6 +27,7 @@ import com.hcl.bss.repository.CurrencyMasterRepository;
 import com.hcl.bss.repository.RatePlanRepository;
 import com.hcl.bss.repository.RatePlanVolumeRepository;
 import com.hcl.bss.repository.UOMRepository;
+import com.hcl.bss.repository.specification.RatePlanSpecification;
 @Service
 @Transactional
 public class RatePlanServiceImpl implements RatePlanService {
@@ -61,11 +66,19 @@ public class RatePlanServiceImpl implements RatePlanService {
 	
 	
 	@Override
-	public List<RatePlanDto> getAllPlans() {
+	public List<RatePlanDto> getRatePlans(Pageable reqCount,RatePlanFilterReqDto filterReq) {
 		List<RatePlan> ratePlanList = new ArrayList<>();
-		ratePlanList = ratePlanRepository.findAll();
-		return convertRatePlanEntityToDto(ratePlanList);
-		
+		Page<RatePlan> result = ratePlanRepository.findAll(Specification.where(RatePlanSpecification.hasName(filterReq.getPlanName()))
+				.and(RatePlanSpecification.hasPlanCode(filterReq.getPlanCode()))
+				.and(RatePlanSpecification.hasBillCycleTerm(filterReq.getBillCycleTerm()))
+				.and(RatePlanSpecification.hasBillFreq(filterReq.getBillFreq()))
+				.and(RatePlanSpecification.hasStatus(filterReq.getStatus()))
+				.and(RatePlanSpecification.hasType(filterReq.getPlanType())), reqCount);
+		if(result!=null){	
+			ratePlanList = result.getContent();
+			return convertRatePlanEntityToDto(ratePlanList);
+		}
+		return null;
 	}
 	
 	private List<RatePlanDto> convertRatePlanEntityToDto(List<RatePlan> ratePlanList) {
@@ -83,8 +96,9 @@ public class RatePlanServiceImpl implements RatePlanService {
 				ratePlanVolumeList = ratePlanVolumeRepository.findByRatePlan(rplan.getId());
 				rpDto.setRatePlanVolumeDtoList(convertRatePlanVolumeEntityToDto(ratePlanVolumeList));
 			}
+			else
+				rpDto.setPrice(rplan.getPrice());
 			rpDto.setUnitOfMesureId(rplan.getUom().getUnitOfMeasure());
-			rpDto.setPrice(rplan.getPrice());
 			rpDto.setBillingCycleTerm(rplan.getBillingCycleTerm());
 			rpDto.setSetUpFee(rplan.getSetUpFee());
 			rpDto.setFreeTrail(rplan.getFreeTrail());
@@ -193,5 +207,15 @@ private RatePlan convertRatePlanDtoToEntity(RatePlanDto ratePlanDto) {
 	public List<String> getDropDownData(String statusId) {
 		// TODO Auto-generated method stub
 		return appConstantRepository.findByAppConstantCode(statusId);
+	}
+	
+	@Override
+	public Long getTotalNumberOfRatePlan(RatePlanFilterReqDto filterReq) {
+		return ratePlanRepository.count(Specification.where(RatePlanSpecification.hasName(filterReq.getPlanName()))
+				.and(RatePlanSpecification.hasPlanCode(filterReq.getPlanCode()))
+				.and(RatePlanSpecification.hasBillCycleTerm(filterReq.getBillCycleTerm()))
+				.and(RatePlanSpecification.hasBillFreq(filterReq.getBillFreq()))
+				.and(RatePlanSpecification.hasStatus(filterReq.getStatus()))
+				.and(RatePlanSpecification.hasType(filterReq.getPlanType())));
 	}
 }
