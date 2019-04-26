@@ -305,7 +305,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 				}
 			}
 			if(subscription.getStatus().equalsIgnoreCase("CANCELLED"))
-				subscriptionDto.setCancelDate(this.getStringDate(new Date(subscription.getCancelDate().getTime())));
+				subscriptionDto.setCancelDate(subscription.getCancelDate().toString());
 		}
 		else
 			throw new CustomSubscriptionException(100,"No Product/RatePlan associated with subscription");
@@ -362,7 +362,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			subscription.setStatus("CANCELLED");
 			subscription.setIsActive(0);
 //			subscription.setSubscriptionEndDate(Timestamp.valueOf((LocalDateTime.now())));
-			subscription.setCancelDate(Timestamp.valueOf((LocalDate.now().atStartOfDay())));
+			subscription.setCancelDate(LocalDate.now());
 			subscriptionRepository.save(subscription);
 			responseDto.setMessage("Subscription Cancelled Successfully");
 			responseDto.setResponseCode(200);
