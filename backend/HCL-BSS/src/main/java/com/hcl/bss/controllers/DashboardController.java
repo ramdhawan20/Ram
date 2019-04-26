@@ -30,20 +30,20 @@ public class DashboardController {
 	DashBoardService dashBoardService;
 	
 	@ApiOperation(value="Get revenue data for widgets")
-	@RequestMapping(value="/getRevenueData",produces = {"application/json"}, method = RequestMethod.GET)
+	@RequestMapping(value="/dashboard/getRevenueData",produces = {"application/json"}, method = RequestMethod.GET)
 	public ResponseEntity<RevenueDto> getRevenue() {
 		RevenueDto revenueDto = new RevenueDto();
 		return new ResponseEntity<>(dashBoardService.getRevenue(revenueDto),HttpStatus.OK);
 	}
 	
 	@ApiOperation(value="Get count for renewal of last batch")
-	@RequestMapping(value="/getLastBatchRenewalCount", produces= {"application/json"},method = RequestMethod.GET)
+	@RequestMapping(value="/dashboard/getLastBatchRenewalCount", produces= {"application/json"},method = RequestMethod.GET)
 	public ResponseEntity<BatchRenewalDto> getLastBatchRenewCount(){
 		return new ResponseEntity<>(dashBoardService.getLastBatchRenewalCount(),HttpStatus.OK);
 	} 
 	
 	@ApiOperation(value="Get values to plot graph")
-	@RequestMapping(value="/getValuesForGraph",produces = {"application/json"}, method = RequestMethod.POST)
+	@RequestMapping(value="/dashboard/getValuesForGraph",produces = {"application/json"}, method = RequestMethod.POST)
 	public ResponseEntity<DashboardGraphDto> getGraphValues(@RequestBody GraphRequestDto graphRequest) {
 		
 		DashboardGraphDto dashboardGraphDto = new DashboardGraphDto();
@@ -52,7 +52,7 @@ public class DashboardController {
 	}
 	
 	@ApiOperation(value = "Get Dropdown Data", response = DropDownOutDto.class)
-	@RequestMapping(value = "/getDashboardDropDown",method = RequestMethod.GET)
+	@RequestMapping(value = "/dashboard/getDashboardDropDown",method = RequestMethod.GET)
 	public ResponseEntity<DropDownOutDto> dropDownData(@RequestParam String statusId) {
 		DropDownOutDto dropDownOutDto = new DropDownOutDto();
 		try {

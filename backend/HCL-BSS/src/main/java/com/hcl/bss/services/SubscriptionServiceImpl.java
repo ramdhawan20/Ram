@@ -263,6 +263,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			subscriptionDto.setNextBillDate(this.getStringDate(new Date(subscription.getNextBillingDate().getTime())));
 		else
 			subscriptionDto.setNextBillDate(NOT_APPLICABLE);
+		if(subscription.getCreatedDate()!=null)
+			subscriptionDto.setCreatedOn(this.getStringDate(new Date(subscription.getCreatedDate().getTime())));
+		else
+			subscriptionDto.setCreatedOn(NOT_APPLICABLE);
+		if(subscription.getActivationDate()!=null)
+			subscriptionDto.setActivationDate(this.getStringDate(new Date(subscription.getActivationDate().getTime())));
+		else
+			subscriptionDto.setCreatedOn(NOT_APPLICABLE);
 		if(subscription.getLastBillingDate()!=null)
 			subscriptionDto.setLastBillDate(this.getStringDate(new Date(subscription.getLastBillingDate().getTime())));
 		else

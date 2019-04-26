@@ -31,7 +31,7 @@ public class DownloadRecordController {
 
 	@Autowired
 	DownloadRecordService downloadRecordService;
-	@GetMapping(path = "/downloadRecord", produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE })
+	@GetMapping(path = "/download/downloadRecord", produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE })
 	public ResponseEntity<StatusDto> downloadErrorFile(HttpServletResponse response,
 			@RequestParam(value="tabName", required = true) String tabName) throws IOException {
 		StatusDto status = new StatusDto();
@@ -40,7 +40,7 @@ public class DownloadRecordController {
 		return new ResponseEntity<StatusDto>(status, HttpStatus.OK);
 	}
 	@ApiOperation(value = "DownLoad Records Based on Search Criteria", response = Product.class)
-	@PostMapping(value = "/downloadSearchRecords")
+	@PostMapping(value = "/download/downloadSearchRecords")
 	public ResponseEntity<StatusDto> downloadSearchRecords(@RequestBody CSVRecordDataDto csvRecordData,HttpServletResponse response) {
 		StatusDto status = new StatusDto();
 		Pageable reqCount = null;
