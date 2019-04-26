@@ -338,8 +338,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 //				subscriptionRatePlanDto.setTax(subRatePlan.gett); //tax is not handled rightnow
 				subscriptionRatePlanDto.setBillFrequency(subRatePlan.getBillingFrequency());
 				subProductRatePlanDtoList.add(subscriptionRatePlanDto);
-//				this.totalAmount = this.totalAmount + subRatePlan.getPrice();
-				
+//				this.totalAmount = this.totalAmount + subRatePlan.getPrice();			
 			}
 			return subProductRatePlanDtoList;
 		}
