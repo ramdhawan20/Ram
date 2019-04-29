@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -418,7 +419,7 @@ public class UserManagementController {
 		try {
 			dropDownList = userServices.getDropDownList(dropDownCode);
 			
-			if (dropDownList == null) {
+			if (dropDownList == null || dropDownList.size() == 0) {
 				dropDownOut.setSuccess(false);
 				dropDownOut.setResponseCode(HttpStatus.NOT_FOUND.value());
 				dropDownOut.setMessage("Dropdown lov not found!");
@@ -532,7 +533,7 @@ public class UserManagementController {
 		
 	}
 
-	@ApiOperation(value = "To map profile with manu and submanu", response = RoleOutDto.class)
+	@ApiOperation(value = "To map profile with Menu and subMenu", response = RoleOutDto.class)
 	@PostMapping(value = "/user/profile/mapping")
 	public ResponseEntity<?> roleMenuMapping(@Valid @RequestBody  ProfileInDto profileInDto){
 		LOGGER.info("<-----------------------Start roleMenuMapping() method in UserManagementController-------------------------------->");		
@@ -556,5 +557,31 @@ public class UserManagementController {
 		}
 		
 	}
+	
+	@ApiOperation(value = "To delete the profile mapping with Menu and subMenu", response = RoleOutDto.class)
+	@DeleteMapping(value = "/user/profile")
+	public ResponseEntity<?> deleteRoleMenuMapping(@Valid @RequestBody  RoleInDto roleIn){
+		LOGGER.info("<-----------------------Start deleteRoleMenuMapping() method in UserManagementController-------------------------------->");		
+		LOGGER.info("Input details: " + roleIn.toString());
+		RoleOutDto roleOut = new RoleOutDto();
+		
+		try {
+			userServices.deleteRoleMenuMapping(roleIn);
+			
+			roleOut.setSuccess(true);
+			roleOut.setResponseCode(HttpStatus.OK.value());
+			roleOut.setMessage("Profile mapping deleted successfully!");
+			
+			return new ResponseEntity<>(roleOut, HttpStatus.OK);
+			
+		} catch (CustomUserMgmtException e) {
+			LOGGER.info("Error Description: " + e.getMessage());		
+			throw new CustomUserMgmtException(500);
+		}finally {
+			LOGGER.info("<-----------------------End deleteRoleMenuMapping() method in UserManagementController-------------------------------->");		
+		}
+		
+	}
+
 	
 }

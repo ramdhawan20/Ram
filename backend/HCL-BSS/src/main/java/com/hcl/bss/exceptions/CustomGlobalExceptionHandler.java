@@ -111,6 +111,11 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
             	 error.setStatus(HttpStatus.BAD_REQUEST.value());
             	 error.setError("Sub Menu Name not found");
              }
+             else if(ex.getCode().equals(110)) {
+            	 error.setTimestamp(LocalDateTime.now());
+            	 error.setStatus(HttpStatus.BAD_REQUEST.value());
+            	 error.setError("Profile mapping not found");
+             }
              else {
             	 error.setTimestamp(LocalDateTime.now());
             	 error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());

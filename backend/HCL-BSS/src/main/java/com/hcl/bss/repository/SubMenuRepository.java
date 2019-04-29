@@ -2,6 +2,7 @@ package com.hcl.bss.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.hcl.bss.domain.Menu;
 import com.hcl.bss.domain.SubMenu;
 /**
  *
@@ -10,4 +11,7 @@ import com.hcl.bss.domain.SubMenu;
 public interface SubMenuRepository extends JpaRepository<SubMenu, Long> {
 	
 	SubMenu findBySubMenuName(String subMenuName);
+	
+	SubMenu findByid(Long id);
+
 }

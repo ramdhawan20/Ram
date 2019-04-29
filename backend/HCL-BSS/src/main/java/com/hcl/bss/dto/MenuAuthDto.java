@@ -5,8 +5,8 @@ import java.util.Map;
 
 public class MenuAuthDto {
 	private String menuName;
-	//private List<SubMenuAuthDto> subManuList;
-	private List<String> subManuList;
+	//private List<SubMenuAuthDto> subMenuList;
+	private List<String> subMenuList;
 	
 	public String getMenuName() {
 		return menuName;
@@ -14,11 +14,11 @@ public class MenuAuthDto {
 	public void setMenuName(String menuName) {
 		this.menuName = menuName;
 	}
-	public List<String> getSubManuList() {
-		return subManuList;
+	public List<String> getSubMenuList() {
+		return subMenuList;
 	}
-	public void setSubManuList(List<String> subManuList) {
-		this.subManuList = subManuList;
+	public void setSubMenuList(List<String> subMenuList) {
+		this.subMenuList = subMenuList;
 	}
 	
 }
