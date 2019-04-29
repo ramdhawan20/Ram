@@ -4,8 +4,11 @@ import static com.hcl.bss.constants.ApplicationConstants.ACTIVE;
 import static com.hcl.bss.constants.ApplicationConstants.ADMIN;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +30,7 @@ import com.hcl.bss.domain.User;
 import com.hcl.bss.dto.MenuAuthDto;
 import com.hcl.bss.dto.MenuDto;
 import com.hcl.bss.dto.ProfileInDto;
+import com.hcl.bss.dto.RoleInDto;
 import com.hcl.bss.dto.RoleMenuDto;
 import com.hcl.bss.dto.UserAuthDto;
 import com.hcl.bss.dto.UserInDto;
@@ -264,10 +268,11 @@ public class UserServicesImpl implements UserServices {
 	private UserAuthDto convertUserToDto(User user) {
 		LOGGER.info("<-----------------------Start convertUserToDto() method in UserServicesImpl-------------------------------->");		
 		UserAuthDto userAuthDto = new UserAuthDto();
-		List<MenuAuthDto> tempManuList = new ArrayList();
-		List<String> tempSubManuList = null;
-
-		MenuAuthDto menuAuthDto = null;
+		Map<String, Set<String>> menuMap = new HashMap<>();
+		Set<String> subMenuSet = new HashSet<>();
+		Set<String> roleNameSet = new HashSet<>();
+		Menu menu = null;
+		SubMenu subMenu = null;
 		
 		userAuthDto.setUserId(user.getUserId());
 		userAuthDto.setUserFirstName(user.getUserFirstName());
@@ -278,32 +283,38 @@ public class UserServicesImpl implements UserServices {
 		}
 		
 		for(Role role : roleList) {
-			Set<Menu> menuSet = role.getMenuSet();			
-			if(menuSet == null) {
-				throw new CustomUserMgmtException(101);
+			List<RoleMenuMapping> roleMenuMappingList = roleMenuMappingRepository.findByRoleUid(role.getId());
+			roleNameSet.add(role.getRoleName());
+			if(roleMenuMappingList == null) {
+				throw new CustomUserMgmtException(106);
 			}
 			
-			Iterator<Menu> menuItr = menuSet.iterator();
-			while(menuItr.hasNext()) {
-				Menu menu = menuItr.next();
-
-				menuAuthDto = new MenuAuthDto();
-				menuAuthDto.setMenuName(menu.getMenuName());
+			for(RoleMenuMapping roleMenuMapping : roleMenuMappingList){
+				menu = menuRepository.findByid(roleMenuMapping.getMenuUid());
+				subMenu = subMenuRepository.findByid(roleMenuMapping.getSubMenuUid());
 				
-				List<SubMenu> subMenuList = menu.getSubMenu();
-				tempSubManuList = new ArrayList();
-				
-				for(SubMenu subMenu : subMenuList) {
-					tempSubManuList.add(subMenu.getSubMenuName());
+				if(menuMap.containsKey(menu.getMenuName())) {
+					subMenuSet = menuMap.get(menu.getMenuName());
+					if(subMenu != null)
+						subMenuSet.add(subMenu.getSubMenuName());
+					menuMap.put(menu.getMenuName(), subMenuSet);
+				}else {
+					menuMap.put(menu.getMenuName(), null);
+					if(subMenu != null)
+						subMenuSet.add(subMenu.getSubMenuName());
+					else
+						subMenuSet = new HashSet<>();
+					
+					menuMap.put(menu.getMenuName(), subMenuSet);
 				}
-				menuAuthDto.setSubManuList(tempSubManuList);
-				tempSubManuList = null;
-				tempManuList.add(menuAuthDto);
-				menuAuthDto = null;
+				subMenuSet = null;
+				menu = null;
+				subMenu = null;
 			}
 			
 		}
-		userAuthDto.setMenuList(tempManuList);
+		userAuthDto.setRoleNameSet(roleNameSet);
+		userAuthDto.setMenuMap(menuMap);
 		
 		LOGGER.info("<-----------------------End convertUserToDto() method in UserServicesImpl-------------------------------->");		
 		return userAuthDto;
@@ -358,8 +369,8 @@ public class UserServicesImpl implements UserServices {
     private MenuDto convertToMenuDto(List<Menu> menuList) {
 		LOGGER.info("<-----------------------Start convertUserToDto() method in UserServicesImpl-------------------------------->");		
     	MenuDto menuDto = new MenuDto();
-    	List<MenuAuthDto> tempManuList = new ArrayList();
-		List<String> tempSubManuList = null;
+    	List<MenuAuthDto> tempMenuList = new ArrayList();
+		List<String> tempSubMenuList = null;
 
 		MenuAuthDto menuAuthDto = null;
     	
@@ -371,17 +382,17 @@ public class UserServicesImpl implements UserServices {
 			menuAuthDto.setMenuName(menu.getMenuName());
 			
 			List<SubMenu> subMenuList = menu.getSubMenu();
-			tempSubManuList = new ArrayList();
+			tempSubMenuList = new ArrayList();
 			
 			for(SubMenu subMenu : subMenuList) {
-				tempSubManuList.add(subMenu.getSubMenuName());
+				tempSubMenuList.add(subMenu.getSubMenuName());
 			}
-			menuAuthDto.setSubManuList(tempSubManuList);
-			tempSubManuList = null;
-			tempManuList.add(menuAuthDto);
+			menuAuthDto.setSubMenuList(tempSubMenuList);
+			tempSubMenuList = null;
+			tempMenuList.add(menuAuthDto);
 			menuAuthDto = null;
 		}
-		menuDto.setMenuList(tempManuList);    	
+		menuDto.setMenuList(tempMenuList);    	
 
 		LOGGER.info("<-----------------------End convertUserToDto() method in UserServicesImpl-------------------------------->");		
 
@@ -405,7 +416,7 @@ public class UserServicesImpl implements UserServices {
 				throw new CustomUserMgmtException(108);	
 			}
 			
-			List<String> subMenuNameList = roleMenuDto.getSubManuList();
+			List<String> subMenuNameList = roleMenuDto.getSubMenuList();
 			RoleMenuMapping roleMenuMapping = null;
 			
 			if(subMenuNameList != null) {
@@ -455,6 +466,24 @@ public class UserServicesImpl implements UserServices {
 		LOGGER.info("<-----------------------End roleMenuMapping() method in UserServicesImpl-------------------------------->");		
 
 		return null;
+	}
+
+	@Override
+	public void deleteRoleMenuMapping(RoleInDto roleIn) {
+		LOGGER.info("<-----------------------Start deleteRoleMenuMapping() method in UserServicesImpl-------------------------------->");
+		long roleId = roleRepository.findByRoleName(roleIn.getRoleName()).getId();
+		if(roleId == 0) {
+			throw new CustomUserMgmtException(104);			
+		}
+		
+		List<RoleMenuMapping> roleMenuMappingList = roleMenuMappingRepository.findByRoleUid(roleId);
+		if(roleMenuMappingList == null) {
+			throw new CustomUserMgmtException(110);			
+		}
+		
+		roleMenuMappingRepository.deleteAll(roleMenuMappingList);
+		
+		LOGGER.info("<-----------------------End deleteRoleMenuMapping() method in UserServicesImpl-------------------------------->");		
 	}
 
 	

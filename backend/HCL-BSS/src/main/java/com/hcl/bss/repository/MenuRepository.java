@@ -1,10 +1,6 @@
 package com.hcl.bss.repository;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import com.hcl.bss.domain.Menu;
 /**
@@ -17,4 +13,7 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
 */
 	
 	Menu findByMenuName(String menuName);
+	
+	Menu findByid(Long id);
 }
+ 

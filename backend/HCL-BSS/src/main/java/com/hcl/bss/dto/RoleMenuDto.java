@@ -11,7 +11,7 @@ import javax.validation.constraints.NotEmpty;
 public class RoleMenuDto {
 	@NotEmpty
 	private String menuName;
-	private List<String> subManuList;
+	private List<String> subMenuList;
 	
 	public String getMenuName() {
 		return menuName;
@@ -19,11 +19,11 @@ public class RoleMenuDto {
 	public void setMenuName(String menuName) {
 		this.menuName = menuName;
 	}
-	public List<String> getSubManuList() {
-		return subManuList;
+	public List<String> getSubMenuList() {
+		return subMenuList;
 	}
-	public void setSubManuList(List<String> subManuList) {
-		this.subManuList = subManuList;
+	public void setSubMenuList(List<String> subMenuList) {
+		this.subMenuList = subMenuList;
 	}
 	
 }

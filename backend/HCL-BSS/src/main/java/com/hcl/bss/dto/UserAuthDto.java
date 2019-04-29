@@ -1,12 +1,22 @@
 package com.hcl.bss.dto;
 
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 public class UserAuthDto {
 	private String userId;
 	private String userFirstName;
-	private List<MenuAuthDto> menuList;
+	private Set<String> roleNameSet;
+	private Map<String, Set<String>> menuMap;
 	
+	public Set<String> getRoleNameSet() {
+		return roleNameSet;
+	}
+	public void setRoleNameSet(Set<String> roleNameSet) {
+		this.roleNameSet = roleNameSet;
+	}
 	public String getUserId() {
 		return userId;
 	}
@@ -19,11 +29,11 @@ public class UserAuthDto {
 	public void setUserFirstName(String userFirstName) {
 		this.userFirstName = userFirstName;
 	}
-	public List<MenuAuthDto> getMenuList() {
-		return menuList;
+	public Map<String, Set<String>> getMenuMap() {
+		return menuMap;
 	}
-	public void setMenuList(List<MenuAuthDto> menuList) {
-		this.menuList = menuList;
+	public void setMenuMap(Map<String, Set<String>> menuMap) {
+		this.menuMap = menuMap;
 	}
 	
 }
