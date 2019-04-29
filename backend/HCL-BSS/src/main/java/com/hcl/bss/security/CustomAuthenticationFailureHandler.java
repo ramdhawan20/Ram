@@ -15,24 +15,24 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class CustomAuthenticationFailureHandler 
-implements AuthenticationFailureHandler {
+/**
+ * This class is used to send the authentication error
+ * @author aditya-gu
+ *
+ */
+public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
-  private ObjectMapper objectMapper = new ObjectMapper();
+	private ObjectMapper objectMapper = new ObjectMapper();
 
-  @Override
-  public void onAuthenticationFailure(
-    HttpServletRequest request,
-    HttpServletResponse response,
-    AuthenticationException exception) 
-    throws IOException, ServletException {
+	@Override
+	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+			AuthenticationException exception) throws IOException, ServletException {
 
-      response.setStatus(HttpStatus.UNAUTHORIZED.value());
-      Map<String, Object> data = new HashMap<>();
-      data.put("timestamp",Calendar.getInstance().getTime());
-      data.put("exception",exception.getMessage());
+		response.setStatus(HttpStatus.UNAUTHORIZED.value());
+		Map<String, Object> data = new HashMap<>();
+		data.put("timestamp", Calendar.getInstance().getTime());
+		data.put("exception", exception.getMessage());
 
-      response.getOutputStream()
-        .println(objectMapper.writeValueAsString(data));
-  }
+		response.getOutputStream().println(objectMapper.writeValueAsString(data));
+	}
 }

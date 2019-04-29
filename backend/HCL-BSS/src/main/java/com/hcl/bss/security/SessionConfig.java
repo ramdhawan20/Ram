@@ -6,22 +6,15 @@ import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHtt
 import org.springframework.session.web.http.HeaderHttpSessionIdResolver;
 import org.springframework.session.web.http.HttpSessionIdResolver;
 
-
+/**
+ * This class is used to configure the session
+ * 
+ * @author aditya-gu
+ *
+ */
 @Configuration
 @EnableJdbcHttpSession
 public class SessionConfig {
-
-	/*@Bean
-	public EmbeddedDatabase dataSource() {
-		return new EmbeddedDatabaseBuilder() 2
-				.setType(EmbeddedDatabaseType.H2)
-				.addScript("org/springframework/session/jdbc/schema-h2.sql").build();
-	}
-*/
-/*	@Bean
-	public PlatformTransactionManager transactionManager(DataSource dataSource) {
-		return new DataSourceTransactionManager(dataSource);
-	}*/
 	
 	@Bean
 	public HttpSessionIdResolver httpSessionIdResolver() {

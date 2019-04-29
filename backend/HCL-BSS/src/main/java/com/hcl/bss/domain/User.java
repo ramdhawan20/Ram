@@ -1,20 +1,23 @@
 package com.hcl.bss.domain;
 
 import javax.persistence.*;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
 @Table(name="tb_user_details")
-/*@NamedQueries({
-        @NamedQuery(
-                name = "findUserById",
-                query = "from User a where a.id = :id"
-        ),
-})*/
 public class User implements Serializable {
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@Id
     @Column(name="uidpk")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "uidpk_sequence")
     @TableGenerator(
@@ -43,6 +46,13 @@ public class User implements Serializable {
     @JoinTable(name = "TB_USER_ROLE_MAPPING", joinColumns = { @JoinColumn(name = "USER_ID",referencedColumnName = "USER_ID")}, inverseJoinColumns = { @JoinColumn(name = "ROLE_UID",referencedColumnName = "UIDPK") })
     private List<Role> roleList;
   
+    
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		PasswordEncoder encoder = new BCryptPasswordEncoder();
+		return encoder;
+	}
+	
     public List<Role> getRoleList() {
 		return roleList;
 	}
@@ -75,7 +85,7 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
 
-        this.password = password;
+        this.password = passwordEncoder().encode(password);
     }
 
     public int getRoleId() {
