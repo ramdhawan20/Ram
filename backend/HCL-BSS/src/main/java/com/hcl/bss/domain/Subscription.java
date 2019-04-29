@@ -1,3 +1,4 @@
+
 package com.hcl.bss.domain;
 
 import com.hcl.bss.repository.generator.LoggedUserGenerator;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -72,7 +74,7 @@ public class Subscription implements Serializable {
     @Column(name="AMOUNT")
     private double amount;
     @Column(name="CANCEL_DATE")
-    private Date cancelDate;
+    private LocalDate cancelDate;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PREVIOUS_SUBSCRIPTION_ID", referencedColumnName = "SUBSCRIPTION_ID", nullable = true)
@@ -258,11 +260,11 @@ public class Subscription implements Serializable {
 		this.amount = amount;
 	}
 
-	public Date getCancelDate() {
+	public LocalDate getCancelDate() {
 		return cancelDate;
 	}
 
-	public void setCancelDate(Date cancelDate) {
+	public void setCancelDate(LocalDate cancelDate) {
 		this.cancelDate = cancelDate;
 	}
     

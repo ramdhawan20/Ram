@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
@@ -94,7 +95,7 @@ public class UserServicesImpl implements UserServices {
     }
     
 	@Override
-	public List<User> findAllUser(UserInDto userIn, Pageable pageable) throws Exception {
+	public List<User> findAllUser(UserInDto userIn, Pageable pageable, HttpServletResponse response) throws Exception {
 		LOGGER.info("<-----------------------Start findAllUser() method in UserServicesImpl-------------------------------->");	
 		List<User> userList = null;
 		int isLocked = -1;
@@ -133,7 +134,7 @@ public class UserServicesImpl implements UserServices {
 			/*End:- Defining specification for filter */
 			
 			//return userRepository.findAll();
-			
+			if(null != pageable) {
 			Page<User> userPages = userRepository.findAll(Specification.where(specUserId).and(specUserName).and(specStatus).and(specRole), pageable);
 			
 			userList = userPages.getContent();
@@ -143,6 +144,12 @@ public class UserServicesImpl implements UserServices {
 				userIn.setLastPage(userPages.isLast());
 				return userList;
 			}
+			}
+			else {
+				userList = userRepository.findAll(Specification.where(specUserId).and(specUserName).and(specStatus).and(specRole));
+				return userList;
+			}
+			
 			return null;
 			
 		} finally {

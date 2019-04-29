@@ -10,6 +10,7 @@ import static com.hcl.bss.constants.ApplicationConstants.ROLE_NORMAL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -82,8 +83,8 @@ public class UserManagementController {
 */	
 	
 	@ApiOperation(value = "Get list of all user", response = UserOutDto.class)
-	@PutMapping(value = "/users")
-	public ResponseEntity<?> findAllUser(@Valid @RequestBody UserInDto userIn) {
+	@PutMapping(value = "/users/userlist")
+	public ResponseEntity<?> findAllUser(@Valid @RequestBody UserInDto userIn, HttpServletResponse response) {
 	//public ResponseEntity<?> findAllUser() {
 		LOGGER.info("<-----------------------Start findAllUser() method-------------------------------->");
 		LOGGER.info("I/P details: " + userIn.toString());
@@ -95,7 +96,7 @@ public class UserManagementController {
 		Pageable pageable = PageRequest.of(userIn.getPageNo(), Integer.parseInt(pageSize));
 		
 		try {
-			userList = userServices.findAllUser(userIn, pageable);
+			userList = userServices.findAllUser(userIn, pageable, response);
 			
 			if(userList == null && userList.size() == 0) {
 				userOut.setSuccess(false);
@@ -146,7 +147,7 @@ public class UserManagementController {
 	}
 	
 	@ApiOperation(value = "To create new user", response = UserOutDto.class)
-	@PostMapping(value = "/user")
+	@PostMapping(value = "/users/user")
 	public ResponseEntity<?> addUser(@Valid @RequestBody  UserInDto userIn) {
 		LOGGER.info("<-----------------------Start addUser() method-------------------------------->");		
 		LOGGER.info("Input details: " + userIn.toString());
@@ -229,7 +230,7 @@ public class UserManagementController {
 	}
 
 	@ApiOperation(value = "To update existing user", response = UserOutDto.class)
-	@PutMapping(value = "/user")
+	@PutMapping(value = "/users/user")
 	public ResponseEntity<?> editUser(@Valid @RequestBody  UserInDto userIn) {
 		LOGGER.info("<-----------------------Start editUser() method-------------------------------->");		
 		LOGGER.info("Input details: " + userIn.toString());
@@ -295,7 +296,7 @@ public class UserManagementController {
 	}
 
 	@ApiOperation(value = "To activate/deactivate existing user", response = UserOutDto.class)
-	@PutMapping(value = "/activate")
+	@PutMapping(value = "/users/activate")
 	public ResponseEntity<?> activateUser(@Valid @RequestBody  UserInDto userIn) {
 		LOGGER.info("<-----------------------Start activateUser() method-------------------------------->");		
 		LOGGER.info("Input details: " + userIn.toString());
@@ -348,7 +349,7 @@ public class UserManagementController {
 	}
 
 	@ApiOperation(value = "To reset user password", response = UserOutDto.class)
-	@PutMapping(value = "/reset")
+	@PutMapping(value = "/users/reset")
 	public ResponseEntity<?> resetUser(@Valid @RequestBody  UserInDto userIn) {
 		LOGGER.info("<-----------------------Start resetUser() method-------------------------------->");		
 		LOGGER.info("Input details: " + userIn.toString());
@@ -410,7 +411,7 @@ public class UserManagementController {
 	}
 	
 	@ApiOperation(value = "To get dropdown lov", response = DropDownOutDto.class)
-	@GetMapping(value = "/getDropDownList")
+	@GetMapping(value = "/users/getDropDownList")
 	public ResponseEntity<?> getDropDownList(@RequestParam(value = "dropDownCode", required=true) String dropDownCode) {
 		LOGGER.info("<-----------------------Start getDropDownList() method in UserManagementController-------------------------------->");		
 		List<String> dropDownList = null;
@@ -452,7 +453,7 @@ public class UserManagementController {
 
 
 	@ApiOperation(value = "To get user authorization details", response = UserAuthDto.class)
-	@GetMapping(value = "/user/authorize")
+	@GetMapping(value = "/users/authorize")
 	public ResponseEntity<?> getAuthorizationDetail(@RequestParam(value="userId", required = true) String userId){
 		LOGGER.info("<-----------------------Start getAuthorizationDetail() method in UserManagementController-------------------------------->");		
 		try {
@@ -470,7 +471,7 @@ public class UserManagementController {
 	}
 
 	@ApiOperation(value = "To get all profile name list", response = String.class)
-	@GetMapping(value = "/user/profile")
+	@GetMapping(value = "/users/profile")
 	public ResponseEntity<?> getAllRoleName(){
 		LOGGER.info("<-----------------------Start getAllRoleName() method in UserManagementController-------------------------------->");		
 		try {
@@ -488,7 +489,7 @@ public class UserManagementController {
 	}
 
 	@ApiOperation(value = "To create new profile", response = RoleOutDto.class)
-	@PostMapping(value = "/user/profile")
+	@PostMapping(value = "/users/profile")
 	public ResponseEntity<?> addRole(@Valid @RequestBody  RoleInDto roleIn){
 		LOGGER.info("<-----------------------Start addRole() method in UserManagementController-------------------------------->");		
 		LOGGER.info("Input details: " + roleIn.toString());
@@ -516,7 +517,7 @@ public class UserManagementController {
 	}
 
 	@ApiOperation(value = "To get all menu's list", response = MenuDto.class)
-	@PutMapping(value = "/user/profile")
+	@PutMapping(value = "/users/profile")
 	public ResponseEntity<?> getAllMenu(){
 		LOGGER.info("<-----------------------Start getAllMenuSubmenu() method in UserManagementController-------------------------------->");		
 		try {

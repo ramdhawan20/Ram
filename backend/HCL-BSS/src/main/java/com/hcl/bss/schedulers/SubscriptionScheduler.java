@@ -183,7 +183,7 @@ public class SubscriptionScheduler {
         }
         catch(Exception ex){
             SubscriptionUtility.updateErrLog("Customer could not be created : "+ex.getMessage(), orderErrorsRepository);
-            ex.printStackTrace();
+//            ex.printStackTrace();
         }
     }
 
@@ -367,21 +367,21 @@ public class SubscriptionScheduler {
             LocalDate currentDate = LocalDate.now();
             LocalDate nextBillingDate = null;
             switch(frequencyCode){
-                case "WEEKLY":
+                case "WEEK":
                     //cal.add(Calendar.WEEK_OF_YEAR, billCycle);
                     //nextBillingDate = currentDate.plusWeeks(billingCycleTerm.longValue());
                     nextBillingDate = currentDate.plusWeeks(1);
                     //nextBillingDate = currentDate.plusWeeks(billingCycleTerm);
                     subscriptionEndDate = currentDate.plusWeeks(subEndTerm);
                     break;
-                case "MONTHLY":
+                case "MONTH":
                     //cal.add(Calendar.MONTH, billCycle);
                     //nextBillingDate = currentDate.plusMonths(billingCycleTerm.longValue());
                     nextBillingDate = currentDate.plusMonths(1);
                     //nextBillingDate = currentDate.plusMonths(billingCycleTerm);
                     subscriptionEndDate = currentDate.plusMonths(subEndTerm);
                     break;
-                case "ANNUAL":
+                case "YEAR":
                     //cal.add(Calendar.YEAR, billCycle);
                     //nextBillingDate = currentDate.plusYears(billingCycleTerm.longValue());
                     nextBillingDate = currentDate.plusYears(1);

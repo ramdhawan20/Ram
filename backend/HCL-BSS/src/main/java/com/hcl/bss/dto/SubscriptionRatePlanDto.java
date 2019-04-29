@@ -6,9 +6,11 @@ public class SubscriptionRatePlanDto {
 	private String rateplanDesc;
 	private String productName;
 	private Integer quantity;
-	private double rate;
+	private String rate;
 	private int tax;
-	private double amount;
+	private String amount;
+	private Boolean isParent;
+	private String billFrequency;
 	public String getRateplan() {
 		return rateplan;
 	}
@@ -33,10 +35,10 @@ public class SubscriptionRatePlanDto {
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
-	public double getRate() {
+	public String getRate() {
 		return rate;
 	}
-	public void setRate(double rate) {
+	public void setRate(String rate) {
 		this.rate = rate;
 	}
 	public int getTax() {
@@ -45,10 +47,23 @@ public class SubscriptionRatePlanDto {
 	public void setTax(int tax) {
 		this.tax = tax;
 	}
-	public double getAmount() {
+	public String getAmount() {
 		return amount;
 	}
-	public void setAmount(double amount) {
+	public void setAmount(String amount) {
 		this.amount = amount;
 	}
+	public Boolean getIsParent() {
+		return isParent;
+	}
+	public void setIsParent(Boolean isParent) {
+		this.isParent = isParent;
+	}
+	public String getBillFrequency() {
+		return billFrequency;
+	}
+	public void setBillFrequency(String billFrequency) {
+		this.billFrequency = billFrequency;
+	}
+	
 }

@@ -13,8 +13,11 @@ public class SubscriptionDetailDto {
 	private Boolean renewsForever;
 	private BigDecimal remainingCycles;
 	private String expireOn;
-	private Double totalAmount; // it will be used after total amount will be incorporated in subscription table
+	private String totalAmount; // it will be used after total amount will be incorporated in subscription table
 	private List<SubscriptionRatePlanDto> productPlanList;
+	private String subscriptionDuration;
+	private String createdOn;
+	private String activationDate;
 	public Boolean getRenewsForever() {
 		return renewsForever;
 	}
@@ -64,10 +67,10 @@ public class SubscriptionDetailDto {
 		this.nextBillDate = nextBillDate;
 	}
 	
-	public Double getTotalAmount() {
+	public String getTotalAmount() {
 		return totalAmount;
 	}
-	public void setTotalAmount(Double totalAmount) {
+	public void setTotalAmount(String totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 	public String getCancelDate() {
@@ -76,4 +79,24 @@ public class SubscriptionDetailDto {
 	public void setCancelDate(String cancelDate) {
 		this.cancelDate = cancelDate;
 	}
+	public String getSubscriptionDuration() {
+		return subscriptionDuration;
+	}
+	public void setSubscriptionDuration(String subscriptionDuration) {
+		this.subscriptionDuration = subscriptionDuration;
+	}
+	public String getCreatedOn() {
+		return createdOn;
+	}
+	public void setCreatedOn(String createdOn) {
+		this.createdOn = createdOn;
+	}
+	public String getActivationDate() {
+		return activationDate;
+	}
+	public void setActivationDate(String activationDate) {
+		this.activationDate = activationDate;
+	}
+	
+	
 }

@@ -40,7 +40,7 @@ public class BatchController {
 	Integer recordPerPage;
 	
 	@ApiOperation(value = "Get last subscription batch report error log", response = BatchDto.class)
-	@RequestMapping(value = "/lastBatchRunLog/{pageNo}", produces = {
+	@RequestMapping(value = "/batch/lastBatchRunLog/{pageNo}", produces = {
 	  "application/json"
 	 }, method = RequestMethod.GET)
 	 public ResponseEntity<BatchDto> getLastBatchRunLog(@PathVariable("pageNo") String pageNo) {
@@ -84,7 +84,7 @@ public class BatchController {
 }
 	
 	@ApiOperation(value = "Get filtered subscription batch report log", response = BatchDto.class)
-	 @RequestMapping(value = "/batchRunLog", produces = {
+	 @RequestMapping(value = "/batch/batchRunLog", produces = {
 	  "application/json"
 	 }, method = RequestMethod.POST)
 	 public ResponseEntity<BatchDto> getCustomBatchRunLog(@RequestBody FilterRequest filterRequest) {
@@ -136,15 +136,16 @@ public class BatchController {
 	}
 	
 	@ApiOperation(value = "Get Dropdown Data", response = DropDownOutDto.class)
-	@RequestMapping(value = "/getBatchDropDown",method = RequestMethod.POST)
+	@RequestMapping(value = "/batch/getBatchDropDown",method = RequestMethod.POST)
 	public ResponseEntity<DropDownOutDto> dropDownData(@RequestParam String statusId) {
 		DropDownOutDto dropDownOutDto = new DropDownOutDto();
 		try {
-			if(batchLogService.getDropDownData(statusId)!=null && !(batchLogService.getDropDownData(statusId).isEmpty())) {
+			List<String> dropDownList = batchLogService.getDropDownData(statusId);
+			if(dropDownList!=null && !dropDownList.isEmpty()) {
 				dropDownOutDto.setMessage("Drop Down Fetched Successfully");
 				dropDownOutDto.setResponseCode(HttpStatus.OK.value());
 				dropDownOutDto.setSuccess(true);
-				dropDownOutDto.setDropDownList(batchLogService.getDropDownData(statusId));
+				dropDownOutDto.setDropDownList(dropDownList);
 				return new ResponseEntity<DropDownOutDto>(dropDownOutDto,HttpStatus.OK);
 			}		
 			else {
@@ -165,7 +166,7 @@ public class BatchController {
 
 
 	@ApiOperation(value = "Execute Schedulers", response = String.class)
-	@RequestMapping(value = "/executeSchedulers",
+	@RequestMapping(value = "/batch/executeSchedulers",
 			produces = { "application/json" }, method = RequestMethod.GET)
 	public boolean executeScheduler(@RequestParam(value = "schedulerId", required = true) int schedulerId) {
 
