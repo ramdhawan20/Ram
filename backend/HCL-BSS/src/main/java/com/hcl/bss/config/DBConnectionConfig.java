@@ -1,5 +1,9 @@
 package com.hcl.bss.config;
 
+import java.util.Properties;
+
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -12,10 +16,6 @@ import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import javax.sql.DataSource;
-import java.util.Properties;
 
 @Configuration
 @EntityScan("com.hcl.bss.*")
