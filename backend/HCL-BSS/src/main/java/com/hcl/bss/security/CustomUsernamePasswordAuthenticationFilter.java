@@ -25,6 +25,9 @@ import com.hcl.bss.dto.LoginRequest;
 public class CustomUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	private String userId;
 	private String password;
+	
+	@Autowired
+	UserServices userServices;
 
 	@Override
 	protected String obtainPassword(HttpServletRequest request) {
@@ -107,6 +110,26 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
 		 * response.setHeader("Access-Control-Expose-Headers", "x-uth-token");
 		 * response.setHeader("Access-Control-Allow-Credentials", "x-auth-token");
 		 */
+		
+		if (userServices == null) {
+			ServletContext servletContext = request.getServletContext();
+			WebApplicationContext webApplicationContext = WebApplicationContextUtils
+					.getWebApplicationContext(servletContext);
+			userServices = webApplicationContext.getBean(UserServices.class);
+		}
+
+				
+		UserAuthDto userAuthDto = userServices.getAuthorizationDetail(authResult.getName());
+		
+		//response.setHeader("AuthResponse", userAuthDto.toString());
+		
+		// json conversion
+		response.setContentType("application/json");
+		
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json = ow.writeValueAsString(userAuthDto);
+		ServletOutputStream out = response.getOutputStream();
+		out.print(json);
 		SecurityContextHolder.getContext().setAuthentication(authResult);
 	}
 }
