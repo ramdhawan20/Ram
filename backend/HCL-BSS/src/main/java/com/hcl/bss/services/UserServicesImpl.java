@@ -269,7 +269,7 @@ public class UserServicesImpl implements UserServices {
 		LOGGER.info("<-----------------------Start convertUserToDto() method in UserServicesImpl-------------------------------->");		
 		UserAuthDto userAuthDto = new UserAuthDto();
 		Map<String, Set<String>> menuMap = new HashMap<>();
-		Set<String> subMenuSet = new HashSet<>();
+		Set<String> subMenuSet = null;
 		Set<String> roleNameSet = new HashSet<>();
 		Menu menu = null;
 		SubMenu subMenu = null;
@@ -281,6 +281,7 @@ public class UserServicesImpl implements UserServices {
 		if(roleList == null) {
 			throw new CustomUserMgmtException(103);
 		}
+		subMenuSet = new HashSet<>();
 		
 		for(Role role : roleList) {
 			List<RoleMenuMapping> roleMenuMappingList = roleMenuMappingRepository.findByRoleUid(role.getId());
