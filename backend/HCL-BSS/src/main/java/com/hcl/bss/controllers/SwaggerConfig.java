@@ -1,9 +1,14 @@
 package com.hcl.bss.controllers;
 
+import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
@@ -20,7 +25,14 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.any())                
                 .paths(PathSelectors.any())
                 .build()
-                .apiInfo(apiInfo());
+                .apiInfo(apiInfo())
+                .globalOperationParameters(Arrays.asList(new ParameterBuilder()
+                        .name("x-auth-token")
+                        .description("enter x-auth-token")
+                        .modelRef(new ModelRef("string"))
+                        .parameterType("header")
+                        .required(true)
+                        .build()));
     }
 
 
