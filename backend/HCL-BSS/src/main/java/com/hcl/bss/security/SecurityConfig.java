@@ -15,9 +15,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * This class is used to configure spring security for authentication and
@@ -35,12 +38,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowCredentials(true);
 		config.addAllowedOrigin("*");
-		config.addAllowedHeader("Content-Type");
+		config.addAllowedHeader("*");
 		config.addAllowedMethod("OPTIONS");
 		config.addAllowedMethod("GET");
 		config.addAllowedMethod("POST");
 		config.addAllowedMethod("PUT");
 		config.addAllowedMethod("DELETE");
+		config.setAllowCredentials(true);
+		config.setExposedHeaders(ImmutableList.of("x-auth-token"));
 		source.registerCorsConfiguration("/**", config);
 		return source;
 	}
@@ -99,17 +104,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.authorizeRequests()
 
-				.antMatchers("/login/**").permitAll()
-				.antMatchers("/product/**", "/rate/**").hasAnyRole("Agent", "Admin")
-				.antMatchers("/download/**", "/batch/**", "/users/**", "/upload/**").hasAnyRole("Admin")
-				.antMatchers("/subscription/**").hasAnyRole("Agent", "Business", "Admin")
+				.antMatchers("/login/**").permitAll().antMatchers("/product/**", "/rate/**")
+				.hasAnyRole("Agent", "Admin").antMatchers("/download/**", "/batch/**", "/users/**", "/upload/**")
+				.hasAnyRole("Admin").antMatchers("/subscription/**").hasAnyRole("Agent", "Business", "Admin")
 				.antMatchers("/dashboard/**").hasAnyRole("Business", "Admin").anyRequest().authenticated().and()
 				.exceptionHandling().accessDeniedHandler(accessDeniedHandler)
 				.authenticationEntryPoint(restAuthenticationEntryPoint).and()
 				.addFilterAt(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
 		http.sessionManagement().maximumSessions(2);
-		http.logout().invalidateHttpSession(true).deleteCookies("JSESSIONID");
+		http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")).clearAuthentication(true)
+				.invalidateHttpSession(true).deleteCookies("JSESSIONID");
 	}
 
 	public AuthenticationProvider authProvider() {

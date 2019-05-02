@@ -1,4 +1,4 @@
-package com.hcl.bss.filters;
+/*package com.hcl.bss.filters;
 
 import org.springframework.stereotype.Component;
 
@@ -50,3 +50,4 @@ public class CORSFilterServlet implements Filter {
 
     }
 }
+*/
