@@ -19,4 +19,10 @@ public class OrderSpecification {
 		}
 		return null;
 	}
+	public static Specification<Order> hasRatePlanUID(Long ratePlanId){
+		if(ratePlanId!=null) {
+			return (filter,cq,cb)->cb.equal(filter.get("ratePlanId"), ratePlanId);
+		}
+		return null;
+	}
  }
