@@ -7,8 +7,13 @@ import org.springframework.stereotype.Component;
 import com.hcl.bss.notification.email.sender.EmailNotificationProducer;
 @Component
 public class SampleCamelRouter extends RouteBuilder {
-	@Autowired
-	  EmailNotificationProducer emailNotificationProducer;
+	/*@Autowired
+	  EmailNotificationProducer emailNotificationProducer;*/
+	EmailNotificationProducer emailNotificationProducer;
+	public SampleCamelRouter(EmailNotificationProducer emailNotificationProducer) {
+		super();
+		this.emailNotificationProducer = emailNotificationProducer;
+	}
 
   @Override
   public void configure() throws Exception {
@@ -22,7 +27,7 @@ public class SampleCamelRouter extends RouteBuilder {
 	  from("jms:topic:subscriptionr-topic")
       .to("jms:topic:subscriptionr-topic");
       from("jms:topic:subscriptionr-topic")
-      .bean(emailNotificationProducer)
+     // .bean(emailNotificationProducer)
      .process(processor);
  
 	}
