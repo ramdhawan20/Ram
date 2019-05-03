@@ -2,6 +2,7 @@ package com.hcl.bss.dto;
 
 public class RatePlanVolumeDto {
 	
+	long id;
 	int startQty;
 	int endQty;
 	double price;
@@ -24,10 +25,13 @@ public class RatePlanVolumeDto {
 	public void setPrice(double price) {
 		this.price = price;
 	}
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
 
-	
-
-	
 }
 
 

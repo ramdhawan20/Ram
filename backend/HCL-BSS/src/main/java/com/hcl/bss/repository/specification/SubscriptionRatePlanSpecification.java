@@ -19,5 +19,10 @@ public class SubscriptionRatePlanSpecification {
 		}
 		return null;
 	}
-	
+	public static Specification<SubscriptionRatePlan> hasRatePlanUID(Long ratePlanUID){
+		if(ratePlanUID!=null) {
+			return (filter,cq,cb)->cb.equal(filter.get("ratePlan").get("id"), ratePlanUID);
+		}
+		return null;
+	}
 }
