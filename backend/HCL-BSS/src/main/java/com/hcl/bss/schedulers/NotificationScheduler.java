@@ -42,11 +42,8 @@ public class NotificationScheduler {
 	    public void runSubscriptionDetails() throws Exception{
 		 List<String> subIds = subscriptionService.getLastSubscriptionIds();
 		
-	        //1.call controller of notification for subscription details . from controller further flow will happen
 		for(String subId :subIds) {
-		 
 			restTemplate.getForObject(SUBSCRIPTION_DETAILS_URL+subId, CustomerDto.class);
-		}
-	        
+		}       
 	    }
 }
