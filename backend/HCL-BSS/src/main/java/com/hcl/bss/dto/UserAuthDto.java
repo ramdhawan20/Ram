@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 public class UserAuthDto {
 	private String userId;
-	private String userFirstName;
+	private String userName;
 	private Set<String> roleNameSet;
 	private Map<String, Set<String>> menuMap;
 	
@@ -23,11 +23,11 @@ public class UserAuthDto {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public String getUserFirstName() {
-		return userFirstName;
+	public String getUserName() {
+		return userName;
 	}
-	public void setUserFirstName(String userFirstName) {
-		this.userFirstName = userFirstName;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	public Map<String, Set<String>> getMenuMap() {
 		return menuMap;

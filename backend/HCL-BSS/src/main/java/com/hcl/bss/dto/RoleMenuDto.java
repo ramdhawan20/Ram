@@ -25,5 +25,9 @@ public class RoleMenuDto {
 	public void setSubMenuList(List<String> subMenuList) {
 		this.subMenuList = subMenuList;
 	}
-	
+	@Override
+	public String toString() {
+		return "RoleMenuDto [menuName=" + menuName + ", subMenuList=" + subMenuList + "]";
+	}
+		
 }

@@ -3,10 +3,8 @@ package com.hcl.bss.services;
 import static com.hcl.bss.constants.ApplicationConstants.ACTIVE;
 import static com.hcl.bss.constants.ApplicationConstants.ADMIN;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,13 +25,14 @@ import com.hcl.bss.domain.Role;
 import com.hcl.bss.domain.RoleMenuMapping;
 import com.hcl.bss.domain.SubMenu;
 import com.hcl.bss.domain.User;
-import com.hcl.bss.dto.MenuAuthDto;
+import com.hcl.bss.domain.UserRoleMapping;
 import com.hcl.bss.dto.MenuDto;
 import com.hcl.bss.dto.ProfileInDto;
 import com.hcl.bss.dto.RoleInDto;
 import com.hcl.bss.dto.RoleMenuDto;
 import com.hcl.bss.dto.UserAuthDto;
 import com.hcl.bss.dto.UserInDto;
+import com.hcl.bss.exceptions.CustomSubscriptionException;
 import com.hcl.bss.exceptions.CustomUserMgmtException;
 import com.hcl.bss.repository.AppConstantRepository;
 import com.hcl.bss.repository.MenuRepository;
@@ -41,6 +40,7 @@ import com.hcl.bss.repository.RoleMenuMappingRepository;
 import com.hcl.bss.repository.RoleRepository;
 import com.hcl.bss.repository.SubMenuRepository;
 import com.hcl.bss.repository.UserRepository;
+import com.hcl.bss.repository.UserRoleMappingRepository;
 import com.hcl.bss.repository.specification.UserManagementSpecification;;
 /**
  * This is UserServicesImpl will handle calls related to UserManagement
@@ -63,6 +63,8 @@ public class UserServicesImpl implements UserServices {
     private SubMenuRepository subMenuRepository;
     @Autowired
     RoleMenuMappingRepository roleMenuMappingRepository;
+    @Autowired
+    UserRoleMappingRepository userRoleMappingRepository;
 
     @Override
     public User findById(int id) {
@@ -257,7 +259,7 @@ public class UserServicesImpl implements UserServices {
 		user = userRepository.findByUserId(userId);
 		
 		if(user == null) {
-			throw new CustomUserMgmtException(100);
+			throw new CustomUserMgmtException(100, "No User Found");
 		}
 		
 		LOGGER.info("<-----------------------End getAuthorizationDetail() method in UserServicesImpl-------------------------------->");		
@@ -275,24 +277,29 @@ public class UserServicesImpl implements UserServices {
 		SubMenu subMenu = null;
 		
 		userAuthDto.setUserId(user.getUserId());
-		userAuthDto.setUserFirstName(user.getUserFirstName());
-		
+		StringBuilder userNameSB = new StringBuilder();
+		userNameSB.append(user.getUserFirstName())
+		.append(user.getUserMiddleName() != null && !"".equalsIgnoreCase(user.getUserMiddleName().trim()) ? " "+user.getUserMiddleName() : "")
+		.append(user.getUserLastName() != null && !"".equalsIgnoreCase(user.getUserLastName().trim()) ? " "+user.getUserLastName() : "");
+
+		userAuthDto.setUserName(userNameSB.toString());
+	
 		List<Role> roleList = user.getRoleList();		
 		if(roleList == null) {
-			throw new CustomUserMgmtException(103);
+			throw new CustomUserMgmtException(103, "Role is not associated with this user");
 		}
-		subMenuSet = new HashSet<>();
 		
 		for(Role role : roleList) {
 			List<RoleMenuMapping> roleMenuMappingList = roleMenuMappingRepository.findByRoleUid(role.getId());
 			roleNameSet.add(role.getRoleName());
 			if(roleMenuMappingList == null) {
-				throw new CustomUserMgmtException(106);
+				throw new CustomUserMgmtException(106, "Profile mapping failed");
 			}
 			
 			for(RoleMenuMapping roleMenuMapping : roleMenuMappingList){
 				menu = menuRepository.findByid(roleMenuMapping.getMenuUid());
 				subMenu = subMenuRepository.findByid(roleMenuMapping.getSubMenuUid());
+				subMenuSet = new HashSet<>();
 				
 				if(menuMap.containsKey(menu.getMenuName())) {
 					subMenuSet = menuMap.get(menu.getMenuName());
@@ -316,7 +323,7 @@ public class UserServicesImpl implements UserServices {
 		}
 		userAuthDto.setRoleNameSet(roleNameSet);
 		userAuthDto.setMenuMap(menuMap);
-		
+		userNameSB = null;
 		LOGGER.info("<-----------------------End convertUserToDto() method in UserServicesImpl-------------------------------->");		
 		return userAuthDto;
 	}
@@ -329,7 +336,7 @@ public class UserServicesImpl implements UserServices {
 		roleNameList = roleRepository.getAllRoleName();
 		
 		if(roleNameList == null) {
-			throw new CustomUserMgmtException(104);			
+			throw new CustomUserMgmtException(104, "No profile found");			
 		}
 
 		LOGGER.info("<-----------------------End getAllRoleName() method in UserServicesImpl-------------------------------->");		
@@ -343,7 +350,7 @@ public class UserServicesImpl implements UserServices {
 		
 		Role createdRole = roleRepository.save(role);
 		if(createdRole == null) {
-			throw new CustomUserMgmtException(105);			
+			throw new CustomUserMgmtException(105, "Profile creation failed");			
 		}
 		LOGGER.info("<-----------------------End addRole() method in UserServicesImpl-------------------------------->");		
 		
@@ -351,7 +358,7 @@ public class UserServicesImpl implements UserServices {
 	}
 
 	@Override
-	public MenuDto getAllMenu(){
+	public MenuDto getAllMenu(String roleName){
 		LOGGER.info("<-----------------------Start getAllMenu() method in UserServicesImpl-------------------------------->");	
 		MenuDto menuDto = new MenuDto();
 		List<Menu> menuList = null;
@@ -359,62 +366,139 @@ public class UserServicesImpl implements UserServices {
 		menuList = menuRepository.findAll();
 		
 		if(menuList == null) {
-			throw new CustomUserMgmtException(104);			
+			throw new CustomUserMgmtException(104, "No profile found");			
 		}
 
 		LOGGER.info("<-----------------------End getAllMenu() method in UserServicesImpl-------------------------------->");		
 		
-		return convertToMenuDto(menuList);
+		return convertToMenuDto(menuList, roleName);
 	}
 	
-    private MenuDto convertToMenuDto(List<Menu> menuList) {
+    private MenuDto convertToMenuDto(List<Menu> menuList, String roleName) {
 		LOGGER.info("<-----------------------Start convertUserToDto() method in UserServicesImpl-------------------------------->");		
     	MenuDto menuDto = new MenuDto();
-    	List<MenuAuthDto> tempMenuList = new ArrayList();
-		List<String> tempSubMenuList = null;
+    	Map<String, Set<String>> mappedMenuMap = new HashMap<>();
+    	Map<String, Set<String>> unmappedMenuMap = new HashMap<>();
+		Set<String> subMenuSet = null;
+		Menu menu = null;
+		SubMenu subMenu = null;
 
-		MenuAuthDto menuAuthDto = null;
-    	
-		Iterator<Menu> menuItr = menuList.iterator();
-		while(menuItr.hasNext()) {
-			Menu menu = menuItr.next();
+		//To fetch all menu & sub-menu's exists in the system
+		for(Menu mmenu : menuList) {
+			subMenuSet = new HashSet();
+			List<SubMenu> subMenuList = mmenu.getSubMenu();
 
-			menuAuthDto = new MenuAuthDto();
-			menuAuthDto.setMenuName(menu.getMenuName());
-			
-			List<SubMenu> subMenuList = menu.getSubMenu();
-			tempSubMenuList = new ArrayList();
-			
-			for(SubMenu subMenu : subMenuList) {
-				tempSubMenuList.add(subMenu.getSubMenuName());
+			if(subMenuList != null) {
+				for(SubMenu ssubMenu : subMenuList) {
+					subMenuSet.add(ssubMenu.getSubMenuName());
+				}
 			}
-			menuAuthDto.setSubMenuList(tempSubMenuList);
-			tempSubMenuList = null;
-			tempMenuList.add(menuAuthDto);
-			menuAuthDto = null;
+			unmappedMenuMap.put(mmenu.getMenuName(), subMenuSet);
+			subMenuSet = null;
 		}
-		menuDto.setMenuList(tempMenuList);    	
+		menuDto.setUnmappedMenuMap(unmappedMenuMap);   	
 
+		if(roleName == null || "".equalsIgnoreCase(roleName.trim())) {
+			return menuDto;
+		}
+		
+		//To fetch all menu & sub-menu's which are mapped with specific role
+		Role role = roleRepository.findByRoleName(roleName);
+		if(role == null) {
+			throw new CustomUserMgmtException(107, "Role Name not found");	
+		}
+		
+		menuDto.setRoleName(role.getRoleName());
+
+		List<RoleMenuMapping> roleMenuMappingList = roleMenuMappingRepository.findByRoleUid(role.getId());
+		if(roleMenuMappingList == null) {
+			throw new CustomUserMgmtException(106, "Profile mapping failed");
+		}
+		
+		for(RoleMenuMapping roleMenuMapping : roleMenuMappingList){
+			menu = menuRepository.findByid(roleMenuMapping.getMenuUid());
+			subMenu = subMenuRepository.findByid(roleMenuMapping.getSubMenuUid());
+			subMenuSet = new HashSet<>();
+			
+			if(mappedMenuMap.containsKey(menu.getMenuName())) {
+				subMenuSet = mappedMenuMap.get(menu.getMenuName());
+				if(subMenu != null)
+					subMenuSet.add(subMenu.getSubMenuName());
+				mappedMenuMap.put(menu.getMenuName(), subMenuSet);
+			}else {
+				mappedMenuMap.put(menu.getMenuName(), null);
+				if(subMenu != null)
+					subMenuSet.add(subMenu.getSubMenuName());
+				else
+					subMenuSet = new HashSet<>();
+				
+				mappedMenuMap.put(menu.getMenuName(), subMenuSet);
+			}
+			subMenuSet = null;
+			menu = null;
+			subMenu = null;
+		}
+		menuDto.setMappedMenuMap(mappedMenuMap);
+		
+		//To fetch all menu & sub-menu's which are not mapped with specific role
+		menuDto.setUnmappedMenuMap(removeMappedFromUnmapped(mappedMenuMap, unmappedMenuMap));
+		
 		LOGGER.info("<-----------------------End convertUserToDto() method in UserServicesImpl-------------------------------->");		
 
 		return menuDto;
 	}
+    
+    private Map<String, Set<String>> removeMappedFromUnmapped(Map<String, Set<String>> mappedMenuMap, Map<String, Set<String>> unmappedMenuMap) {
+		LOGGER.info("<-----------------------Start removeMappedFromUnmapped() method in UserServicesImpl-------------------------------->");		
+    	Set<String> mappedKeySet = mappedMenuMap.keySet();
+    	for(String key : mappedKeySet) {
+    		if(unmappedMenuMap.containsKey(key)) {
+    			Set<String> unmapSet = unmappedMenuMap.get(key);
+    			Set<String> mapSet = mappedMenuMap.get(key);
+    			//if(unmapSet.size() == mapSet.size()) {
+       			if(unmapSet.equals(mapSet)) {
+    				unmappedMenuMap.remove(key);
+    			}else {
+    				unmapSet.removeAll(mapSet);
+    				unmappedMenuMap.put(key, unmapSet);
+    			}
+    			
+    		}
+    	}
+    	
+		LOGGER.info("<-----------------------Start removeMappedFromUnmapped() method in UserServicesImpl-------------------------------->");		
+    	return unmappedMenuMap;
+    }
+    
 	
 	@Override
-	public RoleMenuMapping roleMenuMapping(ProfileInDto profileInDto) {
+	public RoleMenuMapping createRoleMenuMapping(ProfileInDto profileInDto) {
 		LOGGER.info("<-----------------------Start roleMenuMapping() method in UserServicesImpl-------------------------------->");		
-		long roleId = roleRepository.findByRoleName(profileInDto.getRoleName()).getId();
-		if(roleId == 0) {
-			throw new CustomUserMgmtException(107);	
+		Role checkRole = roleRepository.findByRoleName(profileInDto.getRoleName());
+		if(checkRole != null)
+			throw new CustomUserMgmtException(111, "Profile is already not exists");	
+		
+		Role newRole = new Role();
+		newRole.setRoleName(profileInDto.getRoleName());
+		newRole.setDescription(profileInDto.getDescription());
+		
+		checkRole = roleRepository.save(newRole);
+		if(checkRole == null) {
+			throw new CustomUserMgmtException(105, "Profile creation failed");			
 		}
 		
+		long roleId = checkRole.getId();
+/*		if(roleId == 0) {
+			throw new CustomUserMgmtException(107);	
+		}
+*/		
 		List<RoleMenuDto> roleMenuDtoList = profileInDto.getMenuList();
 		
 		for(RoleMenuDto roleMenuDto : roleMenuDtoList) {
 			String menuName = roleMenuDto.getMenuName();
 			long menuId = menuRepository.findByMenuName(roleMenuDto.getMenuName()).getId();
 			if(menuId == 0) {
-				throw new CustomUserMgmtException(108);	
+				throw new CustomUserMgmtException(108, "Menu Name not found");	
 			}
 			
 			List<String> subMenuNameList = roleMenuDto.getSubMenuList();
@@ -425,7 +509,7 @@ public class UserServicesImpl implements UserServices {
 					for(String subMenuName : subMenuNameList) {
 						long subMenuId = subMenuRepository.findBySubMenuName(subMenuName).getId();
 						if(subMenuId == 0) {
-							throw new CustomUserMgmtException(109);	
+							throw new CustomUserMgmtException(109, "Sub Menu Name not found");	
 						}
 						roleMenuMapping = new RoleMenuMapping();
 						roleMenuMapping.setRoleUid(roleId);
@@ -434,7 +518,7 @@ public class UserServicesImpl implements UserServices {
 						
 						RoleMenuMapping roleMenuMap = roleMenuMappingRepository.save(roleMenuMapping);
 						if(roleMenuMap == null) {
-							throw new CustomUserMgmtException(106);	
+							throw new CustomUserMgmtException(106, "Profile mapping failed");	
 						}
 						roleMenuMapping = null;
 					}
@@ -446,7 +530,7 @@ public class UserServicesImpl implements UserServices {
 					
 					RoleMenuMapping roleMenuMap = roleMenuMappingRepository.save(roleMenuMapping);
 					if(roleMenuMap == null) {
-						throw new CustomUserMgmtException(106);	
+						throw new CustomUserMgmtException(106, "Profile mapping failed");	
 					}
 					roleMenuMapping = null;
 				}
@@ -457,7 +541,7 @@ public class UserServicesImpl implements UserServices {
 				
 				RoleMenuMapping roleMenuMap = roleMenuMappingRepository.save(roleMenuMapping);
 				if(roleMenuMap == null) {
-					throw new CustomUserMgmtException(106);	
+					throw new CustomUserMgmtException(106, "Profile mapping failed");	
 				}
 				roleMenuMapping = null;
 			}
@@ -474,12 +558,17 @@ public class UserServicesImpl implements UserServices {
 		LOGGER.info("<-----------------------Start deleteRoleMenuMapping() method in UserServicesImpl-------------------------------->");
 		long roleId = roleRepository.findByRoleName(roleIn.getRoleName()).getId();
 		if(roleId == 0) {
-			throw new CustomUserMgmtException(104);			
+			throw new CustomUserMgmtException(104, "No profile found");			
 		}
+		List<UserRoleMapping> userRoleMappingList = userRoleMappingRepository.findByRoleUid(roleId);
+		
+		if(userRoleMappingList != null && userRoleMappingList.size() > 0)
+			//throw new CustomUserMgmtException(112);	
+			throw new CustomSubscriptionException(100, "Profile already mapped with existing user can't be deleted");
 		
 		List<RoleMenuMapping> roleMenuMappingList = roleMenuMappingRepository.findByRoleUid(roleId);
 		if(roleMenuMappingList == null) {
-			throw new CustomUserMgmtException(110);			
+			throw new CustomUserMgmtException(110, "Profile mapping not found");			
 		}
 		
 		roleMenuMappingRepository.deleteAll(roleMenuMappingList);
@@ -487,5 +576,78 @@ public class UserServicesImpl implements UserServices {
 		LOGGER.info("<-----------------------End deleteRoleMenuMapping() method in UserServicesImpl-------------------------------->");		
 	}
 
+	@Override
+	public RoleMenuMapping updateRoleMenuMapping(ProfileInDto profileInDto) {
+		LOGGER.info("<-----------------------Start updateRoleMenuMapping() method in UserServicesImpl-------------------------------->");		
+		long roleId = roleRepository.findByRoleName(profileInDto.getRoleName()).getId();
+		if(roleId == 0) {
+			throw new CustomUserMgmtException(107, "Role Name not found");	
+		}
+		List<RoleMenuMapping> roleMenuMappingList = roleMenuMappingRepository.findByRoleUid(roleId);
+		if(roleMenuMappingList == null || roleMenuMappingList.size()==0) {
+			throw new CustomUserMgmtException(110, "Profile mapping not found");	
+		}
+		roleMenuMappingRepository.deleteAll(roleMenuMappingList);
+		
+		List<RoleMenuDto> roleMenuDtoList = profileInDto.getMenuList();
+		
+		for(RoleMenuDto roleMenuDto : roleMenuDtoList) {
+			String menuName = roleMenuDto.getMenuName();
+			long menuId = menuRepository.findByMenuName(roleMenuDto.getMenuName()).getId();
+			if(menuId == 0) {
+				throw new CustomUserMgmtException(108, "Menu Name not found");	
+			}
+			
+			List<String> subMenuNameList = roleMenuDto.getSubMenuList();
+			RoleMenuMapping roleMenuMapping = null;
+			
+			if(subMenuNameList != null) {
+				if(subMenuNameList.size() > 0) {
+					for(String subMenuName : subMenuNameList) {
+						long subMenuId = subMenuRepository.findBySubMenuName(subMenuName).getId();
+						if(subMenuId == 0) {
+							throw new CustomUserMgmtException(109, "Sub Menu Name not found");	
+						}
+						roleMenuMapping = new RoleMenuMapping();
+						roleMenuMapping.setRoleUid(roleId);
+						roleMenuMapping.setMenuUid(menuId);
+						roleMenuMapping.setSubMenuUid(subMenuId);
+						
+						RoleMenuMapping roleMenuMap = roleMenuMappingRepository.save(roleMenuMapping);
+						if(roleMenuMap == null) {
+							throw new CustomUserMgmtException(106, "Profile mapping failed");	
+						}
+						roleMenuMapping = null;
+					}
+					
+				}else {
+					roleMenuMapping = new RoleMenuMapping();
+					roleMenuMapping.setRoleUid(roleId);
+					roleMenuMapping.setMenuUid(menuId);
+					
+					RoleMenuMapping roleMenuMap = roleMenuMappingRepository.save(roleMenuMapping);
+					if(roleMenuMap == null) {
+						throw new CustomUserMgmtException(106, "Profile mapping failed");	
+					}
+					roleMenuMapping = null;
+				}
+			}else {
+				roleMenuMapping = new RoleMenuMapping();
+				roleMenuMapping.setRoleUid(roleId);
+				roleMenuMapping.setMenuUid(menuId);
+				
+				RoleMenuMapping roleMenuMap = roleMenuMappingRepository.save(roleMenuMapping);
+				if(roleMenuMap == null) {
+					throw new CustomUserMgmtException(106, "Profile mapping failed");	
+				}
+				roleMenuMapping = null;
+			}
+			
+		}
+		
+		LOGGER.info("<-----------------------End updateRoleMenuMapping() method in UserServicesImpl-------------------------------->");		
+
+		return null;
+	}
 	
 }

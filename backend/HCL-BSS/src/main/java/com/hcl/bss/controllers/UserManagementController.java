@@ -463,7 +463,7 @@ public class UserManagementController {
 			
 		} catch (Exception e) {
 			LOGGER.info("Error Description: " + e.getMessage());		
-			throw new CustomUserMgmtException(500);
+			throw new CustomUserMgmtException(500, e.getMessage());
 		}finally {
 			LOGGER.info("<-----------------------End getAuthorizationDetail() method in UserManagementController-------------------------------->");		
 		}
@@ -481,14 +481,14 @@ public class UserManagementController {
 			
 		} catch (Exception e) {
 			LOGGER.info("Error Description: " + e.getMessage());		
-			throw new CustomUserMgmtException(500);
+			throw new CustomUserMgmtException(500, e.getMessage());
 		}finally {
 			LOGGER.info("<-----------------------End getAllRoleName() method in UserManagementController-------------------------------->");		
 		}
 		
 	}
 
-	@ApiOperation(value = "To create new profile", response = RoleOutDto.class)
+/*	@ApiOperation(value = "To create new profile", response = RoleOutDto.class)
 	@PostMapping(value = "/users/profile")
 	public ResponseEntity<?> addRole(@Valid @RequestBody  RoleInDto roleIn){
 		LOGGER.info("<-----------------------Start addRole() method in UserManagementController-------------------------------->");		
@@ -515,46 +515,46 @@ public class UserManagementController {
 		}
 		
 	}
-
+*/
 	@ApiOperation(value = "To get all menu's list", response = MenuDto.class)
 	@PutMapping(value = "/users/profile")
-	public ResponseEntity<?> getAllMenu(){
+	public ResponseEntity<?> getAllMenu(@RequestParam(value="roleName", required=false) String roleName){
 		LOGGER.info("<-----------------------Start getAllMenuSubmenu() method in UserManagementController-------------------------------->");		
 		try {
-			MenuDto menuDto = userServices.getAllMenu();
+			MenuDto menuDto = userServices.getAllMenu(roleName);
 			
 			return new ResponseEntity<>(menuDto, HttpStatus.OK);
 			
 		} catch (Exception e) {
 			LOGGER.info("Error Description: " + e.getMessage());		
-			throw new CustomUserMgmtException(500);
+			throw new CustomUserMgmtException(500, e.getMessage());
 		}finally {
 			LOGGER.info("<-----------------------End getAllMenuSubmenu() method in UserManagementController-------------------------------->");		
 		}
 		
 	}
 
-	@ApiOperation(value = "To map profile with Menu and subMenu", response = RoleOutDto.class)
+	@ApiOperation(value = "To create profile with Menu and subMenu mapping", response = RoleOutDto.class)
 	@PostMapping(value = "/user/profile/mapping")
-	public ResponseEntity<?> roleMenuMapping(@Valid @RequestBody  ProfileInDto profileInDto){
-		LOGGER.info("<-----------------------Start roleMenuMapping() method in UserManagementController-------------------------------->");		
+	public ResponseEntity<?> createRoleMenuMapping(@Valid @RequestBody  ProfileInDto profileInDto){
+		LOGGER.info("<-----------------------Start createRoleMenuMapping() method in UserManagementController-------------------------------->");		
 		LOGGER.info("Input details: " + profileInDto.toString());
 		RoleOutDto roleOutDto = new RoleOutDto();
 		
 		try {
-			userServices.roleMenuMapping(profileInDto);
+			userServices.createRoleMenuMapping(profileInDto);
 			
 			roleOutDto.setSuccess(true);
 			roleOutDto.setResponseCode(HttpStatus.OK.value());
-			roleOutDto.setMessage("Profile mapping done successfully!");
+			roleOutDto.setMessage("Profile creation and mapping done successfully!");
 			
 			return new ResponseEntity<>(roleOutDto, HttpStatus.OK);
 			
 		} catch (Exception e) {
 			LOGGER.info("Error Description: " + e.getMessage());		
-			throw new CustomUserMgmtException(500);
+			throw new CustomUserMgmtException(500, e.getMessage());
 		}finally {
-			LOGGER.info("<-----------------------End roleMenuMapping() method in UserManagementController-------------------------------->");		
+			LOGGER.info("<-----------------------End createRoleMenuMapping() method in UserManagementController-------------------------------->");		
 		}
 		
 	}
@@ -577,12 +577,36 @@ public class UserManagementController {
 			
 		} catch (CustomUserMgmtException e) {
 			LOGGER.info("Error Description: " + e.getMessage());		
-			throw new CustomUserMgmtException(500);
+			throw new CustomUserMgmtException(500, e.getMessage());
 		}finally {
 			LOGGER.info("<-----------------------End deleteRoleMenuMapping() method in UserManagementController-------------------------------->");		
 		}
 		
 	}
 
+	@ApiOperation(value = "To update profile mapping with Menu and subMenu", response = RoleOutDto.class)
+	@PutMapping(value = "/user/profile/mapping")
+	public ResponseEntity<?> updateRoleMenuMapping(@Valid @RequestBody  ProfileInDto profileInDto){
+		LOGGER.info("<-----------------------Start updateRoleMenuMapping() method in UserManagementController-------------------------------->");		
+		LOGGER.info("Input details: " + profileInDto.toString());
+		RoleOutDto roleOutDto = new RoleOutDto();
+		
+		try {
+			userServices.updateRoleMenuMapping(profileInDto);
+			
+			roleOutDto.setSuccess(true);
+			roleOutDto.setResponseCode(HttpStatus.OK.value());
+			roleOutDto.setMessage("Profile mapping updated successfully!");
+			
+			return new ResponseEntity<>(roleOutDto, HttpStatus.OK);
+			
+		} catch (Exception e) {
+			LOGGER.info("Error Description: " + e.getMessage());		
+			throw new CustomUserMgmtException(500, e.getMessage());
+		}finally {
+			LOGGER.info("<-----------------------End updateRoleMenuMapping() method in UserManagementController-------------------------------->");		
+		}
+		
+	}
 	
 }

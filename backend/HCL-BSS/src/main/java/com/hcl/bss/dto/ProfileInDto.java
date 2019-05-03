@@ -11,8 +11,8 @@ import javax.validation.constraints.NotEmpty;
 public class ProfileInDto {
 	@NotEmpty
 	private String roleName;
+	private String description;
 	private List<RoleMenuDto> menuList;
-
 
 	public String getRoleName() {
 		return roleName;
@@ -30,9 +30,17 @@ public class ProfileInDto {
 		this.menuList = menuList;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	@Override
 	public String toString() {
-		return "ProfileInDto [roleName=" + roleName + ", menuList=" + menuList + "]";
+		return "ProfileInDto [roleName=" + roleName + ", description=" + description + ", menuList=" + menuList + "]";
 	}
 	
 }

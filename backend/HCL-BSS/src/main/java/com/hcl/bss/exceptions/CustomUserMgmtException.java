@@ -1,17 +1,9 @@
 package com.hcl.bss.exceptions;
 
-public class CustomUserMgmtException extends RuntimeException{
+public class CustomUserMgmtException extends CustomGlobalException{
 
-	private Integer code;  
-	public CustomUserMgmtException(Integer code) {
-		super();
-		this.code = code;
-	}
-	public Integer getCode() {
-		return code;
-	}
-	public void setCode(Integer code) {
-		this.code = code;
+	public CustomUserMgmtException(int code, String message) {
+		super(code, message);
 	}
 	
 }
