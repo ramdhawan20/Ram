@@ -34,8 +34,9 @@ EmailNotificationProducer emailNotificationProducer;
 	@Override
 	public void emailSubscriptionDetail(String subId) {
 		
-		//without camel routing
+		
 		CustomerDto cus = bSSClient.getSubscriptionDetails(subId);
+		//without camel routing
 		//notificationSender.createTopic(cus);
 		
 		
