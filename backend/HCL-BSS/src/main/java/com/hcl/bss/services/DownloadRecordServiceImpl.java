@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -38,6 +39,7 @@ import org.springframework.util.FileCopyUtils;
 import com.hcl.bss.domain.Customer;
 import com.hcl.bss.domain.Product;
 import com.hcl.bss.domain.RatePlan;
+import com.hcl.bss.domain.Role;
 import com.hcl.bss.domain.Subscription;
 import com.hcl.bss.domain.SubscriptionRatePlan;
 import com.hcl.bss.domain.User;
@@ -268,11 +270,20 @@ FileWriter fileWriter = null;
 			 for (User user : userList)
 	            {
 	                StringBuffer oneLine = new StringBuffer();
-	                oneLine.append(user.getId());
+	                List<String> rolesList = user.getRoleList().stream().map(Role::getRoleName).collect(Collectors.toList());
+	                String roles = rolesList.stream().map(Object::toString ).collect( Collectors.joining( "," ));
+	                oneLine.append(roles);
 	                oneLine.append(CSV_SEPARATOR);
 	                oneLine.append(user.getUserFirstName());
 	                oneLine.append(CSV_SEPARATOR);
-	                oneLine.append(user.getUserLastName());               
+	                oneLine.append(null == user.getUserMiddleName() ? BLANK : user.getUserMiddleName());
+	                oneLine.append(CSV_SEPARATOR);
+	                oneLine.append(user.getUserLastName()); 
+	                oneLine.append(CSV_SEPARATOR);
+	                oneLine.append(user.getId());
+	                oneLine.append(CSV_SEPARATOR);
+	                oneLine.append(user.getIsLocked() == 1 ? "Active" : "Locked");
+	                oneLine.append(CSV_SEPARATOR);
 	                fileWriter.write(oneLine.toString());
 	                fileWriter.append(NEW_LINE_SEPARATOR);
 	            }
