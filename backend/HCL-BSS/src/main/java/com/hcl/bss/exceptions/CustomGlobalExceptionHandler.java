@@ -41,77 +41,24 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 //    }
     
     //... Exception for User Management
-    @ExceptionHandler(CustomUserMgmtException.class)
-	public ResponseEntity<CustomErrorResponse> subExceptionHandler(CustomUserMgmtException ex) {
+/*    @ExceptionHandler(CustomGlobalException.class)
+	public ResponseEntity<CustomErrorResponse> subExceptionHandler(CustomGlobalException ex) {
     	CustomErrorResponse error = new CustomErrorResponse();
-             if(ex.getCode().equals(100)) {
-             	error.setTimestamp(LocalDateTime.now());   
-            	error.setStatus(HttpStatus.NOT_FOUND.value()); 	 
-             	error.setError("No User Found");
-             } 
-             else if(ex.getCode().equals(101)) {
-            	 error.setTimestamp(LocalDateTime.now());
-            	 error.setStatus(HttpStatus.NOT_FOUND.value());
-            	 error.setError("Menu not found for this user");
-             }
-             else if(ex.getCode().equals(103)) {
-            	 error.setTimestamp(LocalDateTime.now());
-            	 error.setStatus(HttpStatus.NOT_FOUND.value());
-            	 error.setError("Role is not associated with this user");
-             }
-             else if(ex.getCode().equals(104)) {
-            	 error.setTimestamp(LocalDateTime.now());
-            	 error.setStatus(HttpStatus.NOT_FOUND.value());
-            	 error.setError("No profile found");
-             }
-             else if(ex.getCode().equals(105)) {
-            	 error.setTimestamp(LocalDateTime.now());
-            	 error.setStatus(HttpStatus.NOT_FOUND.value());
-            	 error.setError("Profile creation failed");
-             }
-             else if(ex.getCode().equals(106)) {
-            	 error.setTimestamp(LocalDateTime.now());
-            	 error.setStatus(HttpStatus.BAD_REQUEST.value());
-            	 error.setError("Profile mapping failed");
-             }
-             else if(ex.getCode().equals(107)) {
-            	 error.setTimestamp(LocalDateTime.now());
-            	 error.setStatus(HttpStatus.BAD_REQUEST.value());
-            	 error.setError("Role Name not found");
-             }
-             else if(ex.getCode().equals(108)) {
-            	 error.setTimestamp(LocalDateTime.now());
-            	 error.setStatus(HttpStatus.BAD_REQUEST.value());
-            	 error.setError("Menu Name not found");
-             }
-             else if(ex.getCode().equals(109)) {
-            	 error.setTimestamp(LocalDateTime.now());
-            	 error.setStatus(HttpStatus.BAD_REQUEST.value());
-            	 error.setError("Sub Menu Name not found");
-             }
-             else if(ex.getCode().equals(110)) {
-            	 error.setTimestamp(LocalDateTime.now());
-            	 error.setStatus(HttpStatus.BAD_REQUEST.value());
-            	 error.setError("Profile mapping not found");
-             }
-             else {
-            	 error.setTimestamp(LocalDateTime.now());
-            	 error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            	 error.setError("Internal Server Error Occurred");
-            	 return new ResponseEntity<CustomErrorResponse>(error, HttpStatus.INTERNAL_SERVER_ERROR);
-             }
+		error.setTimestamp(LocalDateTime.now());   
+		error.setStatus(ex.getCode()); 	 
+		error.setError(ex.getMessage());
 		return new ResponseEntity<CustomErrorResponse>(error, HttpStatus.NOT_FOUND);
 	}
-
+*/
   //...
     @ExceptionHandler(CustomGlobalException.class)
     public ResponseEntity<CustomErrorResponse> customGlobalException(CustomGlobalException ex){
     	CustomErrorResponse error = new CustomErrorResponse();
-    	if(ex.getCode()==100)
+    	if(ex.getCode() <= 500)
     	{
     		error.setTimestamp(LocalDateTime.now());
     		error.setError(ex.getMessage());
-    		error.setStatus(HttpStatus.NOT_FOUND.value());
+    		error.setStatus(ex.getCode());
     		return new ResponseEntity<CustomErrorResponse>(error, HttpStatus.NOT_FOUND);
     	}
     	else {

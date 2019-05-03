@@ -43,9 +43,12 @@ public interface UserServices {
 	
 	Role addRole(Role role);
 	
-	MenuDto getAllMenu();
+	MenuDto getAllMenu(String roleName);
 	
-	RoleMenuMapping roleMenuMapping(ProfileInDto profileInDto);
+	RoleMenuMapping createRoleMenuMapping(ProfileInDto profileInDto);
 	
 	void deleteRoleMenuMapping(RoleInDto roleIn);
+	
+	RoleMenuMapping updateRoleMenuMapping(ProfileInDto profileInDto);
+	
 }
