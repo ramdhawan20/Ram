@@ -3,6 +3,7 @@ package com.hcl.bss.services;
 import static com.hcl.bss.constants.ApplicationConstants.ACTIVE;
 import static com.hcl.bss.constants.ApplicationConstants.ADMIN;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -650,4 +651,20 @@ public class UserServicesImpl implements UserServices {
 		return null;
 	}
 	
+	@Override
+	public List<RoleInDto> getAllRoles(Pageable pageable) {
+		List<Role> roleList = roleRepository.findAll(pageable).getContent();
+		if(roleList!=null && !roleList.isEmpty()) {
+			List<RoleInDto> roleDtoList = new ArrayList<RoleInDto>();
+			for(Role role: roleList) {
+				RoleInDto roleDto = new RoleInDto();
+				roleDto.setRoleName(role.getRoleName());
+				roleDto.setDescription(role.getDescription());
+				roleDtoList.add(roleDto);
+			}
+			return roleDtoList;
+		}
+		else
+			throw new CustomUserMgmtException(100, "No role found");
+	}
 }
