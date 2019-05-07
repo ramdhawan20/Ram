@@ -51,4 +51,5 @@ public interface UserServices {
 	
 	RoleMenuMapping updateRoleMenuMapping(ProfileInDto profileInDto);
 	
+	List<RoleInDto> getAllRoles(Pageable pageable);
 }
