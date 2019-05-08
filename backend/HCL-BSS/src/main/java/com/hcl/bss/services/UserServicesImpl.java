@@ -2,6 +2,9 @@ package com.hcl.bss.services;
 
 import static com.hcl.bss.constants.ApplicationConstants.ACTIVE;
 import static com.hcl.bss.constants.ApplicationConstants.ADMIN;
+import static com.hcl.bss.constants.ApplicationConstants.APOSTROPHE;
+import static com.hcl.bss.constants.ApplicationConstants.BLANK;
+import static com.hcl.bss.constants.ApplicationConstants.SPACE;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +36,7 @@ import com.hcl.bss.dto.RoleInDto;
 import com.hcl.bss.dto.RoleMenuDto;
 import com.hcl.bss.dto.UserAuthDto;
 import com.hcl.bss.dto.UserInDto;
+import com.hcl.bss.dto.UserInputDto;
 import com.hcl.bss.exceptions.CustomSubscriptionException;
 import com.hcl.bss.exceptions.CustomUserMgmtException;
 import com.hcl.bss.repository.AppConstantRepository;
@@ -63,9 +67,9 @@ public class UserServicesImpl implements UserServices {
     @Autowired
     private SubMenuRepository subMenuRepository;
     @Autowired
-    RoleMenuMappingRepository roleMenuMappingRepository;
+    private RoleMenuMappingRepository roleMenuMappingRepository;
     @Autowired
-    UserRoleMappingRepository userRoleMappingRepository;
+    private UserRoleMappingRepository userRoleMappingRepository;
 
     @Override
     public User findById(int id) {
@@ -161,40 +165,103 @@ public class UserServicesImpl implements UserServices {
 	}
     
 	@Override
-	public User addUser(User user) throws Exception {
+	public User addUser(UserInputDto userInput) {
 		LOGGER.info("<-----------------------Start addUser() method in UserServicesImpl-------------------------------->");		
+		User user = new User();
+		Set<String> userProfileSet = null;
+		List<Role> roleList = new ArrayList();
 		try {
-			return userRepository.save(user);
+			user.setUserId(userInput.getUserId());
+			if(userInput.getUserFirstName() == null || userInput.getUserFirstName().trim().isEmpty())
+				throw new CustomUserMgmtException(400, "UserFirstName can not be null/blank!");	
+			
+			user.setUserFirstName(userInput.getUserFirstName());
+			user.setUserMiddleName(userInput.getUserMiddleName());
+			user.setUserLastName(userInput.getUserLastName());
+			
+			userProfileSet = userInput.getUserProfileSet();
+			if(userProfileSet == null || userProfileSet.size() == 0)
+				throw new CustomUserMgmtException(400, "User should belong to atleast one profile!");	
+			
+			for(String roleName : userProfileSet) {
+				Role role = roleRepository.findByRoleName(roleName.trim());
+				
+				if(role == null)
+					throw new CustomUserMgmtException(400, APOSTROPHE + roleName.trim() + "' profile does not exist, please provide the correct profile!");
+				
+				roleList.add(role);
+			}
+			//user.setRoleId(userInput.getUserProfile().trim().equalsIgnoreCase(ADMIN) ? ROLE_ADMIN : ROLE_NORMAL);	
+			user.setPassword(userInput.getAttribute());
+			
+			User createdUser = userRepository.save(user);
+			if(createdUser == null) 
+				throw new CustomUserMgmtException(400, "User not created!");	
+			
+			for(Role role : roleList) {
+				UserRoleMapping userRoleMapping = new UserRoleMapping();
+				userRoleMapping.setUserId(createdUser.getUserId());
+				userRoleMapping.setRoleUid(role.getId());
+				
+				userRoleMappingRepository.save(userRoleMapping);
+			}
+
+			return null;
+			
 		} finally {
 			LOGGER.info("<-----------------------End addUser() method in UserServicesImpl-------------------------------->");		
 		}
 	}
 	
 	@Override
-	public User editUser(User user) throws Exception {
+	public UserInputDto editUser(UserInputDto userInput) {
 		LOGGER.info("<-----------------------Start editUser() method in UserServicesImpl-------------------------------->");	
-		User fetchUser = null;
+		User fetchedUser = null;
+		Set<String> userProfileSet = null;
+		
 		try {
 			//fetch the user which you want to update
-			fetchUser = userRepository.findByUserId(user.getUserId());
+			fetchedUser = userRepository.findByUserId(userInput.getUserId());
+			if(fetchedUser == null)
+				throw new CustomUserMgmtException(112, "User not found!");	
+			if(fetchedUser.getIsLocked() == 1)
+				throw new CustomUserMgmtException(113, "User is deactivated, can't be updated!");	
+				
+			userProfileSet = userInput.getUserProfileSet();
+			if(userProfileSet != null && userProfileSet.size() > 0) {
+				
+				List<UserRoleMapping> userRoleMappingList = userRoleMappingRepository.findByUserId(fetchedUser.getUserId());
+				if(userRoleMappingList == null || userRoleMappingList.size()==0) {
+					throw new CustomUserMgmtException(110, "User profile mapping not found");	
+				}
+				userRoleMappingRepository.deleteAll(userRoleMappingList);
+				
+				for(String roleName : userProfileSet) {
+					UserRoleMapping userRoleMapping = new UserRoleMapping();
+					userRoleMapping.setUserId(fetchedUser.getUserId());
+					Long roleId = roleRepository.findByRoleName(roleName.trim()).getId();
+					userRoleMapping.setRoleUid(roleId);
+					
+					userRoleMappingRepository.save(userRoleMapping);
+				}
+			}
 			
-			if (user.getUserFirstName() != null && !"".equalsIgnoreCase(user.getUserFirstName())) {
-				fetchUser.setUserFirstName(user.getUserFirstName());
+			if (userInput.getUserFirstName() != null && !BLANK.equalsIgnoreCase(userInput.getUserFirstName().trim())) {
+				fetchedUser.setUserFirstName(userInput.getUserFirstName());
 			}
-			if (user.getUserMiddleName() != null && !"".equalsIgnoreCase(user.getUserMiddleName())) {
-				fetchUser.setUserMiddleName(user.getUserMiddleName());
+			if (userInput.getUserMiddleName() != null && !BLANK.equalsIgnoreCase(userInput.getUserMiddleName().trim())) {
+				fetchedUser.setUserMiddleName(userInput.getUserMiddleName());
 			}
-			if (user.getUserLastName() != null && !"".equalsIgnoreCase(user.getUserLastName())) {
-				fetchUser.setUserLastName(user.getUserLastName());
+			if (userInput.getUserLastName() != null && !BLANK.equalsIgnoreCase(userInput.getUserLastName().trim())) {
+				fetchedUser.setUserLastName(userInput.getUserLastName());
 			}
-			if (user.getRoleId() != -1) {
-				fetchUser.setRoleId(user.getRoleId());
-			}
+			userRepository.save(fetchedUser);
 			
-			return this.userRepository.save(fetchUser);
-			
+			return null; 
 		} finally {
-			fetchUser = null;
+			fetchedUser = null;
+			userProfileSet = null;
+			userInput = null;
 			LOGGER.info("<-----------------------End editUser() method in UserServicesImpl-------------------------------->");		
 		}
 	}
@@ -280,9 +347,11 @@ public class UserServicesImpl implements UserServices {
 		userAuthDto.setUserId(user.getUserId());
 		StringBuilder userNameSB = new StringBuilder();
 		userNameSB.append(user.getUserFirstName())
-		.append(user.getUserMiddleName() != null && !"".equalsIgnoreCase(user.getUserMiddleName().trim()) ? " "+user.getUserMiddleName() : "")
-		.append(user.getUserLastName() != null && !"".equalsIgnoreCase(user.getUserLastName().trim()) ? " "+user.getUserLastName() : "");
+		.append(user.getUserMiddleName() != null && !BLANK.equals(user.getUserMiddleName().trim()) ? SPACE+user.getUserMiddleName() : BLANK)
+		.append(user.getUserLastName() != null && !BLANK.equals(user.getUserLastName().trim()) ? SPACE+user.getUserLastName() : BLANK);
 
+		//userNameSB.append(user.getUserFirstName()).append(user.getUserMiddleName()).append(user.getUserLastName());
+		
 		userAuthDto.setUserName(userNameSB.toString());
 	
 		List<Role> roleList = user.getRoleList();		
@@ -505,8 +574,8 @@ public class UserServicesImpl implements UserServices {
 			List<String> subMenuNameList = roleMenuDto.getSubMenuList();
 			RoleMenuMapping roleMenuMapping = null;
 			
-			if(subMenuNameList != null) {
-				if(subMenuNameList.size() > 0) {
+			if(subMenuNameList != null && subMenuNameList.size() > 0) {
+				//if(subMenuNameList.size() > 0) {
 					for(String subMenuName : subMenuNameList) {
 						long subMenuId = subMenuRepository.findBySubMenuName(subMenuName).getId();
 						if(subMenuId == 0) {
@@ -524,7 +593,7 @@ public class UserServicesImpl implements UserServices {
 						roleMenuMapping = null;
 					}
 					
-				}else {
+/*				}else {
 					roleMenuMapping = new RoleMenuMapping();
 					roleMenuMapping.setRoleUid(roleId);
 					roleMenuMapping.setMenuUid(menuId);
@@ -535,7 +604,7 @@ public class UserServicesImpl implements UserServices {
 					}
 					roleMenuMapping = null;
 				}
-			}else {
+*/			}else {
 				roleMenuMapping = new RoleMenuMapping();
 				roleMenuMapping.setRoleUid(roleId);
 				roleMenuMapping.setMenuUid(menuId);
@@ -602,8 +671,8 @@ public class UserServicesImpl implements UserServices {
 			List<String> subMenuNameList = roleMenuDto.getSubMenuList();
 			RoleMenuMapping roleMenuMapping = null;
 			
-			if(subMenuNameList != null) {
-				if(subMenuNameList.size() > 0) {
+			if(subMenuNameList != null && subMenuNameList.size() > 0) {
+				//if(subMenuNameList.size() > 0) {
 					for(String subMenuName : subMenuNameList) {
 						long subMenuId = subMenuRepository.findBySubMenuName(subMenuName).getId();
 						if(subMenuId == 0) {
@@ -621,7 +690,7 @@ public class UserServicesImpl implements UserServices {
 						roleMenuMapping = null;
 					}
 					
-				}else {
+/*				}else {
 					roleMenuMapping = new RoleMenuMapping();
 					roleMenuMapping.setRoleUid(roleId);
 					roleMenuMapping.setMenuUid(menuId);
@@ -632,7 +701,7 @@ public class UserServicesImpl implements UserServices {
 					}
 					roleMenuMapping = null;
 				}
-			}else {
+*/			}else {
 				roleMenuMapping = new RoleMenuMapping();
 				roleMenuMapping.setRoleUid(roleId);
 				roleMenuMapping.setMenuUid(menuId);
@@ -651,7 +720,16 @@ public class UserServicesImpl implements UserServices {
 		return null;
 	}
 	
-	@Override
+/*	public boolean isRoleExist(String roleName){
+		Role role = roleRepository.findByRoleName(roleName.trim());
+		if(role == null)
+			return false;
+		
+		return true;
+	}
+*/	
+
+  @Override
 	public List<RoleInDto> getAllRoles(Pageable pageable) {
 		List<Role> roleList = roleRepository.findAll(pageable).getContent();
 		if(roleList!=null && !roleList.isEmpty()) {

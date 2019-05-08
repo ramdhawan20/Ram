@@ -70,7 +70,9 @@ public final class ApplicationConstants {
     public static final String NORMAL = "Normal";
     public static final String ACTIVE = "Active";
     public static final String INACTIVE = "Inactive";
-       
+    public static final String SPACE = " ";
+    public static final String APOSTROPHE = "'";
+     
      public enum BillingInvoicing{
         ACTIVE(1),
         INACTIVE(0);

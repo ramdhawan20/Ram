@@ -14,6 +14,7 @@ import com.hcl.bss.dto.ProfileInDto;
 import com.hcl.bss.dto.RoleInDto;
 import com.hcl.bss.dto.UserAuthDto;
 import com.hcl.bss.dto.UserInDto;
+import com.hcl.bss.dto.UserInputDto;
 /**
  * This is interface to UserServicesImpl
  *
@@ -27,9 +28,9 @@ public interface UserServices {
 	
 	List<User> findAllUser(UserInDto userIn, Pageable pageable, HttpServletResponse response) throws Exception;
     
-    User addUser(User user) throws Exception ;
+    User addUser(UserInputDto user);
     
-    User editUser(User user) throws Exception;
+    UserInputDto editUser(UserInputDto user);
     
     User activateUser(User user) throws Exception;
     
@@ -51,5 +52,6 @@ public interface UserServices {
 	
 	RoleMenuMapping updateRoleMenuMapping(ProfileInDto profileInDto);
 	
+	//boolean isRoleExist(String roleName);
 	List<RoleInDto> getAllRoles(Pageable pageable);
 }
