@@ -21,6 +21,7 @@ private BigDecimal expireAfter;
 private String pricingScheme;
 private String currencyCode;
 private List<RatePlanVolumeDto> ratePlanVolumeDtoList;
+private boolean transactionFlag;
 public Long getUidpk() {
 	return uidpk;
 }
@@ -104,5 +105,11 @@ public List<RatePlanVolumeDto> getRatePlanVolumeDtoList() {
 }
 public void setRatePlanVolumeDtoList(List<RatePlanVolumeDto> ratePlanVolumeDtoList) {
 	this.ratePlanVolumeDtoList = ratePlanVolumeDtoList;
+}
+public boolean isTransactionFlag() {
+	return transactionFlag;
+}
+public void setTransactionFlag(boolean transactionFlag) {
+	this.transactionFlag = transactionFlag;
 }
 }

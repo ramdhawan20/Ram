@@ -53,4 +53,5 @@ public interface UserServices {
 	RoleMenuMapping updateRoleMenuMapping(ProfileInDto profileInDto);
 	
 	//boolean isRoleExist(String roleName);
+	List<RoleInDto> getAllRoles(Pageable pageable);
 }

@@ -16,6 +16,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
+import com.hcl.bss.schedulers.NotificationScheduler;
 import com.hcl.bss.schedulers.SubscriptionRenewalScheduler;
 import com.hcl.bss.schedulers.SubscriptionScheduler;
 
@@ -39,6 +40,8 @@ public class SsRestApplication extends SpringBootServletInitializer implements C
 
 	@Autowired
 	SubscriptionRenewalScheduler subscriptionRenewalScheduler;
+	@Autowired
+	NotificationScheduler notificationScheduler;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SsRestApplication.class, args);
@@ -52,9 +55,11 @@ public class SsRestApplication extends SpringBootServletInitializer implements C
 	}
 
 	@Override
-	public void run(String... arg0) throws IOException, URISyntaxException {
+	public void run(String... arg0) throws Exception {
 		subscriptionScheduler.runSubscriptionBatch();
 		subscriptionRenewalScheduler.runAutorenewSubscriptionsScheduler();
+		//notificationScheduler.runSubscriptionDetails();
+		 
 	}
 
 	@Bean

@@ -19,4 +19,5 @@ public interface RatePlanService {
 	Iterable<UOM> getUom();
 	List<String> getDropDownData(String statusId);
 	Long getTotalNumberOfRatePlan(RatePlanFilterReqDto filterReqDto);
+	ResponseDto updateRatePlan(RatePlanDto product);
 }

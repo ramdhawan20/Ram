@@ -50,7 +50,20 @@ public class RatePlanController {
 				return new ResponseEntity<ResponseDto>(response,HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
-
+		
+		@ApiOperation(value = "Edit RatePlan", response = ResponseDto.class)
+		@RequestMapping(value = "/updateRatePlan", produces = { "application/json" }, method = RequestMethod.POST)
+		public ResponseEntity<ResponseDto> updateRatePlan(@RequestBody RatePlanDto product) {
+			ResponseDto response = new ResponseDto();
+			try {
+				response = ratePlanService.updateRatePlan(product);
+				return new ResponseEntity<ResponseDto>(response,HttpStatus.OK);
+			}
+			catch(DataIntegrityViolationException e) {
+				response.setMessage("Could not update Plan "+e.getRootCause().getMessage());
+				return new ResponseEntity<ResponseDto>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
 		
 		@ApiOperation(value = "Get RatePlans", response = RatePlanDto.class)
 		@RequestMapping(value = "/rate/getRatePlan", produces = { "application/json" }, method = RequestMethod.POST)

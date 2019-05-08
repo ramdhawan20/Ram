@@ -114,4 +114,12 @@ public class SubscriptionController {
 		return new ResponseEntity<>(responseDto,HttpStatus.OK);
 		
 	}
+	
+	@ApiOperation(value="Get Details of a Subscription for Email Notification", response= CustomerDto.class)
+	@RequestMapping(value="subscriptionNotification", produces = { "application/json" }, method = RequestMethod.GET)
+	public ResponseEntity<CustomerDto> notifySubscriptionDetail(@RequestParam(value = "subscriptionId", required = true) String subId){
+		
+		return new ResponseEntity<>(subscriptionService.findSubscriptionDetail(subId), HttpStatus.OK);
+		
+	}
 }

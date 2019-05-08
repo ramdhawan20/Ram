@@ -25,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,12 +39,14 @@ import com.hcl.bss.dto.MenuDto;
 import com.hcl.bss.dto.ProfileInDto;
 import com.hcl.bss.dto.RoleInDto;
 import com.hcl.bss.dto.RoleOutDto;
+import com.hcl.bss.dto.RoleResponseDto;
 import com.hcl.bss.dto.UserAuthDto;
 import com.hcl.bss.dto.UserDto;
 import com.hcl.bss.dto.UserInDto;
 import com.hcl.bss.dto.UserInputDto;
 import com.hcl.bss.dto.UserOutDto;
 import com.hcl.bss.exceptions.CustomUserMgmtException;
+import com.hcl.bss.repository.RoleRepository;
 import com.hcl.bss.repository.UserRepository;
 import com.hcl.bss.services.UserServices;
 
@@ -61,6 +64,8 @@ public class UserManagementController {
 	UserServices userServices;
 	@Autowired
 	public UserRepository userRepository;
+	@Autowired
+	public RoleRepository roleRepository;
 	@Value("${app.page.size}") String pageSize;
 
 	//@Autowired
@@ -405,7 +410,29 @@ public class UserManagementController {
 		}
 		
 	}
-
+	
+	@ApiOperation(value = "To get all role name and discription ist", response = String.class)
+	@GetMapping(value = "/users/roles/{pageNo}", produces = {"application/json"})
+	public ResponseEntity<?> getAllRole(@PathVariable("pageNo") String pageNo){
+		LOGGER.info("<-----------------------Start getAllRole() method in UserManagementController-------------------------------->");		
+		RoleResponseDto responseDto = new RoleResponseDto();
+		Integer pageNumber = Integer.valueOf(pageNo);
+		Pageable pageable = PageRequest.of(pageNumber, Integer.parseInt(pageSize));
+		List<RoleInDto> roleDtoList = userServices.getAllRoles(pageable);
+		responseDto.setRoleDtoList(roleDtoList);
+		Long noOfTotalRole = roleRepository.count();
+		if(noOfTotalRole>(pageNumber+1)*pageable.getPageSize())
+			  responseDto.setLastPage(false);
+		  else
+			  responseDto.setLastPage(true);
+		Long totalPages = noOfTotalRole/pageable.getPageSize();
+		if(noOfTotalRole%pageable.getPageSize() != 0) {
+			totalPages = totalPages+1;
+		}
+		responseDto.setTotalPages(totalPages);
+		return new ResponseEntity<>(responseDto,HttpStatus.OK);
+	}
+	
 /*	@ApiOperation(value = "To create new profile", response = RoleOutDto.class)
 	@PostMapping(value = "/users/profile")
 	public ResponseEntity<?> addRole(@Valid @RequestBody  RoleInDto roleIn){

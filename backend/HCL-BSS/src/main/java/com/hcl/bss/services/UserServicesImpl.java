@@ -728,4 +728,21 @@ public class UserServicesImpl implements UserServices {
 		return true;
 	}
 */	
+
+  @Override
+	public List<RoleInDto> getAllRoles(Pageable pageable) {
+		List<Role> roleList = roleRepository.findAll(pageable).getContent();
+		if(roleList!=null && !roleList.isEmpty()) {
+			List<RoleInDto> roleDtoList = new ArrayList<RoleInDto>();
+			for(Role role: roleList) {
+				RoleInDto roleDto = new RoleInDto();
+				roleDto.setRoleName(role.getRoleName());
+				roleDto.setDescription(role.getDescription());
+				roleDtoList.add(roleDto);
+			}
+			return roleDtoList;
+		}
+		else
+			throw new CustomUserMgmtException(100, "No role found");
+	}
 }
