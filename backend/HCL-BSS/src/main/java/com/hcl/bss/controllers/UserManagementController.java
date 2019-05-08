@@ -3,12 +3,13 @@ package com.hcl.bss.controllers;
 import static com.hcl.bss.constants.ApplicationConstants.ACTIVE;
 import static com.hcl.bss.constants.ApplicationConstants.ADMIN;
 import static com.hcl.bss.constants.ApplicationConstants.INACTIVE;
-import static com.hcl.bss.constants.ApplicationConstants.NORMAL;
 import static com.hcl.bss.constants.ApplicationConstants.ROLE_ADMIN;
 import static com.hcl.bss.constants.ApplicationConstants.ROLE_NORMAL;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -40,6 +41,7 @@ import com.hcl.bss.dto.RoleOutDto;
 import com.hcl.bss.dto.UserAuthDto;
 import com.hcl.bss.dto.UserDto;
 import com.hcl.bss.dto.UserInDto;
+import com.hcl.bss.dto.UserInputDto;
 import com.hcl.bss.dto.UserOutDto;
 import com.hcl.bss.exceptions.CustomUserMgmtException;
 import com.hcl.bss.repository.UserRepository;
@@ -92,6 +94,7 @@ public class UserManagementController {
 		List<UserDto> userListOut = new ArrayList<>();
 		UserOutDto userOut = new UserOutDto();
 		List<User> userList = null;
+		Set<String> userProfileSet = null;
 		//Pageable pageable = new PageRequest(userIn.getPageNo(), 1);
 		Pageable pageable = PageRequest.of(userIn.getPageNo(), Integer.parseInt(pageSize));
 		
@@ -109,7 +112,12 @@ public class UserManagementController {
 			
 			for(User usr : userList) {
 				userDto = new UserDto();
-				userDto.setUserProfile(usr.getRoleId()== ROLE_ADMIN ? ADMIN : NORMAL);
+				userProfileSet = new HashSet();
+				//userDto.setUserProfile(usr.getRoleId()== ROLE_ADMIN ? ADMIN : NORMAL);
+				List<Role> roleList = usr.getRoleList();
+				for(Role role : roleList)
+					userProfileSet.add(role.getRoleName());
+				userDto.setUserProfileSet(userProfileSet);
 				userDto.setUserId(usr.getUserId());
 				userDto.setUserFirstName(usr.getUserFirstName());
 				userDto.setUserMiddleName(usr.getUserMiddleName()==null ? "" : usr.getUserMiddleName());
@@ -117,6 +125,7 @@ public class UserManagementController {
 				userDto.setStatus(usr.getIsLocked()==0 ? ACTIVE : INACTIVE);
 				
 				userListOut.add(userDto);
+				userProfileSet = null;
 			}
 			
 			userOut.setSuccess(true);
@@ -140,6 +149,7 @@ public class UserManagementController {
 			LOGGER.info("<-----------------------Start finally block-------------------------------->");
 			userDto = null;
 			userListOut = null;
+			userProfileSet = null;
 			LOGGER.info("<-----------------------End finally block-------------------------------->");
 			LOGGER.info("<-----------------------End findAllUser() method-------------------------------->");		
 		}
@@ -148,70 +158,19 @@ public class UserManagementController {
 	
 	@ApiOperation(value = "To create new user", response = UserOutDto.class)
 	@PostMapping(value = "/users/user")
-	public ResponseEntity<?> addUser(@Valid @RequestBody  UserInDto userIn) {
+	public ResponseEntity<?> addUser(@Valid @RequestBody  UserInputDto userInput) {
 		LOGGER.info("<-----------------------Start addUser() method-------------------------------->");		
-		LOGGER.info("Input details: " + userIn.toString());
-		
-		User user = new User();
-		User createdUser = null;
+		LOGGER.info("Input details: " + userInput.toString());
+
 		UserOutDto userOut = new UserOutDto();
 		
 		try {
-			user.setUserId(userIn.getUserId());
-			if(userIn.getUserFirstName() == null) {
-				userOut.setSuccess(false);
-				userOut.setResponseCode(HttpStatus.BAD_REQUEST.value());
-				userOut.setMessage("UserFirstName can not be null!");
-
-				return new ResponseEntity<>(userOut, HttpStatus.BAD_REQUEST);				
-			}
-			
-			if("".equalsIgnoreCase(userIn.getUserFirstName().trim())) {
-				userOut.setSuccess(false);
-				userOut.setResponseCode(HttpStatus.BAD_REQUEST.value());
-				userOut.setMessage("UserFirstName can not be blank!");
-	
-				return new ResponseEntity<>(userOut, HttpStatus.BAD_REQUEST);
-			}
-			
-			user.setUserFirstName(userIn.getUserFirstName());
-			user.setUserMiddleName(userIn.getUserMiddleName());
-			user.setUserLastName(userIn.getUserLastName());
-			
-			if(userIn.getUserProfile() == null) {
-				userOut.setSuccess(false);
-				userOut.setResponseCode(HttpStatus.BAD_REQUEST.value());
-				userOut.setMessage("User Profile can not be null!");
-
-				return new ResponseEntity<>(userOut, HttpStatus.BAD_REQUEST);
-			}
-			
-			if("".equalsIgnoreCase(userIn.getUserProfile().trim())) {
-				userOut.setSuccess(false);
-				userOut.setResponseCode(HttpStatus.BAD_REQUEST.value());
-				userOut.setMessage("User Profile can not be blank!");
-
-				return new ResponseEntity<>(userOut, HttpStatus.BAD_REQUEST);
-			}
-			
-			user.setRoleId(userIn.getUserProfile().trim().equalsIgnoreCase(ADMIN) ? ROLE_ADMIN : ROLE_NORMAL);			
-			user.setPassword(userIn.getAttribute());
-			
-			createdUser = this.userServices.addUser(user);
-			
-			if(createdUser == null) {
-				userOut.setSuccess(false);
-				userOut.setResponseCode(HttpStatus.BAD_REQUEST.value());
-				userOut.setMessage("User not created!");
-
-				return new ResponseEntity<>(userOut, HttpStatus.BAD_REQUEST);
-			}
+			userServices.addUser(userInput);
 			
 			userOut.setSuccess(true);
 			userOut.setResponseCode(HttpStatus.OK.value());
 			userOut.setMessage("User created successfully!");
 			return new ResponseEntity<>(userOut, HttpStatus.OK);
-			
 		} catch (Exception e) {
 			LOGGER.info("<-----------------------Start catch block-------------------------------->");
 			userOut.setSuccess(false);
@@ -221,62 +180,25 @@ public class UserManagementController {
 			LOGGER.info("<-----------------------End catch block-------------------------------->");
 			return new ResponseEntity<>(userOut, HttpStatus.INTERNAL_SERVER_ERROR);
 		}finally {
-			LOGGER.info("<-----------------------Start finally block-------------------------------->");
-			user = null;
-			createdUser = null;
-			LOGGER.info("<-----------------------End finally block-------------------------------->");
 			LOGGER.info("<-----------------------End addUser() method-------------------------------->");		
 		}
 	}
 
 	@ApiOperation(value = "To update existing user", response = UserOutDto.class)
 	@PutMapping(value = "/users/user")
-	public ResponseEntity<?> editUser(@Valid @RequestBody  UserInDto userIn) {
+	public ResponseEntity<?> editUser(@Valid @RequestBody  UserInputDto userInput) {
 		LOGGER.info("<-----------------------Start editUser() method-------------------------------->");		
-		LOGGER.info("Input details: " + userIn.toString());
+		LOGGER.info("Input details: " + userInput.toString());
 
-		User user = new User();
 		UserOutDto userOut = new UserOutDto();
-		User updatedUser = null;
 		
 		try {
-			user.setUserId(userIn.getUserId());
-			user.setUserFirstName(userIn.getUserFirstName());
-			user.setUserMiddleName(userIn.getUserMiddleName());
-			user.setUserLastName(userIn.getUserLastName());
-			if(userIn.getUserProfile() == null) {
-				userOut.setSuccess(false);
-				userOut.setResponseCode(HttpStatus.BAD_REQUEST.value());
-				userOut.setMessage("User Profile can not be null!");
-
-				return new ResponseEntity<>(userOut, HttpStatus.BAD_REQUEST);
-			}
-			
-			if("".equalsIgnoreCase(userIn.getUserProfile().trim())) {
-				userOut.setSuccess(false);
-				userOut.setResponseCode(HttpStatus.BAD_REQUEST.value());
-				userOut.setMessage("User Profile can not be blank!");
-
-				return new ResponseEntity<>(userOut, HttpStatus.BAD_REQUEST);
-			}
-			
-			user.setRoleId(userIn.getUserProfile().trim().equalsIgnoreCase(ADMIN) ? ROLE_ADMIN : ROLE_NORMAL);			
-
-			updatedUser = this.userServices.editUser(user);
-
-			if(updatedUser == null) {
-				userOut.setSuccess(false);
-				userOut.setResponseCode(HttpStatus.BAD_REQUEST.value());
-				userOut.setMessage("User not updated!");
-
-				return new ResponseEntity<>(userOut, HttpStatus.BAD_REQUEST);
-			}
+			userServices.editUser(userInput);
 			
 			userOut.setSuccess(true);
 			userOut.setResponseCode(HttpStatus.OK.value());
 			userOut.setMessage("User updated successfully!");
 			return new ResponseEntity<>(userOut, HttpStatus.OK);
-			
 		} catch (Exception e) {
 			LOGGER.info("<-----------------------Start catch block-------------------------------->");
 			userOut.setSuccess(false);
@@ -286,10 +208,6 @@ public class UserManagementController {
 			LOGGER.info("<-----------------------End catch block-------------------------------->");
 			return new ResponseEntity<>(userOut, HttpStatus.INTERNAL_SERVER_ERROR);
 		}finally {
-			LOGGER.info("<-----------------------Start finally block-------------------------------->");
-			user = null;
-			updatedUser = null;
-			LOGGER.info("<-----------------------End finally block-------------------------------->");
 			LOGGER.info("<-----------------------End editUser() method-------------------------------->");		
 		}
 		
@@ -454,14 +372,14 @@ public class UserManagementController {
 
 	@ApiOperation(value = "To get user authorization details", response = UserAuthDto.class)
 	@GetMapping(value = "/users/authorize")
-	public ResponseEntity<?> getAuthorizationDetail(@RequestParam(value="userId", required = true) String userId){
+	public ResponseEntity<UserAuthDto> getAuthorizationDetail(@RequestParam(value="userId", required = true) String userId){
 		LOGGER.info("<-----------------------Start getAuthorizationDetail() method in UserManagementController-------------------------------->");		
 		try {
 			UserAuthDto userAuthDto = userServices.getAuthorizationDetail(userId);
 			
 			return new ResponseEntity<>(userAuthDto, HttpStatus.OK);
 			
-		} catch (Exception e) {
+		} catch (CustomUserMgmtException e) {
 			LOGGER.info("Error Description: " + e.getMessage());		
 			throw new CustomUserMgmtException(500, e.getMessage());
 		}finally {
@@ -472,14 +390,14 @@ public class UserManagementController {
 
 	@ApiOperation(value = "To get all profile name list", response = String.class)
 	@GetMapping(value = "/users/profile")
-	public ResponseEntity<?> getAllRoleName(){
+	public ResponseEntity<List<String>> getAllRoleName(){
 		LOGGER.info("<-----------------------Start getAllRoleName() method in UserManagementController-------------------------------->");		
 		try {
 			List<String> profileNameList = userServices.getAllRoleName();
 			
 			return new ResponseEntity<>(profileNameList, HttpStatus.OK);
 			
-		} catch (Exception e) {
+		} catch (CustomUserMgmtException e) {
 			LOGGER.info("Error Description: " + e.getMessage());		
 			throw new CustomUserMgmtException(500, e.getMessage());
 		}finally {
@@ -518,14 +436,14 @@ public class UserManagementController {
 */
 	@ApiOperation(value = "To get all menu's list", response = MenuDto.class)
 	@PutMapping(value = "/users/profile")
-	public ResponseEntity<?> getAllMenu(@RequestParam(value="roleName", required=false) String roleName){
+	public ResponseEntity<MenuDto> getAllMenu(@RequestParam(value="roleName", required=false) String roleName){
 		LOGGER.info("<-----------------------Start getAllMenuSubmenu() method in UserManagementController-------------------------------->");		
 		try {
 			MenuDto menuDto = userServices.getAllMenu(roleName);
 			
 			return new ResponseEntity<>(menuDto, HttpStatus.OK);
 			
-		} catch (Exception e) {
+		} catch (CustomUserMgmtException e) {
 			LOGGER.info("Error Description: " + e.getMessage());		
 			throw new CustomUserMgmtException(500, e.getMessage());
 		}finally {
@@ -536,7 +454,7 @@ public class UserManagementController {
 
 	@ApiOperation(value = "To create profile with Menu and subMenu mapping", response = RoleOutDto.class)
 	@PostMapping(value = "/user/profile/mapping")
-	public ResponseEntity<?> createRoleMenuMapping(@Valid @RequestBody  ProfileInDto profileInDto){
+	public ResponseEntity<RoleOutDto> createRoleMenuMapping(@Valid @RequestBody  ProfileInDto profileInDto){
 		LOGGER.info("<-----------------------Start createRoleMenuMapping() method in UserManagementController-------------------------------->");		
 		LOGGER.info("Input details: " + profileInDto.toString());
 		RoleOutDto roleOutDto = new RoleOutDto();
@@ -550,7 +468,7 @@ public class UserManagementController {
 			
 			return new ResponseEntity<>(roleOutDto, HttpStatus.OK);
 			
-		} catch (Exception e) {
+		} catch (CustomUserMgmtException e) {
 			LOGGER.info("Error Description: " + e.getMessage());		
 			throw new CustomUserMgmtException(500, e.getMessage());
 		}finally {
@@ -560,8 +478,8 @@ public class UserManagementController {
 	}
 	
 	@ApiOperation(value = "To delete the profile mapping with Menu and subMenu", response = RoleOutDto.class)
-	@DeleteMapping(value = "/user/profile")
-	public ResponseEntity<?> deleteRoleMenuMapping(@Valid @RequestBody  RoleInDto roleIn){
+	@PutMapping(value = "/user/profile")
+	public ResponseEntity<RoleOutDto> deleteRoleMenuMapping(@Valid @RequestBody  RoleInDto roleIn){
 		LOGGER.info("<-----------------------Start deleteRoleMenuMapping() method in UserManagementController-------------------------------->");		
 		LOGGER.info("Input details: " + roleIn.toString());
 		RoleOutDto roleOut = new RoleOutDto();
@@ -586,7 +504,7 @@ public class UserManagementController {
 
 	@ApiOperation(value = "To update profile mapping with Menu and subMenu", response = RoleOutDto.class)
 	@PutMapping(value = "/user/profile/mapping")
-	public ResponseEntity<?> updateRoleMenuMapping(@Valid @RequestBody  ProfileInDto profileInDto){
+	public ResponseEntity<RoleOutDto> updateRoleMenuMapping(@Valid @RequestBody  ProfileInDto profileInDto){
 		LOGGER.info("<-----------------------Start updateRoleMenuMapping() method in UserManagementController-------------------------------->");		
 		LOGGER.info("Input details: " + profileInDto.toString());
 		RoleOutDto roleOutDto = new RoleOutDto();
@@ -600,7 +518,7 @@ public class UserManagementController {
 			
 			return new ResponseEntity<>(roleOutDto, HttpStatus.OK);
 			
-		} catch (Exception e) {
+		} catch (CustomUserMgmtException e) {
 			LOGGER.info("Error Description: " + e.getMessage());		
 			throw new CustomUserMgmtException(500, e.getMessage());
 		}finally {

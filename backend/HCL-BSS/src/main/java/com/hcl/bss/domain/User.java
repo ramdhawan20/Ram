@@ -30,7 +30,7 @@ public class User implements Serializable {
     private int id;
     @Column(name = "user_id") private String userId;
     @Column(name = "password") private String password;
-    @Column(name = "role_id") private int roleId;
+    //@Column(name = "role_id") private int roleId;
     @Column(name = "user_first_name") private String userFirstName;
     @Column(name = "user_middle_name")
 	private String userMiddleName;
@@ -88,7 +88,7 @@ public class User implements Serializable {
         this.password = passwordEncoder().encode(password);
     }
 
-    public int getRoleId() {
+ /*   public int getRoleId() {
         return roleId;
     }
 
@@ -96,7 +96,7 @@ public class User implements Serializable {
 
         this.roleId = roleId;
     }
-
+*/
     public String getUserFirstName() {
 
         return userFirstName;
@@ -180,20 +180,12 @@ public class User implements Serializable {
 		this.userMiddleName = userMiddleName;
 	}
 
-	@Override
+/*	@Override
 	public String toString() {
-		return "User [id=" + id + ", userId=" + userId + ", password=" + password + ", roleId=" + roleId
-				+ ", userFirstName=" + userFirstName + ", userMiddleName=" + userMiddleName + ", userLastName="
-				+ userLastName + ", lastLogin=" + lastLogin + ", isLocked=" + isLocked + ", updatedBy=" + updatedBy
-				+ ", uupdatedDate=" + uupdatedDate + ", createdBy=" + createdBy + ", createdDate=" + createdDate
-				+ ", roleList=" + roleList + ", getRoleList()=" + getRoleList() + ", getId()=" + getId()
-				+ ", getUserId()=" + getUserId() + ", getPassword()=" + getPassword() + ", getRoleId()=" + getRoleId()
-				+ ", getUserFirstName()=" + getUserFirstName() + ", getUserLastName()=" + getUserLastName()
-				+ ", getLastLogin()=" + getLastLogin() + ", getIsLocked()=" + getIsLocked() + ", getUpdatedBy()="
-				+ getUpdatedBy() + ", getUupdatedDate()=" + getUupdatedDate() + ", getCreatedBy()=" + getCreatedBy()
-				+ ", getCreatedDate()=" + getCreatedDate() + ", getUserMiddleName()=" + getUserMiddleName()
-				+ ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString()
-				+ "]";
+		return "User [userId=" + userId + ", userFirstName=" + userFirstName + ", userMiddleName=" + userMiddleName
+				+ ", userLastName=" + userLastName + ", lastLogin=" + lastLogin + ", isLocked=" + isLocked
+				+ ", updatedBy=" + updatedBy + ", uupdatedDate=" + uupdatedDate + ", createdBy=" + createdBy
+				+ ", createdDate=" + createdDate + ", roleList=" + roleList + "]";
 	}
-	
+*/	
 }

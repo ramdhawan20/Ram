@@ -5,15 +5,16 @@ import java.util.Set;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-public class UserDto {
+public class UserInputDto {
 	private Set<String> userProfileSet;
 	@NotEmpty @Email
 	private String userId;
-	//@NotEmpty
 	private String userFirstName;
 	private String userMiddleName;
 	private String userLastName;
 	private String status;
+	private String attribute;
+	private String newAttribute;
 
 	public String getUserId() {
 		return userId;
@@ -51,5 +52,24 @@ public class UserDto {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
+	public String getNewAttribute() {
+		return newAttribute;
+	}
+	public void setNewAttribute(String newAttribute) {
+		this.newAttribute = newAttribute;
+	}
+	public String getAttribute() {
+		return attribute;
+	}
+	public void setAttribute(String attribute) {
+		this.attribute = attribute;
+	}
+	
+	@Override
+	public String toString() {
+		return "UserInputDto [userProfileSet=" + userProfileSet + ", userId=" + userId + ", userFirstName="
+				+ userFirstName + ", userMiddleName=" + userMiddleName + ", userLastName=" + userLastName + ", status="
+				+ status + "]";
+	}
+		
 }
