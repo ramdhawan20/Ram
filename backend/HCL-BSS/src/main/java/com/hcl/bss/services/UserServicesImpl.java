@@ -643,6 +643,8 @@ public class UserServicesImpl implements UserServices {
 		
 		roleMenuMappingRepository.deleteAll(roleMenuMappingList);
 		
+		roleRepository.deleteById(roleId);
+		
 		LOGGER.info("<-----------------------End deleteRoleMenuMapping() method in UserServicesImpl-------------------------------->");		
 	}
 
