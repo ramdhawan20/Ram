@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import javax.servlet.http.HttpSession;
+
 @CrossOrigin(origins = "*")
 @RestController
 public class AuthenticationController{
@@ -56,9 +58,13 @@ public class AuthenticationController{
 
 	@ApiOperation(value = "Logout user from current session", response = UserDetails.class)
     @RequestMapping(value = "/logout",
-    produces = { "application/json" }, method = RequestMethod.POST)
-    public boolean logout(@RequestParam(value = "sessionID", required = true) String sessionId) {
-    	return true;
+    produces = { "application/json" }, method = RequestMethod.GET)
+    public boolean logout(@RequestParam(value = "sessionID", required = true) String sessionId, HttpSession session) {
+    	if(session!=null) {
+    		session.invalidate();
+    		return true;
+    	}
+    	return false;
     }
 
 
