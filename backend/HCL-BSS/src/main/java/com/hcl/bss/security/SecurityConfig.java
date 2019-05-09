@@ -113,8 +113,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilterAt(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
 		http.sessionManagement().maximumSessions(2);
-		http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")).clearAuthentication(true)
-				.invalidateHttpSession(true).deleteCookies("JSESSIONID");
+		http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST")).invalidateHttpSession(true).logoutSuccessUrl("/login").deleteCookies("JSESSIONID");
 	}
 
 	public AuthenticationProvider authProvider() {

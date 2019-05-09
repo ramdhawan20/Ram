@@ -130,6 +130,7 @@ public class RatePlanServiceImpl implements RatePlanService {
 			rpDto.setName(rplan.getRatePlanDescription());
 			rpDto.setBillEvery(rplan.getBillingFrequency());
 			rpDto.setPricingScheme(rplan.getPricingScheme());
+			rpDto.setExpireAfter(rplan.getExpireAfter());
 			if("VOLUME".equalsIgnoreCase(rplan.getPricingScheme())) {
 				
 				ratePlanVolumeList = ratePlanVolumeRepository.findByRatePlan(rplan.getId());
