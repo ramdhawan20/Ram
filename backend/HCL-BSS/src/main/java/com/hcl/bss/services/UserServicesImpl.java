@@ -546,7 +546,7 @@ public class UserServicesImpl implements UserServices {
 		LOGGER.info("<-----------------------Start roleMenuMapping() method in UserServicesImpl-------------------------------->");		
 		Role checkRole = roleRepository.findByRoleName(profileInDto.getRoleName());
 		if(checkRole != null)
-			throw new CustomUserMgmtException(111, "Profile is already not exists");	
+			throw new CustomUserMgmtException(111, "Profile already exists!");	
 		
 		Role newRole = new Role();
 		newRole.setRoleName(profileInDto.getRoleName());
