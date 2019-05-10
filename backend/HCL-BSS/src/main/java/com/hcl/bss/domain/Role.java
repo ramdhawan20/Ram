@@ -52,7 +52,7 @@ public class Role implements Serializable {
     @Column(name = "UPD_DT")
     private Timestamp updatedDate;
 
-    @OneToMany(fetch=FetchType.LAZY,cascade={CascadeType.PERSIST,CascadeType.REMOVE})
+/*    @OneToMany(fetch=FetchType.LAZY,cascade={CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinTable(name = "TB_ROLE_MENU_MAPPING", joinColumns = { @JoinColumn(name = "ROLE_UID",referencedColumnName = "UIDPK")}, inverseJoinColumns = { @JoinColumn(name = "MENU_UID",referencedColumnName = "UIDPK") })
     private Set<Menu> menuSet;
     	
@@ -62,7 +62,7 @@ public class Role implements Serializable {
 	public void setMenuSet(Set<Menu> menuSet) {
 		this.menuSet = menuSet;
 	}
-    
+*/    
     public Long getId() {
 		return id;
 	}
@@ -109,8 +109,7 @@ public class Role implements Serializable {
 	@Override
 	public String toString() {
 		return "Role [id=" + id + ", roleName=" + roleName + ", description=" + description + ", createdBy=" + createdBy
-				+ ", createdDate=" + createdDate + ", updatedBy=" + updatedBy + ", updatedDate=" + updatedDate
-				+ ", menuSet=" + menuSet + "]";
+				+ ", createdDate=" + createdDate + ", updatedBy=" + updatedBy + ", updatedDate=" + updatedDate + "]";
 	}
 
 }
