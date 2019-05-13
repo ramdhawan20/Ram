@@ -21,12 +21,15 @@ public class SubscriptionCamelRouter extends RouteBuilder {
 
   @Override
   public void configure() throws Exception {
+	  
 	  	  EmailProcessor emailProcessor = new EmailProcessor(emailNotificationProducer);
 	  	SmsBean smsBean = new SmsBean(smsNotificationProducer);
-
+	  	onException(Exception.class).handled(true)
+	  	.process(new ExceptionProcessor());	
       from("jms:topic:subscriptionr-topic")
       .process(emailProcessor)
       .bean(smsBean);
+      
  
 	}
 }

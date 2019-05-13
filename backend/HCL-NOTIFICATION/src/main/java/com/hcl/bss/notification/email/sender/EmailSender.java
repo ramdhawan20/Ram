@@ -59,11 +59,18 @@ public class EmailSender implements EmailNotificationProducer {
 			Transport.send(message);
 			System.out.println("Sent message successfully....");
 			SubscriptionNotification subscriptionNotification  = new SubscriptionNotification();
+			SubscriptionNotification subscriptionNotificationDB  = new SubscriptionNotification();
+			subscriptionNotificationDB = subscriptionNotificationRepository.findBySubscriptionId(subscriptionId);
+			if(null != subscriptionNotificationDB) {
+				subscriptionNotificationDB.setEmailStatus('Y');
+				subscriptionNotificationDB.setSubscriptionEvent("CreateSubscription");
+				subscriptionNotificationRepository.save(subscriptionNotificationDB);
+			}else {
 			subscriptionNotification.setSubscriptionId(subscriptionId);
 			subscriptionNotification.setEmailStatus('Y');
 			subscriptionNotification.setSubscriptionEvent("CreateSubscription");
 			subscriptionNotificationRepository.save(subscriptionNotification);
-			
+			}
 		} 
 		catch(SendFailedException sfe) {
 			System.out.println("Mail not send");

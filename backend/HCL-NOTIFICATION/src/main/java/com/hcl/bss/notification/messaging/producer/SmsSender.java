@@ -22,9 +22,19 @@ public class SmsSender implements SmsNotificationProducer {
 		System.out.println(sms +" :: " + toPhoneNo);
 		// After successfull msg delivered make entry in DB 
 		SubscriptionNotification subscriptionNotification  = new SubscriptionNotification();
-		subscriptionNotification = subscriptionNotificationRepository.findBySubscriptionId(subscriptionId);
+		SubscriptionNotification subscriptionNotificationDB  = new SubscriptionNotification();
+		subscriptionNotificationDB = subscriptionNotificationRepository.findBySubscriptionId(subscriptionId);
+		if(null != subscriptionNotificationDB) {
+			subscriptionNotificationDB.setSmsStatus('Y');
+			subscriptionNotificationDB.setSubscriptionEvent("CreateSubscription");
+			subscriptionNotificationRepository.save(subscriptionNotificationDB);
+		}
+		else {
+		subscriptionNotification.setSubscriptionId(subscriptionId);
 		subscriptionNotification.setSmsStatus('Y');
-		subscriptionNotificationRepository.save(subscriptionNotification);
+		subscriptionNotification.setSubscriptionEvent("CreateSubscription");
+		subscriptionNotificationRepository.save(subscriptionNotification);}
+		
 		
 	}
 
