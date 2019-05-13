@@ -17,8 +17,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-//@Configuration
-@EntityScan("com.hcl.bss.*")
+@Configuration
+@EntityScan("com.hcl.bss.notification*")
 //@EnableTransactionManagement
 @PropertySource("classpath:application.properties")
 
