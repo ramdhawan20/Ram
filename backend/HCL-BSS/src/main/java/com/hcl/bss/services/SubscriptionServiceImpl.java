@@ -220,6 +220,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 					response.setEmailAddress(customer.getEmail());
 				else
 					response.setEmailAddress(HYPHEN);
+				if(customer.getPhone()!=null)
+					response.setPhoneNo(customer.getPhone());
+				else
+					response.setPhoneNo(HYPHEN);
 				response.setBillingAdress(covertAddressEntityToDto(addressRepository.findById(customer.getBillTo()).get()));
 				response.setShippingAdress(covertAddressEntityToDto(addressRepository.findById(customer.getSoldTo()).get()));
 				response.setSubscriptionDto(convertSubscriptioEntityToDto(subscription));
