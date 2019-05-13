@@ -26,8 +26,6 @@ public class EmailContentBuilder {
 		        
 		    	output = templateEngine.process("subscription_mail_notification", context);
 		    	
-		    	
-	System.out.println("<-----------------\n"+ output +"\n------------------------->");
 		    	context = null;
 		        return output;
 		    }

@@ -33,7 +33,7 @@ public class NotificationReceiver {
        System.out.println("received <" + customer + ">");
        
        emailNotificationProducer.createMail(customer);
-       smsNotificationProducer.createSms(customer);
+      // smsNotificationProducer.createSms(customer);
     }
 
 	

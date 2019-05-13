@@ -10,6 +10,7 @@ public class CustomerDto implements Serializable{
 	private AddressDto billingAdress;
 	private AddressDto shippingAdress;
 	private String companyName;
+	private String phoneNo;;
 	private SubscriptionDetailDto subscriptionDto;
 
 	
@@ -55,4 +56,11 @@ public class CustomerDto implements Serializable{
 	public void setSubscriptionDto(SubscriptionDetailDto subscriptionDto) {
 		this.subscriptionDto = subscriptionDto;
 	}
+	public String getPhoneNo() {
+		return phoneNo;
+	}
+	public void setPhoneNo(String phoneNo) {
+		this.phoneNo = phoneNo;
+	}
+	
 }

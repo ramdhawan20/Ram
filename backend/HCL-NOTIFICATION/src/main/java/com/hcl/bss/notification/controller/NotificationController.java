@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hcl.bss.notification.dto.CustomerDto;
 import com.hcl.bss.notification.email.service.EmailService;
+import com.hcl.bss.notification.repository.SubscriptionRepository;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -17,13 +18,19 @@ import io.swagger.annotations.ApiOperation;
 public class NotificationController {
 	@Autowired
 	EmailService emailService;
+	@Autowired
+	SubscriptionRepository subscriptionRepository;
 	@ApiOperation(value="Get Details of a Subscription", response= CustomerDto.class)
 	@RequestMapping(value="/emailSubscriptionDetail", produces = { "application/json" }, method = RequestMethod.GET)
 	
 	public void emailSubscriptionDetail(@RequestParam(value = "subscriptionId", required = true) String subId) throws Exception{
 	
-		
+		try {
 		emailService.emailSubscriptionDetail(subId);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 		
 	}
 }

@@ -1,9 +1,6 @@
 package com.hcl.bss.notification.email.sender;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
-import java.util.regex.*;
 
 import javax.mail.Message;
 import javax.mail.SendFailedException;
@@ -15,8 +12,10 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hcl.bss.notification.domain.SubscriptionNotification;
 import com.hcl.bss.notification.dto.CustomerDto;
 import com.hcl.bss.notification.email.service.EmailContentBuilder;
+import com.hcl.bss.notification.repository.SubscriptionNotificationRepository;
 /**
  * 
  * @author ranjankumar.y
@@ -26,6 +25,8 @@ import com.hcl.bss.notification.email.service.EmailContentBuilder;
 public class EmailSender implements EmailNotificationProducer {
 	@Autowired
 	private EmailContentBuilder emailContentBuilder;
+	@Autowired
+	SubscriptionNotificationRepository subscriptionNotificationRepository;
 /**
  * 
  */
@@ -34,9 +35,6 @@ public class EmailSender implements EmailNotificationProducer {
 		String htmlContent = emailContentBuilder.buildEmailContent(customer);
 		String subscriptionId = customer.getSubscriptionDto().getSubscriptionId();
 		String toEmail = customer.getEmailAddress();
-		System.out.println("<------------------------------------------------------------->");
-		System.out.println(htmlContent);
-		System.out.println("<------------------------------------------------------------->");
 		sendMail(htmlContent,subscriptionId,toEmail);
 	}
 
@@ -51,7 +49,6 @@ public class EmailSender implements EmailNotificationProducer {
 		
 		String from = "subscriptions_hclbss@mail.hcl.com";
 		Session session = Session.getDefaultInstance(properties);
-		System.out.println("Preparing to send email....");
 		try {
 			MimeMessage message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(from));
@@ -61,6 +58,19 @@ public class EmailSender implements EmailNotificationProducer {
 			message.setContent(htmlBody, "text/html; charset=utf-8");
 			Transport.send(message);
 			System.out.println("Sent message successfully....");
+			SubscriptionNotification subscriptionNotification  = new SubscriptionNotification();
+			SubscriptionNotification subscriptionNotificationDB  = new SubscriptionNotification();
+			subscriptionNotificationDB = subscriptionNotificationRepository.findBySubscriptionId(subscriptionId);
+			if(null != subscriptionNotificationDB) {
+				subscriptionNotificationDB.setEmailStatus('Y');
+				subscriptionNotificationDB.setSubscriptionEvent("CreateSubscription");
+				subscriptionNotificationRepository.save(subscriptionNotificationDB);
+			}else {
+			subscriptionNotification.setSubscriptionId(subscriptionId);
+			subscriptionNotification.setEmailStatus('Y');
+			subscriptionNotification.setSubscriptionEvent("CreateSubscription");
+			subscriptionNotificationRepository.save(subscriptionNotification);
+			}
 		} 
 		catch(SendFailedException sfe) {
 			System.out.println("Mail not send");
