@@ -108,9 +108,9 @@ public class SubscriptionController {
 	
 	@ApiOperation(value="Cancel Subscription",response = ResponseDto.class)
 	@RequestMapping(value="/subscription/cancelSubscription", produces= {"application/json"},method=RequestMethod.PUT)
-	public ResponseEntity<ResponseDto> cancelSubscription(@RequestParam(value = "subscriptionId", required = true) String subId){
+	public ResponseEntity<ResponseDto> cancelSubscription(@RequestBody SubscriptionInOut subscriptionIn){
 		
-		ResponseDto responseDto = subscriptionService.cancelSubscription(subId);
+		ResponseDto responseDto = subscriptionService.cancelSubscription(subscriptionIn.getSubscriptionId());
 		return new ResponseEntity<>(responseDto,HttpStatus.OK);
 		
 	}
