@@ -1,10 +1,7 @@
 package com.hcl.bss.controllers;
 
 import static com.hcl.bss.constants.ApplicationConstants.ACTIVE;
-import static com.hcl.bss.constants.ApplicationConstants.ADMIN;
 import static com.hcl.bss.constants.ApplicationConstants.INACTIVE;
-import static com.hcl.bss.constants.ApplicationConstants.ROLE_ADMIN;
-import static com.hcl.bss.constants.ApplicationConstants.ROLE_NORMAL;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +34,7 @@ import com.hcl.bss.dto.DropDownOutDto;
 import com.hcl.bss.dto.MenuDto;
 import com.hcl.bss.dto.ProfileInDto;
 import com.hcl.bss.dto.RoleInDto;
+import com.hcl.bss.dto.RoleInputDto;
 import com.hcl.bss.dto.RoleOutDto;
 import com.hcl.bss.dto.RoleResponseDto;
 import com.hcl.bss.dto.UserAuthDto;
@@ -463,10 +460,10 @@ public class UserManagementController {
 */
 	@ApiOperation(value = "To get all menu's list", response = MenuDto.class)
 	@PutMapping(value = "/users/profile")
-	public ResponseEntity<MenuDto> getAllMenu(@RequestParam(value="roleName", required=false) String roleName){
+	public ResponseEntity<MenuDto> getAllMenu(@RequestBody  RoleInputDto roleInput){
 		LOGGER.info("<-----------------------Start getAllMenuSubmenu() method in UserManagementController-------------------------------->");		
 		try {
-			MenuDto menuDto = userServices.getAllMenu(roleName);
+			MenuDto menuDto = userServices.getAllMenu(roleInput.getRoleName());
 			
 			return new ResponseEntity<>(menuDto, HttpStatus.OK);
 			
