@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import com.hcl.bss.notification.domain.SubscriptionNotification;
 import com.hcl.bss.notification.repository.SubscriptionNotificationRepository;
+import static com.hcl.bss.notification.constant.NotificationConstant.CANCELLED;
+import static com.hcl.bss.notification.constant.NotificationConstant.Y;
 @Service
 public class SmsSender implements SmsNotificationProducer {
 	@Autowired
@@ -18,18 +20,18 @@ public class SmsSender implements SmsNotificationProducer {
 		System.out.println(sms +" :: " + toPhoneNo);
 		
 		
-		if("CANCELLED".equalsIgnoreCase(status)) {
+		if(CANCELLED.equalsIgnoreCase(status)) {
 			SubscriptionNotification subscriptionNotification  = new SubscriptionNotification();
 			SubscriptionNotification subscriptionNotificationDB  = new SubscriptionNotification();
 			subscriptionNotificationDB = subscriptionNotificationRepository.findBySubscriptionId(subscriptionId);
 			if(null != subscriptionNotificationDB) {
-				subscriptionNotificationDB.setSmsStatus('Y');
-				subscriptionNotificationDB.setCancelledEvent('Y');
+				subscriptionNotificationDB.setSmsStatus(Y);
+				subscriptionNotificationDB.setCancelledEvent(Y);
 				subscriptionNotificationRepository.save(subscriptionNotificationDB);
 			}else {
 			subscriptionNotification.setSubscriptionId(subscriptionId);
-			subscriptionNotification.setEmailStatus('Y');
-			subscriptionNotification.setCancelledEvent('Y');
+			subscriptionNotification.setEmailStatus(Y);
+			subscriptionNotification.setCancelledEvent(Y);
 			subscriptionNotificationRepository.save(subscriptionNotification);
 		}
 		}
@@ -39,14 +41,14 @@ public class SmsSender implements SmsNotificationProducer {
 		
 		subscriptionNotificationDB = subscriptionNotificationRepository.findBySubscriptionId(subscriptionId);
 		if(null != subscriptionNotificationDB) {
-			subscriptionNotificationDB.setSmsStatus('Y');
-			subscriptionNotificationDB.setCreateEvent('Y');
+			subscriptionNotificationDB.setSmsStatus(Y);
+			subscriptionNotificationDB.setCreateEvent(Y);
 			subscriptionNotificationRepository.save(subscriptionNotificationDB);
 		}
 		else {
 		subscriptionNotification.setSubscriptionId(subscriptionId);
-		subscriptionNotification.setSmsStatus('Y');
-		subscriptionNotification.setCreateEvent('Y');
+		subscriptionNotification.setSmsStatus(Y);
+		subscriptionNotification.setCreateEvent(Y);
 		subscriptionNotificationRepository.save(subscriptionNotification);}
 		
 		}

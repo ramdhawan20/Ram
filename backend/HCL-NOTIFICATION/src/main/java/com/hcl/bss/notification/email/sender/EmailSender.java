@@ -16,6 +16,13 @@ import com.hcl.bss.notification.domain.SubscriptionNotification;
 import com.hcl.bss.notification.dto.CustomerDto;
 import com.hcl.bss.notification.email.service.EmailContentBuilder;
 import com.hcl.bss.notification.repository.SubscriptionNotificationRepository;
+import static com.hcl.bss.notification.constant.NotificationConstant.ACTIVE;
+import static com.hcl.bss.notification.constant.NotificationConstant.CANCELLED;
+import static com.hcl.bss.notification.constant.NotificationConstant.Y;
+import static com.hcl.bss.notification.constant.NotificationConstant.FROM;
+import static com.hcl.bss.notification.constant.NotificationConstant.SUBSCRIPTION_DETAILS;
+import static com.hcl.bss.notification.constant.NotificationConstant.SUBSCRIPTION_CANCELLATION;
+import static com.hcl.bss.notification.constant.NotificationConstant.TEXT_HTML_CHARSET;
 /**
  * 
  * @author ranjankumar.y
@@ -48,29 +55,33 @@ public class EmailSender implements EmailNotificationProducer {
 		properties.put("mail.smtp.port", "25");
 
 		
-		String from = "subscriptions_hclbss@mail.hcl.com";
+		String from = FROM;
 		Session session = Session.getDefaultInstance(properties);
 		try {
 			MimeMessage message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(from));
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-			message.setSubject("Subscription Detail for "+subscriptionId);
+			if(ACTIVE.equalsIgnoreCase(status)) {
+			message.setSubject(SUBSCRIPTION_DETAILS+subscriptionId);
+			}else if(CANCELLED.equalsIgnoreCase(status)) {
+				message.setSubject(SUBSCRIPTION_CANCELLATION+subscriptionId);
+				}
 			String htmlBody = htmlContent;
-			message.setContent(htmlBody, "text/html; charset=utf-8");
+			message.setContent(htmlBody, TEXT_HTML_CHARSET);
 			Transport.send(message);
 			System.out.println("Sent message successfully....");
-			if("CANCELLED".equalsIgnoreCase(status)) {
+			if(CANCELLED.equalsIgnoreCase(status)) {
 				SubscriptionNotification subscriptionNotification  = new SubscriptionNotification();
 				SubscriptionNotification subscriptionNotificationDB  = new SubscriptionNotification();
 				subscriptionNotificationDB = subscriptionNotificationRepository.findBySubscriptionId(subscriptionId);
 				if(null != subscriptionNotificationDB) {
-					subscriptionNotificationDB.setEmailStatus('Y');
-					subscriptionNotificationDB.setCancelledEvent('Y');
+					subscriptionNotificationDB.setEmailStatus(Y);
+					subscriptionNotificationDB.setCancelledEvent(Y);
 					subscriptionNotificationRepository.save(subscriptionNotificationDB);
 				}else {
 				subscriptionNotification.setSubscriptionId(subscriptionId);
-				subscriptionNotification.setEmailStatus('Y');
-				subscriptionNotification.setCancelledEvent('Y');
+				subscriptionNotification.setEmailStatus(Y);
+				subscriptionNotification.setCancelledEvent(Y);
 				subscriptionNotificationRepository.save(subscriptionNotification);
 			}
 			}
@@ -79,13 +90,13 @@ public class EmailSender implements EmailNotificationProducer {
 			SubscriptionNotification subscriptionNotificationDB  = new SubscriptionNotification();
 			subscriptionNotificationDB = subscriptionNotificationRepository.findBySubscriptionId(subscriptionId);
 			if(null != subscriptionNotificationDB) {
-				subscriptionNotificationDB.setEmailStatus('Y');
-				subscriptionNotificationDB.setCreateEvent('Y');
+				subscriptionNotificationDB.setEmailStatus(Y);
+				subscriptionNotificationDB.setCreateEvent(Y);
 				subscriptionNotificationRepository.save(subscriptionNotificationDB);
 			}else {
 			subscriptionNotification.setSubscriptionId(subscriptionId);
-			subscriptionNotification.setEmailStatus('Y');
-			subscriptionNotification.setCreateEvent('Y');
+			subscriptionNotification.setEmailStatus(Y);
+			subscriptionNotification.setCreateEvent(Y);
 			subscriptionNotificationRepository.save(subscriptionNotification);
 			}
 			}
