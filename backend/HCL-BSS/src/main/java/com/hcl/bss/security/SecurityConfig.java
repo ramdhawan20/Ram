@@ -105,7 +105,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 
 				.antMatchers("/login/**").permitAll().antMatchers("/product/**", "/rate/**")
-				.hasAnyRole("Agent", "Admin").antMatchers("/download/**", "/batch/**", "/users/**", "/upload/**")
+				.hasAnyRole("Agent", "Admin").antMatchers("/download/**", "/batch/**", "/users/**")
 				.hasAnyRole("Admin").antMatchers("/subscription/**").hasAnyRole("Agent", "Business", "Admin")
 				.antMatchers("/dashboard/**").hasAnyRole("Business", "Admin").anyRequest().authenticated().and()
 				.exceptionHandling().accessDeniedHandler(accessDeniedHandler)
@@ -132,6 +132,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/swagger-ui.html", "/webjars/**", "/swagger-resources/**", "/v2/api-docs",
-				"/configuration/**", "/subscriptionNotification/**", "/emailSubscriptionDetail/**");
+				"/configuration/**", "/subscriptionNotification/**", "/emailSubscriptionDetail/**", "/cancelSubscriptionNotification/**", "/upload/**");
 	}
 }

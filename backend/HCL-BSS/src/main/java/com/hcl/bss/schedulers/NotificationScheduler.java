@@ -36,14 +36,21 @@ public class NotificationScheduler {
 	private RestTemplate restTemplate;
 	@Autowired
 	SubscriptionService subscriptionService;
-	public static final String SUBSCRIPTION_DETAILS_URL = "http://localhost:8081/emailSubscriptionDetail?subscriptionId=";
+	public static final String SUBSCRIPTION_NOTIFICATION_URL = "http://localhost:8081/notifySubscriptionDetail?subscriptionId=";
+	public static final String SUBSCRIPTION_NOTIFICATION_CREATED = "&eventType=CreatedSubscription";
+	public static final String SUBSCRIPTION_NOTIFICATION_CANCELLED = "&eventType=CancelledSubscription";
 
 	 @Scheduled(cron="0 0 0 * * ?")
 	    public void runSubscriptionDetails() throws Exception{
 		 List<String> subIds = subscriptionService.getLastSubscriptionIds();
-		
+		 List<String> canceledsubIds = subscriptionService.getLastCanceledSubscriptionIds();
 		for(String subId :subIds) {
-			restTemplate.getForObject(SUBSCRIPTION_DETAILS_URL+subId, CustomerDto.class);
-		}       
+			restTemplate.getForObject(SUBSCRIPTION_NOTIFICATION_URL+subId+SUBSCRIPTION_NOTIFICATION_CREATED, CustomerDto.class);
+		} 
+		for(String subId :canceledsubIds) {
+			restTemplate.getForObject(SUBSCRIPTION_NOTIFICATION_URL+subId+SUBSCRIPTION_NOTIFICATION_CANCELLED, CustomerDto.class);
+		} 
 	    }
-}
+	 
+	}
+

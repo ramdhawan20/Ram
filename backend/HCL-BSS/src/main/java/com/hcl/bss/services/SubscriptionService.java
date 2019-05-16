@@ -26,4 +26,8 @@ public interface SubscriptionService {
     ResponseDto cancelSubscription(String subId);
 
 	List<String> getLastSubscriptionIds();
+
+	List<String> getLastCanceledSubscriptionIds();
+
+	CustomerDto notifycancelSubscription(String subId);
 }

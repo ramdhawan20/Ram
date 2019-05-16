@@ -381,4 +381,17 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	public List<String> getLastSubscriptionIds() {
 		return subscriptionRepository.getLastSubscriptionIds();
 	}
+
+	@Override
+	public List<String> getLastCanceledSubscriptionIds() { 
+		return subscriptionRepository.getLastCanceledSubscriptionIds();
+	}
+
+	@Override
+	public CustomerDto notifycancelSubscription(String subId) {
+		
+		
+		return findSubscriptionDetail(subId);
+		
+	}
 }
