@@ -30,4 +30,7 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
     
     @Query(value="SELECT AMOUNT from TB_SUBSCRIPTION where TRANSACTION_REASON_CODE_ID=?1 AND CRE_DT>=?2 AND CRE_DT<=?3", nativeQuery = true)
     List<BigDecimal> findAmntByStartEndDate(String newOrRenew, Date startDate, Date endDate);
+    
+    @Query(value="select SUBSCRIPTION_ID from tb_subscription where CANCEL_DATE>=DATE_SUB(NOW(), INTERVAL 1 day)",nativeQuery=true)
+	public List<String> getLastCanceledSubscriptionIds();
 }

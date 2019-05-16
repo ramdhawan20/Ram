@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hcl.bss.domain.Subscription;
 import com.hcl.bss.dto.CustomerDto;
 import com.hcl.bss.dto.ResponseDto;
 import com.hcl.bss.dto.SubscriptionDto;
@@ -120,6 +121,14 @@ public class SubscriptionController {
 	public ResponseEntity<CustomerDto> notifySubscriptionDetail(@RequestParam(value = "subscriptionId", required = true) String subId){
 		
 		return new ResponseEntity<>(subscriptionService.findSubscriptionDetail(subId), HttpStatus.OK);
+		
+	}
+	@ApiOperation(value="Cancel Subscription",response = CustomerDto.class)
+	@RequestMapping(value="cancelSubscriptionNotification", produces= {"application/json"},method=RequestMethod.GET)
+	public ResponseEntity<CustomerDto> notifyCancelSubscription(@RequestParam(value = "subscriptionId", required = true) String subId){
+		
+		
+		return new ResponseEntity<>(subscriptionService.notifycancelSubscription(subId),HttpStatus.OK);
 		
 	}
 }
