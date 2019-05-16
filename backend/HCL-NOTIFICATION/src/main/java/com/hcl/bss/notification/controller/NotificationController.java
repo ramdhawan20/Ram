@@ -21,16 +21,18 @@ public class NotificationController {
 	@Autowired
 	SubscriptionRepository subscriptionRepository;
 	@ApiOperation(value="Get Details of a Subscription", response= CustomerDto.class)
-	@RequestMapping(value="/emailSubscriptionDetail", produces = { "application/json" }, method = RequestMethod.GET)
+	@RequestMapping(value="/notifySubscriptionDetail", produces = { "application/json" }, method = RequestMethod.GET)
 	
-	public void emailSubscriptionDetail(@RequestParam(value = "subscriptionId", required = true) String subId) throws Exception{
+	public void emailSubscriptionDetail(@RequestParam(value = "subscriptionId", required = true) String subId,
+			@RequestParam(value = "eventType", required = true) String eventType) throws Exception{
 	
 		try {
-		emailService.emailSubscriptionDetail(subId);
+		emailService.emailSubscriptionDetail(subId,eventType);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		
 		
 	}
+	
 }

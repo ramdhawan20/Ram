@@ -23,9 +23,10 @@ public class SmsProcessor implements Processor{
 		CustomerDto customer = mapper.readValue(str, CustomerDto.class);
 		String toPhoneNo = customer.getPhoneNo();
 		String subscriptionId = customer.getSubscriptionDto().getSubscriptionId();
+		String status = customer.getSubscriptionDto().getStatus();
 		String sms = "Hi " +customer.getFirstName()+ " " + customer.getLastName()+ ", Your Subscription with Subcription Id : " + subscriptionId+ " is completed";
 		// in create sms third party smsgate will be integrated 
-		smsNotificationProducer.createSms(sms,toPhoneNo,subscriptionId);
+		smsNotificationProducer.createSms(sms,toPhoneNo,subscriptionId,status);
 		
 	}
 

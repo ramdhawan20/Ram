@@ -18,14 +18,17 @@ public class EmailContentBuilder {
 	    public EmailContentBuilder(TemplateEngine templateEngine) {
 	        this.templateEngine = templateEngine;
 	    }
-	 public String buildEmailContent(CustomerDto customer) {
+	 public String buildEmailContent(CustomerDto customer, String status) {
 		    
 		        Context context = new Context();
 		        context.setVariable("customer", customer);
 		        String output = "";
-		        
+		        if("CANCELLED".equalsIgnoreCase(status)) {
+		        	output = templateEngine.process("cancelSubscription_mail_notification", context);
+		        }
+		        else {
 		    	output = templateEngine.process("subscription_mail_notification", context);
-		    	
+		        }
 		    	context = null;
 		        return output;
 		    }

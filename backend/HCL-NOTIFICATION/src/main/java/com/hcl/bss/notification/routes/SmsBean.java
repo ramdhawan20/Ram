@@ -14,12 +14,13 @@ import com.hcl.bss.notification.dto.CustomerDto;
 import com.hcl.bss.notification.messaging.producer.SmsNotificationProducer;
 
 public class SmsBean {
-	@Value("${sms.hi}")
-	 String hi;
-	@Value("${sms.subscription}")
-	 String subscription;
-	@Value("${sms.completed}")
-	 String completed;
+	 public static final String HI="Hi ";
+	 public static final String SPACE=" ";
+	 public static final String YOUR_SUBSCRIPTION=" your subscription for subscription id : ";
+	 public static final String COMPLETED=" completted ";
+	 public static final String CANCELLED=" cancelled ";
+	
+	 
 	@Autowired
 	SmsNotificationProducer smsNotificationProducer;
 	 public SmsBean(SmsNotificationProducer smsNotificationProducer) {
@@ -27,13 +28,19 @@ public class SmsBean {
 	}
 	@Handler
 	 public void routeSms(Exchange exchange) throws JsonParseException, JsonMappingException, IOException {
+		String sms = "";
 		 ObjectMapper mapper = new ObjectMapper();
 			String str = exchange.getIn().getBody(String.class);
 			CustomerDto customer = mapper.readValue(str, CustomerDto.class);
 			String toPhoneNo = customer.getPhoneNo();
 			String subscriptionId = customer.getSubscriptionDto().getSubscriptionId();
-			String sms = hi +customer.getFirstName()+ " " + customer.getLastName()+ subscription + subscriptionId+ completed;
-		 smsNotificationProducer.createSms(sms, toPhoneNo, subscriptionId);
+			String status = customer.getSubscriptionDto().getStatus();
+			if("CANCELLED".equalsIgnoreCase(customer.getSubscriptionDto().getStatus())) {
+				sms = HI +customer.getFirstName()+ SPACE + customer.getLastName()+ YOUR_SUBSCRIPTION + subscriptionId+ CANCELLED;
+			}else {
+			sms = HI +customer.getFirstName()+ SPACE + customer.getLastName()+ YOUR_SUBSCRIPTION + subscriptionId+ COMPLETED;
+			}
+		 smsNotificationProducer.createSms(sms, toPhoneNo, subscriptionId, status);
 		 
 	 }
 }

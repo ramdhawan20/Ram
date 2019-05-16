@@ -30,8 +30,12 @@ public class SubscriptionNotification implements Serializable{
 	@Column(name = "SUB_SMS_STATUS")
 	private Character smsStatus;
 
-	@Column(name = "SUB_EVENT")
-	private String subscriptionEvent;
+	@Column(name = "SUB_CREATE_EVENT")
+	private Character createEvent;
+	
+	@Column(name = "SUB_CANCELLED_EVENT")
+	private Character cancelledEvent;
+	
 
 	public Long getId() {
 		return id;
@@ -65,12 +69,22 @@ public class SubscriptionNotification implements Serializable{
 		this.smsStatus = smsStatus;
 	}
 
-	public String getSubscriptionEvent() {
-		return subscriptionEvent;
+	public Character getCreateEvent() {
+		return createEvent;
 	}
 
-	public void setSubscriptionEvent(String subscriptionEvent) {
-		this.subscriptionEvent = subscriptionEvent;
+	public void setCreateEvent(Character createEvent) {
+		this.createEvent = createEvent;
 	}
+
+	public Character getCancelledEvent() {
+		return cancelledEvent;
+	}
+
+	public void setCancelledEvent(Character cancelledEvent) {
+		this.cancelledEvent = cancelledEvent;
+	}
+
+	
 
 }
