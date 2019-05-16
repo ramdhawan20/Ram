@@ -32,14 +32,15 @@ public class EmailSender implements EmailNotificationProducer {
  */
 	@Override
 	public void createMail(CustomerDto customer) {
-		String htmlContent = emailContentBuilder.buildEmailContent(customer);
+		String status = customer.getSubscriptionDto().getStatus();
+		String htmlContent = emailContentBuilder.buildEmailContent(customer,status);
 		String subscriptionId = customer.getSubscriptionDto().getSubscriptionId();
 		String toEmail = customer.getEmailAddress();
-		sendMail(htmlContent,subscriptionId,toEmail);
+		sendMail(htmlContent,subscriptionId,toEmail,status);
 	}
 
 	@Override
-	public void sendMail(String htmlContent, String subscriptionId, String toEmail) {
+	public void sendMail(String htmlContent, String subscriptionId, String toEmail, String status) {
 		String to = toEmail;
 	  
 		Properties properties = System.getProperties();
@@ -58,18 +59,35 @@ public class EmailSender implements EmailNotificationProducer {
 			message.setContent(htmlBody, "text/html; charset=utf-8");
 			Transport.send(message);
 			System.out.println("Sent message successfully....");
+			if("CANCELLED".equalsIgnoreCase(status)) {
+				SubscriptionNotification subscriptionNotification  = new SubscriptionNotification();
+				SubscriptionNotification subscriptionNotificationDB  = new SubscriptionNotification();
+				subscriptionNotificationDB = subscriptionNotificationRepository.findBySubscriptionId(subscriptionId);
+				if(null != subscriptionNotificationDB) {
+					subscriptionNotificationDB.setEmailStatus('Y');
+					subscriptionNotificationDB.setCancelledEvent('Y');
+					subscriptionNotificationRepository.save(subscriptionNotificationDB);
+				}else {
+				subscriptionNotification.setSubscriptionId(subscriptionId);
+				subscriptionNotification.setEmailStatus('Y');
+				subscriptionNotification.setCancelledEvent('Y');
+				subscriptionNotificationRepository.save(subscriptionNotification);
+			}
+			}
+			else {
 			SubscriptionNotification subscriptionNotification  = new SubscriptionNotification();
 			SubscriptionNotification subscriptionNotificationDB  = new SubscriptionNotification();
 			subscriptionNotificationDB = subscriptionNotificationRepository.findBySubscriptionId(subscriptionId);
 			if(null != subscriptionNotificationDB) {
 				subscriptionNotificationDB.setEmailStatus('Y');
-				subscriptionNotificationDB.setSubscriptionEvent("CreateSubscription");
+				subscriptionNotificationDB.setCreateEvent('Y');
 				subscriptionNotificationRepository.save(subscriptionNotificationDB);
 			}else {
 			subscriptionNotification.setSubscriptionId(subscriptionId);
 			subscriptionNotification.setEmailStatus('Y');
-			subscriptionNotification.setSubscriptionEvent("CreateSubscription");
+			subscriptionNotification.setCreateEvent('Y');
 			subscriptionNotificationRepository.save(subscriptionNotification);
+			}
 			}
 		} 
 		catch(SendFailedException sfe) {

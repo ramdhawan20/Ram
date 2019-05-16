@@ -92,11 +92,6 @@ public class Subscription implements Serializable {
     @LastModifiedDate
     @Column(name = "UPD_DT")
     private Timestamp updatedDate;
-    @Column(name = "SMS")
-    private Character sms;
-    @Column(name = "EMAIL")
-    private Character email;
-    
 
     public Long getId() {
         return id;
@@ -271,22 +266,6 @@ public class Subscription implements Serializable {
 
 	public void setCancelDate(LocalDate cancelDate) {
 		this.cancelDate = cancelDate;
-	}
-
-	public Character getSms() {
-		return sms;
-	}
-
-	public void setSms(Character sms) {
-		this.sms = sms;
-	}
-
-	public Character getEmail() {
-		return email;
-	}
-
-	public void setEmail(Character email) {
-		this.email = email;
 	}
     
 }

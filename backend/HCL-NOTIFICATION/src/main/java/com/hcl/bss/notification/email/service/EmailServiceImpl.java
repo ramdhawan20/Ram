@@ -44,9 +44,9 @@ public class EmailServiceImpl implements EmailService {
 
 
 	@Override
-	public void emailSubscriptionDetail(String subId) {
+	public void emailSubscriptionDetail(String subId,String eventType) { 
 
-		CustomerDto cus = bSSClient.getSubscriptionDetails(subId);
+		CustomerDto cus = bSSClient.getSubscriptionDetails(subId,eventType);
 		// without camel routing
 		// notificationSender.createTopic(cus);
 
