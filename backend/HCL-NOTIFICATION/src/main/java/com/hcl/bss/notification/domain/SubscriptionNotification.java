@@ -13,6 +13,10 @@ import javax.persistence.TableGenerator;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+/**
+ * @author ranjankumar.y
+ *
+ */
 @Entity
 @Table(name = "tb_subscription_notification_status")
 @EntityListeners(AuditingEntityListener.class)

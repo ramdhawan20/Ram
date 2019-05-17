@@ -13,6 +13,10 @@ import com.hcl.bss.notification.repository.SubscriptionRepository;
 
 import io.swagger.annotations.ApiOperation;
 
+/**
+ * @author ranjankumar.y
+ *
+ */
 @CrossOrigin(origins = "*")
 @RestController
 public class NotificationController {

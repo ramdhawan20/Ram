@@ -8,6 +8,10 @@ import com.hcl.bss.notification.dto.CustomerDto;
 import com.hcl.bss.notification.messaging.producer.SmsNotificationProducer;
 import com.hcl.bss.notification.messaging.producer.SmsSender;
 
+/**
+ * @author ranjankumar.y
+ *
+ */
 public class SmsProcessor implements Processor{
 	SmsNotificationProducer smsNotificationProducer;
 	public SmsProcessor(SmsNotificationProducer smsNotificationProducer) {
