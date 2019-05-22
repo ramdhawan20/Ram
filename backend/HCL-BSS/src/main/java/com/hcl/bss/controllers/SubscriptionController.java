@@ -123,7 +123,7 @@ public class SubscriptionController {
 		return new ResponseEntity<>(subscriptionService.findSubscriptionDetail(subId), HttpStatus.OK);
 		
 	}
-	@ApiOperation(value="Cancel Subscription",response = CustomerDto.class)
+	@ApiOperation(value="Notification for Cancel Subscription",response = CustomerDto.class)
 	@RequestMapping(value="cancelSubscriptionNotification", produces= {"application/json"},method=RequestMethod.GET)
 	public ResponseEntity<CustomerDto> notifyCancelSubscription(@RequestParam(value = "subscriptionId", required = true) String subId){
 		

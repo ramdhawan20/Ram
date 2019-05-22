@@ -11,14 +11,6 @@ import com.hcl.bss.dto.CustomerDto;
 import com.hcl.bss.services.SubscriptionService;
 
 
-/*
-import org.apache.activemq.camel.component.ActiveMQComponent;
-import org.apache.camel.CamelContext;
-import org.apache.camel.ProducerTemplate;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.impl.DefaultCamelContext;
-*/
-
 /**
  *
  * author ranjankumar.y

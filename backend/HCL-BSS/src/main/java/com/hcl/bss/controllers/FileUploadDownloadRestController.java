@@ -18,6 +18,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,11 +32,10 @@ import com.hcl.bss.dto.ErrorResponseDTO;
 import com.hcl.bss.dto.FileUploadResponse;
 import com.hcl.bss.exceptions.ImportParseException;
 import com.hcl.bss.services.datamigration.UploadService;
-
+@CrossOrigin(origins = "*")
 @RestController
 public class FileUploadDownloadRestController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileUploadDownloadRestController.class);
-
 	@Autowired
 	UploadService uploadService;
 
